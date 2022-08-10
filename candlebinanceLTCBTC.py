@@ -9,7 +9,7 @@ URL='https://vapi.binance.com/api/v1/klines?symbol=' + par + '&interval=5m'
 while 1:
     buffer = BytesIO()
     c = pycurl.Curl()
-    c.setopt(pycurl.HTTPHEADER, ['X-MBX-APIKEY: ci89ySexkJjexhnNZFBmPHtkUbLOvjLtKtRcoFWdX355Su2YHEeYb9jjmlolJirf'])
+    c.setopt(pycurl.HTTPHEADER, ['X-MBX-APIKEY: APIKEY'])
     c.setopt(pycurl.HTTPGET, 1)
     c.setopt(c.URL, URL)
     c.setopt(pycurl.FOLLOWLOCATION, True)
