@@ -14,9 +14,6 @@ with open(archivo) as f:
         apikey=rec[2]
         secretKey=bytearray((rec[1]).encode("utf-8"))
         user=rec[0]
-        #apikey='XDYrq07qGvkdSpVwuU'
-        #secretKey=bytearray(('Ohi9zuQzDDLPuQfs2N3KsKErO8Dgmqa0Qecr').encode("utf-8"))
-        #user="gassahara"
         pares="bybit_pares.key"
         with open(pares) as p:
             for linp in p:
