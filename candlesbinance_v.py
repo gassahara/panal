@@ -16,9 +16,6 @@ with open(archivo) as f:
         apikey=rec[2]
         secretKey=bytearray((rec[1]).encode("utf-8"))
         user=rec[0]
-        #apikey='FACtYR7FyxULjDCqaqF4e0bx8htmNvKMmjZ9QlN9Ac39rXaBWTeFLQSkv6oQ0YRg'
-        #secretKey=bytearray( ('9VDaJwg0zhTfRKTnS8oLFNoyitSdPide0AMfcIB3ym8r92fd08N6CmlqqzCjUy6v').encode("utf-8"))
-        #user="gassahara"
         symbols=["BTCUSDT", "ETHBTC", "ETCETH"]
         l=len(symbols)
         i=0
