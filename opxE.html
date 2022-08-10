@@ -1,0 +1,759 @@
+<! DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>A S T R O</title>
+    <STYLE>
+      iframe {
+	  width: 250px;
+	  height: 50px;
+	  border-width: 0;
+      }
+      a {
+	  text-decoration: none;
+	  color: blue;
+	  font-weight: bolder;
+      }
+      input {
+	  font-family: Sans-Serif;
+	  font-size: 18pt;
+	  
+      }
+           border-collapse: collapse;
+            width: 100%;
+        }
+          
+        th, td {
+            padding: 8px;
+        }
+          
+        tr:nth-child(even) {
+            background-color: lightgreen;
+        }
+        tr:nth-child(even) {
+            background-color: lightyellow;
+        }
+    </STYLE>
+    <!--
+    <script src="openpgpjs/dist/openpgp.js" type="text/javascript" charset="utf-8"></script>
+    -->
+    <script src="http://95.217.2.43/openpgp/openpgp.min.js" type="text/javascript" charset="utf-8"></script>
+    //
+    <script>
+      var pubkey=`-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+9DCUcsARoYnJdsvLTXnm6qqVv85b
+=e4I6
+-----END PGP PUBLIC KEY BLOCK-----`;//document.getElementById("pubkey").value;
+
+      var encrypted=new Uint8Array();
+      var passw="";
+      var user="";
+      var filed="";
+      var t=null;
+      var scro=null;
+      var iv=new Uint8Array();
+      var remotepath="http://95.217.2.43/";
+      var remotepati="curare0x2019.byethost14.com/panal/";
+      var longitud=0;
+      var latitud=0;
+      var c=0;
+      var errores=null;
+      var ci=0;
+      var pk_global_full=null;
+
+      function importSecretKey(rawKeyz) {
+	  return window.crypto.subtle.importKey(
+	      "raw",
+	      rawKeyz,
+	      "AES-CTR",
+	      false,
+	      ["encrypt", "decrypt"]
+	  );
+      }
+
+      var rawKey="";
+      var kkey=0;
+
+      function modalwarning() {
+	  
+      }
+      function aleatoria() {
+	  var longitudcadenaaleatoria=Math.random() * (60 - 35) + 35;
+	  var cadenaaleatoria="";
+	  var letra=47;
+	  while(longitudcadenaaleatoria>=0) {
+ 	      while(letra==47 || letra==42||letra==127||letra==123||letra==125||String.fromCharCode(letra)=='/'||String.fromCharCode(letra)=='*'||String.fromCharCode(letra)=='+'||String.fromCharCode(letra)==';'||String.fromCharCode(letra)=='}'||String.fromCharCode(letra)=='{')letra=Math.random() * (254 - 32) + 32;
+	      cadenaaleatoria=cadenaaleatoria+String.fromCharCode(letra);
+	      longitudcadenaaleatoria--;
+	      letra=47;
+	  }
+	  return cadenaaleatoria;
+      }
+
+      async function setp() {
+	  passw=document.getElementById('passphrase').value+document.getElementById('usuario').value;
+	  user=document.getElementById('usuario').value;
+	  contrasena=await digestMessage(passw);
+	  var bytes = new Uint8Array(16);
+	  for (var ci=0; ci < 16; ci++) bytes[ci] = parseInt(contrasena.substr( (ci * 2) + 32, 2), 16);
+	  return bytes;
+      }
+      
+      function pon(obj) {
+	  divs=0;
+	  while(divs<document.getElementsByTagName("div").length ) {
+	      document.getElementsByTagName("div")[divs].style.display="none";
+	      divs++;
+	  }
+	  document.getElementById(obj).style.display='';
+      }
+
+      async function decr() {
+	  rawKey=setp();
+	  kkey= await importSecretKey(rawKey);
+	  ciphertext = await window.crypto.subtle.decrypt(
+	      {
+		  name: "AES-CTR",
+		  counter:iv,
+		  length: 128
+	      },
+	      kkey,
+	      encrypted
+	  );
+	  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+	  c=0;
+	  var bb="";
+	  while(c<buffer.length) {
+	      bb+=String.fromCharCode(buffer[c]);
+	      c++;
+	  }
+	  return bb;
+      }
+
+      async function digestMessage(message) {
+	  const msgUint8 = new TextEncoder().encode(message);                           // encode as (utf-8) Uint8Array
+	  const hashBuffer = await crypto.subtle.digest('SHA-512', msgUint8);           // hash the message
+	  const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+	  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+	  return hashHex;
+      }
+      //-----------------------------------------------
+
+      async function undaleyeval(){
+	  if(!esperaencr) {
+	      var paraevaluar="";
+	      if(encrypted) {
+		  const { data:verified } = await openpgp.verify({
+		      message: await openpgp.message.readArmored(encrypted),
+		      publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+		  });
+		  var vi=0;
+		  var decrypted="";
+		  while(vi<verified.length){
+		      decrypted+=String.fromCharCode(verified[vi]);
+		      vi++;
+		  }
+		  errores=".";
+		  eval(decrypted);
+		  if(errores!=".") {
+		      document.getElementById("response").innerHTML=errores;
+		  } else {
+		      iv=prefix_iv;
+		      encrypted=prefix_buf;
+		      var yy=0;
+		      var x=0;
+		      var iv2=new Uint8Array(16);
+		      var zz=iv.length;
+		      var bufferc=new Uint8Array(encrypted[0].length);
+		      var bb="";
+		      while(yy<zz) {
+			  x=0;
+			  while(x<iv[yy].length) {
+			      iv2[x]=iv[yy][x];
+			      x++;
+			  }
+			  x=0;
+			  while(x<bufferc.length) {
+			      bufferc[x]=encrypted[yy][x];
+			      x++;
+			  }
+			  passw=document.getElementById("passphrase").value+document.getElementById("usuario").value;
+			  contrasena=await digestMessage(passw);
+			  var bytes = new Uint8Array(16);
+			  c=0;
+			  while(c<16) {
+			      bytes[c] = parseInt(contrasena.substr( (c * 2) + 32, 2), 16);
+			      c++;
+			  }
+			  rawKey=bytes;
+			  kkey= await importSecretKey(rawKey);
+			  ciphertext = await window.crypto.subtle.decrypt(
+			      {
+				  name: "AES-CTR",
+				  counter:iv2,
+				  length: 128
+			      },
+			      kkey,
+			      bufferc
+			  );
+			  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+			  c=0;
+			  bb="";
+			  while(c<buffer.length) {
+			      if(buffer[c]!=0) bb+=String.fromCharCode(buffer[c]);
+			      //alert(bb);
+			      c++;
+			  }
+			  paraevaluar+=bb;
+			  yy++;
+		      }
+		      espera=false;
+		      return(paraevaluar);
+		  }
+		  
+	      } else {
+		  espera=false;
+		  return null;
+	      }
+	  }
+	  espera=false;
+      }
+      // ------ - - - - - -
+      async function undale(){
+	  if(encrypted && !esperaencr) {
+	      const { data:verified } = await openpgp.verify({
+		  message: await openpgp.message.readArmored(encrypted),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      var vi=0;
+	      var decrypted="";
+	      while(vi<verified.length){
+		  decrypted+=String.fromCharCode(verified[vi]);
+		  vi++;
+	      }
+	      errores=".";
+	      document.getElementById("response").style.display="";
+	      document.getElementById("response").innerHTML="<PRE>"+decrypted+"</PRE>";
+	      eval(decrypted);
+	      if(errores!=".") {
+		  document.getElementById("response").innerHTML=errores;
+	      } else {
+		  iv=prefix_iv;
+		  encrypted=prefix_buf;
+		  //		  alert(iv.length);
+		  //		  alert(encrypted.length);
+		  var yy=0;
+		  var x=0;
+		  var iv2=new Uint8Array(16);
+		  var zz=iv.length;
+		  var bufferc=new Uint8Array(encrypted[0].length);
+		  var bb="";
+		  while(yy<zz) {
+		      x=0;
+		      while(x<iv[yy].length) {
+			  iv2[x]=iv[yy][x];
+			  x++;
+		      }
+		      //		      alert("IV:"+iv2);
+		      x=0;
+		      while(x<bufferc.length) {
+			  bufferc[x]=encrypted[yy][x];
+			  x++;
+		      }
+		      //		      alert("BUF"+bufferc);
+		      passw=document.getElementById("passphrase").value+document.getElementById("usuario").value;
+		      contrasena=await digestMessage(passw);
+		      var bytes = new Uint8Array(16);
+		      c=0;
+		      while(c<16) {
+			  bytes[c] = parseInt(contrasena.substr( (c * 2) + 32, 2), 16);
+			  c++;
+		      }
+		      rawKey=bytes;
+		      kkey= await importSecretKey(rawKey);
+		      ciphertext = await window.crypto.subtle.decrypt(
+			  {
+			      name: "AES-CTR",
+			      counter:iv2,
+			      length: 128
+			  },
+			  kkey,
+			  bufferc
+		      );
+		      const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+		      //		      alert(buffer);
+		      c=0;
+		      bb="";
+		      while(c<buffer.length) {
+			  bb+=String.fromCharCode(buffer[c]);
+			  //alert(bb);
+			  c++;
+		      }
+		      document.getElementById("response").innerHTML+="<PRE>"+bb+"</PRE>";
+		      yy++;
+		  }
+	      }
+	  } else return null;
+      }
+      async function datosn() {
+	  latitud=normtodeg(document.getElementById('latitud').value);latitud*=(document.getElementById('NS').value*1);
+	  longitud=normtodeg(document.getElementById('longitud').value);longitud*=(document.getElementById('EO').value*1);
+	  if(longitud && latitud && epoch) {
+	      cadena = aleatoria()+'*'+'/'+" \n#include <stdio.h>\n/*"+aleatoria()+'*'+'/'+"#include <time.h>\n/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nfloat timezone="+timezone+";\n/*"+aleatoria()+'*'+'/'+"time_t epoch=" + Math.ceil(epoch/1000) + ";\n/*"+aleatoria()+'*'+'/'+"double latitud=" + latitud + ";\n/*"+aleatoria()+'*'+'/'+"double longitud=" + longitud + ";\n/*"+aleatoria()+'*'+'/'+"}\n";
+	      await envia(cadena);
+	  }
+      }
+      
+      async function mandaactivar(url, mensaje) {
+	  if(url  && mensaje) {
+	      cadena = aleatoria()+'*'+'/'+" \n#include <stdio.h>\n/*"+aleatoria()+'*'+'/'+"#include <time.h>\n/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nchar url["+url.length+"]=\""+url+"\";\n/*"+aleatoria()+'*'+'/'+"\nchar mensaje["+mensaje.length+"]=\""+mensaje+"\";\n/*"+aleatoria()+'*'+'/'+"}\n";
+	      encr(cadena);
+	      setp();setscr();	      
+	  }
+      }
+      var t3=null;
+      async function envia(cadenb) {
+	  if(espera) {
+	      if(t3) clearTimeout(t3);
+	      console.log("espera");
+	      t3=setTimeout( function() {envia(cadenb);}, 8100 );
+	  } else {
+	      esperaencr=true;
+	      if(t3) clearTimeout(t3);
+	      t3=null;
+	      checaesperaencr();
+	      await encr(cadenb);
+	  }
+      }
+      async function reg() {
+	  if(!t) {
+	      bytes=await setp();
+	      cadena = aleatoria()+ '*'+'/'+ "#include <stdio.h>\n/*"+aleatoria()+'*'+'/'+"\nint main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nint password[" + bytes.length + "]={";
+	      c=0;
+	      while(c<bytes.length) {
+		  cadena+=bytes[c];
+		  c++;
+		  if(c<bytes.length) cadena+=",";
+	      }
+	      cadena+="};/*"+aleatoria()+'*'+'/'+"\nchar *user=" + '"' + document.getElementById("usuario").value + '"' + ";\n/*"+aleatoria()+" */";
+	      filed=(await digestMessage(cadena+Math.ceil(Math.random()*32768)));
+	      filed+=".js";
+	      cadena+="\n/*"+aleatoria()+'*'+'/'+"FILE *fd=fopen(" + '"' + filed + '"' + ',' + '"' + "w+" + '"' + ");\n}\n";
+	      const { data: encrypted } = await openpgp.encrypt({
+		  message: openpgp.message.fromText(cadena),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      processed=null;
+	      document.getElementById("texto2").value=encrypted;
+	      document.getElementById("envs").style.display="block";
+	      esperaencr=false;
+	  }
+      }
+
+      function procesados() {
+	  encrypted=null;
+	  scro=document.getElementById("scro");
+	  scro.parentNode.removeChild(scro);
+	  scro=document.createElement("script");
+	  scro.id="scro";
+	  var direccion=digestMessage(message);
+	  scro.src=remotepath + "/" + direccion;
+	  document.body.appendChild(scro);
+	  scro.onload=function d() {undale();};
+      }
+      function filedscr() {
+	  if (!processed) {
+	      encrypted=null;
+	      scro=document.getElementById("scro");
+	      scro.parentNode.removeChild(scro);
+	      scro=document.createElement("script");
+	      scro.id="scro";
+	      scro.src=remotepath + "/" + filed;	      
+	      document.body.appendChild(scro);
+	      t=setTimeout( function() {filedscr();}, 5000 );
+	  } else {
+	      clearTimeout(t);
+	      t=null;
+	      undale();
+	  };
+      }
+      var processed=false;
+      var tt=null;
+      var t5=null;
+      async function setscr() {
+	  if(esperaencr) {
+	      if(t5) clearTimeout(t5);
+	      t5=null;
+	      t5=setTimeout( function() {setscr();}, 6000 );
+	      return true;
+	  }
+	  if(espera) {
+	      if(t5) clearTimeout(t5);
+	      console.log("espera");
+	      t5=null;
+	      t5=setTimeout( function() {setscr();}, 10000 );
+	  } else {
+	      console.log("continua");
+	      cuantos=0;
+	      espera=true;
+	      if(t5) clearTimeout(t5);
+	      t5=null;
+	      processed=false
+	      if (user) {
+		  cargaindice(0);
+		  filed=await digestMessage(user)+".js.js"+'?_=' + (new Date()).getTime();
+		  encrypted=null;
+		  var urlscr=remotepath + "/" + filed;
+		  scro=document.getElementById("scro");
+		  scro.parentNode.removeChild(scro);
+		  scro=document.createElement("script");
+		  scro.id="scro";
+		  scro.src=urlscr;		  
+		  document.body.appendChild(scro);
+	      }
+	  }
+      }
+      var espera=false;
+      var cuantos=0;
+      var esperaencr=false;
+      var t4=null;
+      function checaesperaencr() {
+	  if(esperaencr) {
+	      if(tt) clearTimeout(tt);
+	      tt=null;
+	      if(t4) clearTimeout(t4);
+	      t4=null;
+	      t4=setTimeout( function() {checaesperaencr();}, 12000 );
+	  } else {
+	      clearTimeout(t4);
+	      t4=null;
+	      t4=setTimeout( function() {setscr();}, 10000 );
+	  }
+      }
+      async function cargaindice(cuantosc) {
+	  if(esperaencr) {
+	      clearTimeout(tt);
+	      tt=null;
+	      return true;
+	  }
+	  if (user && !processed && !esperaencr) {
+	      if(cuantosc>3) {
+		  clearTimeout(tt);
+		  tt=null;
+		  pon("tab0");
+		  document.getElementById("usuario").value="";
+		  document.getElementById("passphrase").value="";
+		  document.getElementById("modaltext").innerHTML="Problema de autenticacion (o de Red)";
+		  document.getElementById("modal").style.display="block";
+		  passw=null;
+		  user=null;
+		  espera=false;
+	      } else {
+		  clearTimeout(tt);
+		  tt=null;
+		  tt=setTimeout( function() {cargaindice(cuantosc+1);}, 20000 );
+	      }
+	  } else {
+	      clearTimeout(tt);
+	      tt=null;
+	      var descripcion=null;
+	      tt=setTimeout( function() {setscr();}, 10000 );
+	      var pev=await undaleyeval();
+	      eval(pev);
+	      if(descripcion) {
+		  x=1;
+		  document.getElementById("indice").innerHTML="";
+		  cadenaoutput="<table style=\"background-color: lightgray;\" id=\"tablaind\" ><tr><td></td></tr></table>";
+		  document.getElementById("indice").innerHTML+=cadenaoutput;
+		  var idnuevo=null;
+		  var created=null
+		  while(x<descripcion.length) {
+		      created=null;
+		      if(nombre[x]) {
+			  cadena=descripcion[x];
+			  var idall=await digestMessage(cadena);
+			  cadenaoutput=cadena.substring(cadena.indexOf("[")+1, cadena.indexOf("]"))
+			  var idrow=await digestMessage(cadenaoutput);
+			  var row=null;
+			  var i=0;
+			  var url=null;
+			  //aqui
+			  var continua=0;
+			  console.log(cadena);
+			  while(cadena.indexOf("]")>=0) {
+			      cadenaoutput=cadena.substring(cadena.indexOf("[")+1, cadena.indexOf("]"));
+			      idnuevo=await digestMessage(cadenaoutput);
+			      if(i!=1)console.log(cadenaoutput+"\n"+idnuevo);
+			      if(document.getElementById(idnuevo)!=undefined) {
+				      console.log("<"+cadenaoutput);
+				      document.getElementById(idnuevo).rowSpan=(document.getElementById(idnuevo).rowSpan * 1)+1;
+			      } else {
+				  if(!created) {
+				      row=document.createElement("TR");
+				      row.id=idall;
+				      document.getElementById("tablaind").appendChild(row);
+				      created=1;
+				  }
+				  row=document.createElement("TD");
+				  row.id=idnuevo;
+				  document.getElementById(idall).appendChild(row);
+				  /*
+				      if(cadenaoutput.indexOf('.')>0) row.innerHTML="<embed src=\"" + cadenaoutput +  "\" ></embed>";
+				      else row.innerHTML=cadenaoutput;*/
+				  if(i==2) row.innerHTML="<img src=\""+remotepath+"/"+cadenaoutput+".png\" style=\"width: 200px;\"/>";
+				  if(i==1) {
+				      var continuaimg=0;
+				      if(cadenaoutput.indexOf(".jp") || cadenaoutput.indexOf(".png") ||  cadenaoutput.indexOf(".gif")>0) {
+					  row.innerHTML="<img src=\""+cadenaoutput+"\" style=\"width: 200px;\"/>";
+					  continuaimg=1;
+				      }
+				      if(cadenaoutput.indexOf(".mp")>0) {
+					  row.innerHTML="<video src=\""+cadenaoutput+"\" style=\"width: 200px;\"></video>";
+					  continuaimg=1;
+				      }
+				      if(!continuaimg) row.innerHTML="<a href=\""+cadenaoutput+"\" style=\"width: 200px;\">RECIBO</a>";
+				  }
+				  if(i!=1 && i!=2)row.innerHTML=cadenaoutput;
+				  console.log("!"+i+":"+cadenaoutput);
+			      }
+			      if(i==2) url=cadenaoutput;
+			      i++;
+			      cadena=cadena.substring(cadena.indexOf("]")+1, cadena.length);
+			  }
+			  cadenaoutput="<td><a href=\"javascript:encrypted=null; processed=false;mandaactivar('"+url+"','activar');\"> &nbsp; &nbsp; ACTIVAR</a><a href=\"javascript:encrypted=null; processed=false;mandaactivar('"+url+"','usar');\"> &nbsp; &nbsp; USAR</a><br></td></tr></table><br><br>";
+			  row=document.createElement("TD");
+			  row.id=idnuevo;
+			  document.getElementById(idall).appendChild(row);
+			  row.innerHTML=cadenaoutput;
+		      }
+		      x++;
+		  }
+	      } else {
+		  document.getElementById("indice").innerHTML="NO TIENE DATOS CARGADOS";
+	      }
+	  }
+      }
+      async function set_f_scr(fileg) {
+	  if(espera) {
+	      t=setTimeout( function() {set_f_scr(fileg);}, 2000 );
+	  } else {
+	      espera=true;;
+	      processed=null;
+	      if(t) clearTimeout(t);
+	      t=null;
+	      if (user) {
+		  cargafile();
+		  filed=fileg;
+		  encrypted=null;
+		  scro=document.getElementById("scro");
+		  scro.parentNode.removeChild(scro);
+		  scro=document.createElement("script");
+		  scro.id="scro";
+		  scro.src=remotepath + "/" + fileg;
+		  document.body.appendChild(scro);
+	      }
+	  }
+      }
+
+// - - - - - - - - - 
+      async function cargafile() {
+	  if (user && !processed) {
+	      t=setTimeout( function() {cargafile();}, 3000 );
+	  } else {
+	      clearTimeout(t);
+	      t=null;
+	      document.getElementById("carta").innerHTML="Por Favor espere mientras se carga la Informacion ... ";
+	      fecha_inicio=null;
+	      fecha_fin=null;
+	      prefix_ascendente_ascencional=null;
+	      prefix_dispositor_dispositores_aspects=null;
+	      prefix_dispositor_dispositores_planets=null;
+	      prefix_base64imasc=null;
+	      prefix_base64imecl=null;
+	      ascendente=null;
+	      var pfv=await undaleyeval();
+//	      alert(pfv);
+	      eval(pfv);
+	      espera=false;
+	      cadena="";
+	  }
+      }
+
+      async function encr(cadenat) {
+	  var erawKey=await setp();
+	  var ekkey= await importSecretKey(erawKey);
+	  var ec=0;
+	  var ebb="";
+	  var esiz=128;
+	  var esizarr=cadenat.length;
+	  var earraylen=Math.ceil(esizarr/esiz);
+	  while((earraylen*esiz)<esizarr) earraylen++;
+	  var ebuflen=Math.ceil((esizarr+4)/earraylen);
+	  while((earraylen*ebuflen)<esizarr) ebuflen++;
+	  cadenat+="//";
+	  while(earraylen*ebuflen>cadenat.length) {
+	      var eletra=47;
+	      while(eletra==10 || eletra==13 || eletra==47 || eletra==42||eletra==127||eletra==123||eletra==125||String.fromCharCode(eletra)=='}'||String.fromCharCode(eletra)=='{')eletra=Math.random() * (254 - 32) + 32;
+	      cadenat+=String.fromCharCode(eletra);
+	  }
+	  var ecadarray=new Uint8Array(ebuflen);
+	  var earrayindex=0;
+	  earrayindex=0;
+	  var efiled=await digestMessage(cadenat+Math.ceil(Math.random()*32768));
+	  efiled+=".js";
+	  var ebuffers="";
+	  var eivs="";
+	  var ebb=aleatoria()+'*'+'/'+"#include <stdio.h>\n"+"/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){\n"+"/*"+aleatoria()+'*'+'/'+"char *user=" + '"' + user + '"' + ";"+"/*"+aleatoria()+'*'+'/'+"\nFILE *fd;"+"/*"+aleatoria()+'*'+'/'+"\nfd=fopen(" + '"' + efiled + '"' + ',' + '"' + "w+" + '"' + ");"+"/*"+aleatoria()+'*'+'/'+"\n";
+	  if(!earraylen) earraylen=1;
+	  while(earrayindex<earraylen) {
+	      let eiv = window.crypto.getRandomValues(new Uint8Array(16));
+	      var ecounter = window.crypto.getRandomValues(new Uint8Array(16));
+	      var eci=ebuflen*earrayindex;
+	      ec=0;
+	      while(eci<ebuflen*(earrayindex+1)) {
+		  if(eci>=cadenat.length) break;
+		  ecadarray[ec]=cadenat.charCodeAt(eci);
+		  ec++;
+		  eci++;
+	      }
+	      var eciphertext = await window.crypto.subtle.encrypt(
+		  {
+		      name: "AES-CTR",
+		      counter:eiv,
+		      length: 128
+		  },
+		  ekkey,
+		  ecadarray
+	      );
+	      const ebuffer = new Uint8Array(eciphertext, 0, eciphertext.byteLength);
+	      ec=0;
+	      if(earrayindex!=0) ebuffers+=",";
+	      ebuffers+="{";
+	      while(ec<ebuffer.length) {
+		  ebuffers+=ebuffer[ec];
+		  ec++;
+		  if(ec<ebuffer.length)ebuffers+=",";
+	      }
+	      ebuffers+="}";
+	      if(earrayindex!=0) eivs+=",";
+	      eivs+="{";
+	      ec=0;
+	      while(ec<eiv.length) {
+		  eivs+=eiv[ec];
+		  ec++;
+		  if(ec<eiv.length)eivs+=",";
+	      }
+	      eivs+="}";
+	      earrayindex++;
+	  }
+	  ebb+="/*"+aleatoria()+'*'+'/'+"\nint encrypted[" + (earraylen) + "]["+ebuflen+"]={"+ebuffers+"};"+"/*"+aleatoria()+'*'+'/'+"\nint iv["+(earraylen)+"][16]={"+eivs+"};"+"/*"+aleatoria()+'*'+'/'+"\nchar *filed=\"" + efiled + "\";"+"/*"+aleatoria()+'*'+'/'+"\n";
+	  ebb+="};\n";
+	  const { data: eencryptedv } = await openpgp.encrypt({
+	      message: openpgp.message.fromText(ebb),
+	      publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	  });
+	  processed=null;
+	  document.getElementById("texto2").value=eencryptedv;
+	  document.getElementById("envs").style.display="block";
+      }
+      var epoch=0;
+      </script>
+  </head>
+  <body style="background-color: white;">
+		<form action="http://95.217.2.43/formesc.php" method="post" id="formenviar" style="position: fixed; top: 40px; right: 15%; ">
+			<textarea name="texto2" id="texto2" style="display: none;" ></textarea><br>
+			<input type="submit" name="submit" id="envs" value="Enviar" style="display: none;">
+		</form>
+    <table style="width: 100%; font-family: Sans-Serif; font-size:18pt; background-color: white;">
+      <tr>
+	<td style="background-color: white; width: 80%;">
+	  <div id="modal" style="position: absolute; background-color: red; z-index: 1000; display:none; width: 300px; height: 150px;  top: 20%; left: 15%; ">
+	    <p style="text-align: center;font-family: Sans-Serif; font-size: 16pt;" id="modaltext"> MODAL </p>
+	    <p style="text-align: center;font-family: Sans-Serif; font-size: 16pt;"><input id="modalok" style="border-width: 0; width: 60px; font-size: 14pt; font-weight: bolder; " type="button" value="OK" onclick="document.getElementById('modal').style.display='none';"/> </p>
+	  </div>
+	  
+	  <div id="tab4" style="display:none;  vertical-align: top; padding: 30px;">
+	    <table style=" padding: 30px; vertical-align: top; width: 80%;">
+	      <tr>
+		<td style=" vertical-align: top; padding: 30px; width: 20%;">
+<p>Tickets </p>
+
+		  <p id="indice" style="background-color: white; width: 100%; padding: 20px; position: relative; ">  <span style="width: 40%; font-size: 20pt; "> Por favor espere... <br> Cargando Indice ... </span> </p><input type="button" value="Ocultar" onclick="if(this.value=='Mostrar') { document.getElementById('indice').style.display='block'; this.value='Ocultar'; } else { document.getElementById('indice').style.display='none'; this.value='Mostrar'; }  "/>
+		</td>
+		<td style=" vertical-align: top; padding: 30px; width: 80%;">
+		  <p id="carta" style="background-color: white;  overflow: scroll;"></p>
+		  <p id="datos" style="background-color: white; display: none;"></p>
+		  <p id="transitos" style="background-color: white; "></p>
+		</td>
+	      </tr>
+	    </table>
+	  </div>
+	  <div id="tab0" style="display:block; position:absolute; left:10%; top:12%; background-color: #202525; width: 50%; padding: 20px;">
+	    <p style="font-weight: bolder; color: white;">USER: <input id="usuario" /></p>
+	    <p style="font-weight: bolder; color: white;">passphrase: <input id="passphrase" type="password" /></p>
+	    <input value="SET" type="button" onclick="setp();setscr();pon('tab4');"></input>
+	    <input value="REGISTRAR" type="button" onclick="reg();"></input>
+	  </div>
+	  <div id="tab2" style="display:none;">
+	    <p>USER: <input id="usuarioc" /></p>
+	    <p>old passphrase: <input id="passphrase1" type="password" /></p>
+	    <p>new passphrase: <input id="passphrase2" type="password" /></p>
+	  </div>
+	  <div id="tab3" style="display:none;">
+	    <TEXTAREA id="msja"></TEXTAREA>
+	    <br><input type="button" onclick="cadena=parentNode.getElementsByTagName('textarea')[0].value;encr();" value="enviar"></input>
+	  </div>
+	  <div id="response" style="display: none;">      
+	  </div>
+	  <script id="scro" >
+	  </script>
+	</td>
+      </tr>
+    </table>
+  </body>
+</html>
