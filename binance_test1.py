@@ -7,8 +7,8 @@ import hashlib
 from datetime import datetime
 from io import BytesIO
 
-apikey='FACtYR7FyxULjDCqaqF4e0bx8htmNvKMmjZ9QlN9Ac39rXaBWTeFLQSkv6oQ0YRg'
-secretKey=bytearray( ('9VDaJwg0zhTfRKTnS8oLFNoyitSdPide0AMfcIB3ym8r92fd08N6CmlqqzCjUy6v').encode("utf-8"))
+apikey='APIKEY'
+secretKey=bytearray( ('APISECRETKEY').encode("utf-8"))
 user="gassahara"
 symbols=["BTCUSDT", "ETHBTC", "ETCETH"]
 l=len(symbols)
