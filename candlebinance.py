@@ -5,7 +5,7 @@ from io import BytesIO
 
 buffer = BytesIO()
 c = pycurl.Curl()
-c.setopt(pycurl.HTTPHEADER, ['X-MBX-APIKEY: ci89ySexkJjexhnNZFBmPHtkUbLOvjLtKtRcoFWdX355Su2YHEeYb9jjmlolJirf'])
+c.setopt(pycurl.HTTPHEADER, ['X-MBX-APIKEY: APIKEY'])
 c.setopt(pycurl.HTTPGET, 1)
 c.setopt(c.URL, 'https://vapi.binance.com/api/v1/klines?symbol=BTCTUSD&interval=5m')
 c.setopt(pycurl.FOLLOWLOCATION, True)
