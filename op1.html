@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Online PGP</title>
+    <script src="openpgpjs/dist/openpgp.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+function iframeRef( frameRef ) {
+    if (frameRef) {
+        if( frameRef.contentDocument) {
+	    if(frameRef.contentDocument.getElementsByTagName("div")[0]) {
+		if(frameRef.contentDocument.getElementsByTagName("div")[0].innerHTML.length>0) {
+		    return frameRef.contentDocument.getElementsByTagName("div")[0];
+		}
+	    }
+	}
+        if( frameRef.contentWindow) {
+	    if(frameRef.contentWindow.document.getElementsByTagName("div")[0]) {
+		if(frameRef.contentWindow.document.getElementsByTagName("div")[0].innerHTML.length>0) {
+		    return frameRef.contentWindow.document.getElementsByTagName("div")[0];
+		}
+	    }
+	}
+    } else return null;
+}
+
+function iframeRf( frameRef ) {
+    if (frameRef) {
+	if( frameRef.contentDocument) {
+		return frameRef.contentDocument;
+	}
+	if( frameRef.contentWindow) {
+		return frameRef.contentWindow.document;
+	}
+    } else return null;
+}
+function revisa () {
+    if(iframeRef( document.getElementById("uno") )) {
+	if(iframeRef( document.getElementById("uno") ).innerHTML.indexOf('---BEGIN PGP MESSAGE')>=0) {
+            if(iframeRef( document.getElementById("uno") ).innerHTML.indexOf('END PGP MESSAGE---')>0) {
+               document.getElementById('uno').onload=null;
+               cad2=iframeRef( document.getElementById("uno") ).innerHTML;
+               document.getElementById("texto").value=cad2;
+               undale(cad2);
+               cad2=null;
+	    }
+	}
+    }
+}
+var options, encrypted, opt2, privKeyObj2;
+function undale(texton) {
+    if(window.crypto.getRandomValues){
+    if(texton != ""){
+            texton=texton.replace(/\r/, "");
+            alert(texton);
+            privkey2=document.getElementById("privkey").value.replace(/\r/, "");
+	    passphrase2=document.getElementById("passphrase").value;
+            privKeyObj2 = openpgp.key.readArmored(privkey2).keys[0];
+            privKeyObj2.decrypt(passphrase2);
+            opt2 = {
+                message: openpgp.message.readArmored(texton), //document.getElementById("message").value),     // parse armored message
+		privateKeys: privKeyObj2
+            };
+	    openpgp.decrypt(opt2).then(function(plaintext) {
+                    console.log("Encrypted message got decrypted: ", plaintext.data);
+                    document.getElementById("texto").value=plaintext.data;
+                    return plaintext.data;
+                  }, function(error) {
+                    alert( "Error while decrypting");
+                    console.log(error);
+                  });
+	}
+    }
+    else{
+	window.alert("This browser does not support basic cryptography!");
+    }
+}
+
+function escribeabajo() {   
+    document.getElementById('uno').onload=null;
+    iframeRef( document.getElementById("uno") ).appendChild(document.createElement("form"));
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("form")[0].appendChild(document.createElement("textarea"));
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("form")[0].method="POST";
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("form")[0].enctype="multipart/form-data";
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("textarea")[0].name="texto";
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("textarea")[0].value=document.getElementById("texto").value;
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("form")[0].appendChild(document.createElement("input"));
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("input")[0].type="submit";
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("form")[0].appendChild(document.createElement("input"));
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("input")[1].name="passphrase";
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("input")[1].value=document.getElementById("passphrase").value;
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("form")[0].appendChild(document.createElement("input"));
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("input")[2].name="email";
+    iframeRef( document.getElementById("uno") ).getElementsByTagName("input")[2].value=document.getElementById("email").value;
+    document.getElementById('uno').onload=function f() {revisa()};
+}
+function dale(textop){
+    if(window.crypto.getRandomValues){
+	if(textop != ""){
+            message=textop; //document.getElementById("message").value;
+            pubkey=document.getElementById("pubkey").value;
+            alert("!:");
+            privkey=document.getElementById("privkey").value;
+            passphrase=document.getElementById("passphrase").value;
+
+            var privKeyObj = openpgp.key.readArmored(privkey).keys[0];
+            alert(passphrase);
+            privKeyObj.decrypt(passphrase);
+            alert(privKeyObj);
+
+            options = {
+		data: message,                             // input as String (or Uint8Array)
+		publicKeys: openpgp.key.readArmored(pubkey).keys,  // for encryption
+		privateKeys: privKeyObj // for signing (optional)
+            };
+
+            openpgp.encrypt(options).then(function(ciphertext) {
+		encrypted = ciphertext.data; // '-----BEGIN PGP MESSAGE ... END PGP MESSAGE-----'
+ 		document.getElementById("texto").value=encrypted;
+                options=null;
+            });
+	}
+    }
+    else{
+	window.alert("This browser does not support basic cryptography!");
+    }
+}
+    </script>
+  </head>
+  <body>
+<form METHOD="POST" ENCTYPE="multipart/form-data">  ACTION="p11.html"
+      E-mail address
+      <input type="email" name="email" id="email"></input>
+      <input id="passphrase"  name="passphrase"></input>
+      Message
+      <textarea id="message" name="message"></textarea>
+    <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="80" id="texto"  name="texto" >
+    </textarea>
+    <input type="button" value="Env" onclick="document.getElementById('uno').onload=function f() {escribeabajo();};  document.getElementById('uno').src='op2.html';"></input>
+</form>
+<iframe id="uno" src="op2.html">
+</iframe>
+
+    <h2>Our public key</h2>
+    <p><b>pubkey</b></p>
+    <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="80" id="pubkey">-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQSuBFvw0ZERDACdWTSOyA5qfJl8wTlWWE93wSRE4yqJt1IN0mEZdc9dC/bNRdpK
+GlNJ9PwGGcY92f7iSZqbBEinOT4H9s0mA/gh92b9sHgQsCUMSFQxbhSvSI3PVSok
+l0MAz2V9RZbV02mwgA0m3mb4KcmmgqgtSKLAjTpkHBeLqqSyX5v2HKYZ/4Ar9RmL
+IjRF45pktEYA03ZX2YpxZmT1zoX5rjeInbB+EEjPBxOCxWaOlbnRECNqKfllRr0d
+DB7YYMsnVGCo9OneHBL+GgpJctFoYbqq4qE7a9bliLi0LW/GX3VjusaKukRkPmAq
+Hn4cutuv5rNwEfzVYR2+XL0q2rYX936x+RAxamBSR7kYfQ/dhxrsqvbK1a677Vt5
+Bcz1IEFo7GdhZ10FMvSTCOvv1hgb75mZ8GPRk6XYoecleMKghb2ce5aagH1VMDjI
+0J8xQpyMqsMPypcIqxpXIA3mPbaip01le/ptuqFfh3TewBYQaepgpC2TkUFuouYF
+eVUVmy1VnneYq6cBAIrbEF7sHw/ttlF7pvjMhVAGofOPnam/wM4/yccyVUQdC/kB
+ZYUegeoNKmvpXkNdpMJupxz1VZ1qPHKhAg82BdlZXEUfDiMKWINhoA5/q+zlXAY2
+eKz9RbXixsoX0xx+YnCIIsXr8Nh9FX6p1UtmZfFdkP+KXvpqvM3GzDfdiOi07ah+
+rcFEkBHdDBHjg8+l0L6iYFNenjDVlM32ORGFJXiETHJ4FCMOopakvsVSlAtWoS+M
+Ni2+D82Qvk0OyTX0gZ0LiyPeZsmutPCUfEZsrkQsGrpGUd1T0yshJtx2HCNDhjp/
+HsJXsA81nPwPb+Q6IiSZRb+qGrK5/cOMgjN2O9/D/Ut2YhRJ2SwHBYj3zFyx1Dvx
+d7Y01uNMIz6QvfgAkg0wp+LROkbBBDDff9Xid8Xc2GdOICl1chMDkD5kppT/ur4m
+BJdlreNvGJZfDWiO9clXzxqoq3/DNi2m3DPKdDj7vDMKwKTZ1Nnus0ghhq5GKz/I
+hUUzZBT0l2U5q2k+0ycBzr0euIa9XK1hJ7ycwpWx3xVIS3zLyIESTkgk3V9KjsgM
+AI5rbvTzqGwpOwmfjImIQqZtWgtebrOol7lQ4BklQu/si5kGpL9nVrTcEFXyI9/b
+ucH/fd0p2trgbm3UkG9P1YFXBBrxbeLGS5Ho3Uzr6SLdMO4xYLpo8GUHprwxqV/v
+buFwluw6M2AP2HzkaG4/rJU4f85cRqVUVZlFwphqiU1cZ43YE+OpwOuPqAaY3olG
+BOm/R6wQPwZYgcQM8iMeVLzScUwakN6AbRACaNEt2mXsl+USffvChdAgZpzsyC32
+iIbbjwl3twVngsSC4dZ0Qet0vLeJgxyARc+2Yd5Hr/uubWPDOS60ICTeF5kFPsdU
+6ntGW1xP9MN29jmRSaxyz+KmghB9WWztdu1ZbHHDuM8i8PaI1U/aYCVdLLI4KlMN
+nD56mSq8UGEjD3OIQr03wf6n9OqvVA5zt/imavt7Kbz2EKCeqW2goKxf2qxv2g9/
+f0CHu1Ked2AH5e81cQEKYcS94rxHK77mIFcm4i3wF1aKaKq8qh5vJW+5BsQNpMJm
+p7QfZ2Fzc2FoYXJhIDxnYXNzYWhhcmFAZ21haWwuY29tPoiQBBMRCAA4FiEEv1qA
+p+Tb3bfZjDB3Eavu51nrVT8FAlvw0ZECGwMFCwkIBwIGFQoJCAsCBBYCAwECHgEC
+F4AACgkQEavu51nrVT9ZuQEAgjg1VzQhJfBhcy8SrzDYcLp8ciOQgwPILkCZu6U8
+G2AA/1heG/RB0zehDepBJAG6XfRD8uKdBYd8tTVnaJMn8y8i
+=otoM
+-----END PGP PUBLIC KEY BLOCK-----</textarea>
+
+    <p><b>pubkey2</b></p>
+    <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="80" id="pubkey2">-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQSuBFvw0ZERDACdWTSOyA5qfJl8wTlWWE93wSRE4yqJt1IN0mEZdc9dC/bNRdpK
+GlNJ9PwGGcY92f7iSZqbBEinOT4H9s0mA/gh92b9sHgQsCUMSFQxbhSvSI3PVSok
+l0MAz2V9RZbV02mwgA0m3mb4KcmmgqgtSKLAjTpkHBeLqqSyX5v2HKYZ/4Ar9RmL
+IjRF45pktEYA03ZX2YpxZmT1zoX5rjeInbB+EEjPBxOCxWaOlbnRECNqKfllRr0d
+DB7YYMsnVGCo9OneHBL+GgpJctFoYbqq4qE7a9bliLi0LW/GX3VjusaKukRkPmAq
+Hn4cutuv5rNwEfzVYR2+XL0q2rYX936x+RAxamBSR7kYfQ/dhxrsqvbK1a677Vt5
+Bcz1IEFo7GdhZ10FMvSTCOvv1hgb75mZ8GPRk6XYoecleMKghb2ce5aagH1VMDjI
+0J8xQpyMqsMPypcIqxpXIA3mPbaip01le/ptuqFfh3TewBYQaepgpC2TkUFuouYF
+eVUVmy1VnneYq6cBAIrbEF7sHw/ttlF7pvjMhVAGofOPnam/wM4/yccyVUQdC/kB
+ZYUegeoNKmvpXkNdpMJupxz1VZ1qPHKhAg82BdlZXEUfDiMKWINhoA5/q+zlXAY2
+eKz9RbXixsoX0xx+YnCIIsXr8Nh9FX6p1UtmZfFdkP+KXvpqvM3GzDfdiOi07ah+
+rcFEkBHdDBHjg8+l0L6iYFNenjDVlM32ORGFJXiETHJ4FCMOopakvsVSlAtWoS+M
+Ni2+D82Qvk0OyTX0gZ0LiyPeZsmutPCUfEZsrkQsGrpGUd1T0yshJtx2HCNDhjp/
+HsJXsA81nPwPb+Q6IiSZRb+qGrK5/cOMgjN2O9/D/Ut2YhRJ2SwHBYj3zFyx1Dvx
+d7Y01uNMIz6QvfgAkg0wp+LROkbBBDDff9Xid8Xc2GdOICl1chMDkD5kppT/ur4m
+BJdlreNvGJZfDWiO9clXzxqoq3/DNi2m3DPKdDj7vDMKwKTZ1Nnus0ghhq5GKz/I
+hUUzZBT0l2U5q2k+0ycBzr0euIa9XK1hJ7ycwpWx3xVIS3zLyIESTkgk3V9KjsgM
+AI5rbvTzqGwpOwmfjImIQqZtWgtebrOol7lQ4BklQu/si5kGpL9nVrTcEFXyI9/b
+ucH/fd0p2trgbm3UkG9P1YFXBBrxbeLGS5Ho3Uzr6SLdMO4xYLpo8GUHprwxqV/v
+buFwluw6M2AP2HzkaG4/rJU4f85cRqVUVZlFwphqiU1cZ43YE+OpwOuPqAaY3olG
+BOm/R6wQPwZYgcQM8iMeVLzScUwakN6AbRACaNEt2mXsl+USffvChdAgZpzsyC32
+iIbbjwl3twVngsSC4dZ0Qet0vLeJgxyARc+2Yd5Hr/uubWPDOS60ICTeF5kFPsdU
+6ntGW1xP9MN29jmRSaxyz+KmghB9WWztdu1ZbHHDuM8i8PaI1U/aYCVdLLI4KlMN
+nD56mSq8UGEjD3OIQr03wf6n9OqvVA5zt/imavt7Kbz2EKCeqW2goKxf2qxv2g9/
+f0CHu1Ked2AH5e81cQEKYcS94rxHK77mIFcm4i3wF1aKaKq8qh5vJW+5BsQNpMJm
+p7QfZ2Fzc2FoYXJhIDxnYXNzYWhhcmFAZ21haWwuY29tPoiQBBMRCAA4FiEEv1qA
+p+Tb3bfZjDB3Eavu51nrVT8FAlvw0ZECGwMFCwkIBwIGFQoJCAsCBBYCAwECHgEC
+F4AACgkQEavu51nrVT9ZuQEAgjg1VzQhJfBhcy8SrzDYcLp8ciOQgwPILkCZu6U8
+G2AA/1heG/RB0zehDepBJAG6XfRD8uKdBYd8tTVnaJMn8y8i
+=otoM
+-----END PGP PUBLIC KEY BLOCK-----</textarea>
+
+<p><b>prikey</b></p>
+    <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="20" id="privkey">-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+lQTTBFvw0ZERDACdWTSOyA5qfJl8wTlWWE93wSRE4yqJt1IN0mEZdc9dC/bNRdpK
+GlNJ9PwGGcY92f7iSZqbBEinOT4H9s0mA/gh92b9sHgQsCUMSFQxbhSvSI3PVSok
+l0MAz2V9RZbV02mwgA0m3mb4KcmmgqgtSKLAjTpkHBeLqqSyX5v2HKYZ/4Ar9RmL
+IjRF45pktEYA03ZX2YpxZmT1zoX5rjeInbB+EEjPBxOCxWaOlbnRECNqKfllRr0d
+DB7YYMsnVGCo9OneHBL+GgpJctFoYbqq4qE7a9bliLi0LW/GX3VjusaKukRkPmAq
+Hn4cutuv5rNwEfzVYR2+XL0q2rYX936x+RAxamBSR7kYfQ/dhxrsqvbK1a677Vt5
+Bcz1IEFo7GdhZ10FMvSTCOvv1hgb75mZ8GPRk6XYoecleMKghb2ce5aagH1VMDjI
+0J8xQpyMqsMPypcIqxpXIA3mPbaip01le/ptuqFfh3TewBYQaepgpC2TkUFuouYF
+eVUVmy1VnneYq6cBAIrbEF7sHw/ttlF7pvjMhVAGofOPnam/wM4/yccyVUQdC/kB
+ZYUegeoNKmvpXkNdpMJupxz1VZ1qPHKhAg82BdlZXEUfDiMKWINhoA5/q+zlXAY2
+eKz9RbXixsoX0xx+YnCIIsXr8Nh9FX6p1UtmZfFdkP+KXvpqvM3GzDfdiOi07ah+
+rcFEkBHdDBHjg8+l0L6iYFNenjDVlM32ORGFJXiETHJ4FCMOopakvsVSlAtWoS+M
+Ni2+D82Qvk0OyTX0gZ0LiyPeZsmutPCUfEZsrkQsGrpGUd1T0yshJtx2HCNDhjp/
+HsJXsA81nPwPb+Q6IiSZRb+qGrK5/cOMgjN2O9/D/Ut2YhRJ2SwHBYj3zFyx1Dvx
+d7Y01uNMIz6QvfgAkg0wp+LROkbBBDDff9Xid8Xc2GdOICl1chMDkD5kppT/ur4m
+BJdlreNvGJZfDWiO9clXzxqoq3/DNi2m3DPKdDj7vDMKwKTZ1Nnus0ghhq5GKz/I
+hUUzZBT0l2U5q2k+0ycBzr0euIa9XK1hJ7ycwpWx3xVIS3zLyIESTkgk3V9KjsgM
+AI5rbvTzqGwpOwmfjImIQqZtWgtebrOol7lQ4BklQu/si5kGpL9nVrTcEFXyI9/b
+ucH/fd0p2trgbm3UkG9P1YFXBBrxbeLGS5Ho3Uzr6SLdMO4xYLpo8GUHprwxqV/v
+buFwluw6M2AP2HzkaG4/rJU4f85cRqVUVZlFwphqiU1cZ43YE+OpwOuPqAaY3olG
+BOm/R6wQPwZYgcQM8iMeVLzScUwakN6AbRACaNEt2mXsl+USffvChdAgZpzsyC32
+iIbbjwl3twVngsSC4dZ0Qet0vLeJgxyARc+2Yd5Hr/uubWPDOS60ICTeF5kFPsdU
+6ntGW1xP9MN29jmRSaxyz+KmghB9WWztdu1ZbHHDuM8i8PaI1U/aYCVdLLI4KlMN
+nD56mSq8UGEjD3OIQr03wf6n9OqvVA5zt/imavt7Kbz2EKCeqW2goKxf2qxv2g9/
+f0CHu1Ked2AH5e81cQEKYcS94rxHK77mIFcm4i3wF1aKaKq8qh5vJW+5BsQNpMJm
+pwAA/iD6Z4x0afSqttB/HdneMY37iUGJ6z0xxhhGAzMwJzPeEIa0H2dhc3NhaGFy
+YSA8Z2Fzc2FoYXJhQGdtYWlsLmNvbT6IkAQTEQgAOBYhBL9agKfk29232YwwdxGr
+7udZ61U/BQJb8NGRAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEBGr7udZ
+61U/WbkBAII4NVc0ISXwYXMvEq8w2HC6fHIjkIMDyC5AmbulPBtgAP9YXhv0QdM3
+oQ3qQSQBul30Q/LinQWHfLU1Z2iTJ/MvIg==
+=EWwF
+-----END PGP PRIVATE KEY BLOCK-----</textarea>
+    <p><b>texto</b></p>
+
+    <input type="button" onclick="dale(document.getElementById('message').value);" value="dale" id="encrypt"></input>
+    <input type="button" onclick="undale(document.getElementById('texto').value);" value="undale" id="uencrypt"></input>
+
+  </body>
+</html>

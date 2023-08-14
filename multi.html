@@ -1,0 +1,148 @@
+<HTML>
+  <SCRIPT>
+    var tabla=5;
+    var rows=5;
+    var columns=5;
+    var dibujo=0;
+    var metodo=0;
+    
+    function getRandomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    }
+    function draw() { //rows, columns, dibujo) {
+	var ctx = document.getElementById('canvas').getContext('2d');
+	var yini=10;
+	for (var i = 0; i < rows; i++) {
+	    if (metodo==2 && i % tabla == 0 && i > 1) yini+=20;
+	    if (metodo==1 && i == tabla) yini+=20;
+	    var xini=10;
+	    for (var j = 0; j < columns; j++) {
+		var rr=getRandomInt(120, 250); //120;
+		if (metodo==2 && j % tabla == 0 && j>1) xini+=20;
+		var gg=Math.floor(255 - 42.5 * i);
+		var bb=Math.floor(255 - 42.5 * j);
+		ctx.strokeStyle = "rgb(" + rr + "," + gg + "," + bb + ')';
+		ctx.fillStyle = "rgb(" + rr + "," + gg + "," + bb + ')'; //'black';
+		if(dibujo==0) {
+		    ctx.beginPath();
+		    ctx.arc(xini+12.5 + j * 12.5, yini+12.5 + i * 10, 5, 0, Math.PI * 2, true);
+		    ctx.fill();
+		}
+		if(dibujo==1) {
+		    ctx.fillRect(xini + 12.5 + j * 12.5, yini + i * 12.5, 10, 10);
+		}
+		if(dibujo==2) {
+		    var path=new Path2D();
+		    var newx=xini + 12.5 + j * 12.5 ;
+		    var newy=yini + 9.5 + i * 12.5;
+		    path.moveTo(newy, newx);
+		    path.lineTo(newy,newx-10);
+		    path.lineTo(newy-10,newx);
+		    ctx.fill(path);
+		}
+		ctx.fillStyle = "white";
+		ctx.font = "30px Sans";
+		ctx.fillText(columns + "x" + rows , 210, 30);
+	    }
+	}
+    }
+    function genera() {
+	rows=getRandomInt(6, 10);
+	columns=getRandomInt(6, 9);
+	dibujo=getRandomInt(0, 3);
+	funca();
+    }
+    function funca() {
+	const canvas = document.getElementById('canvas');
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = 'black';
+	ctx.fillRect(0, 0, 600, 600);	
+	draw(rows, columns, dibujo);
+//	document.getElementById("div1").innerHTML = rows + "x" + columns + " ";
+
+	document.getElementById("outp").innerHTML=document.getElementById("check").value;
+	    outp="..";
+	if(columns>tabla && rows>tabla && metodo==2 && document.getElementById("check").value ==1) {
+	    ctx.font = "8px Sans";
+	    var resto=0;
+	    var c=0;
+	    var r=0;
+	    var l=0;
+	    lx=0;
+	    while(r<rows && resto<(rows*columns) && (resto+(tabla*tabla)<=(rows*columns))) {
+		c=tabla;
+		ly=0;
+		while(c<=columns) {
+		    outp+="<p>"+tabla+"x"+tabla+"="+(tabla*tabla)+"</p>";
+		    c+=tabla;
+		    ly++;
+		    resto+=(tabla*tabla);
+		}
+		r+=tabla;
+		if(r+tabla>rows) break;
+		lx++;
+	    }
+	    if(tabla<columns && rows>tabla) {
+		r=0;
+		while(r+tabla<=rows) {
+	    	    outp+=(columns%tabla) + "x" + tabla +"="+((columns%tabla)*tabla)+"</p>";
+		    resto+=(columns%tabla)*tabla;
+		    r+=tabla;
+		}
+	    }
+	    c=tabla;
+	    while (resto < (rows*columns) && columns>c) {
+		outp+="<p>"+tabla+"x"+(rows%tabla)+"="+tabla*(rows%tabla)+"</p>";
+		resto+=(columns%tabla)*(rows%tabla);
+		c+=tabla;
+	    }
+	    if(resto < (rows*columns)) {
+		outp+="<p>"+(columns%tabla)+"x"+(rows%tabla)+"="+(columns%tabla)*(rows%tabla)+"</p>";
+	    }
+	    document.getElementById("outp").innerHTML=outp;
+	}
+
+	if( (rows>tabla && metodo==1 && document.getElementById("check").checked) || (metodo==2  && rows>tabla && columns<=tabla) && document.getElementById("check").checked) {
+	    ctx.font = "20px Sans";
+	    ctx.fillText(tabla+"x"+columns+"="+(tabla*columns), 200, 50);
+	    ctx.fillText("+", 220, 65);
+	    ctx.fillText((rows-tabla)+"x"+columns+"="+((rows-tabla)*columns), 190, 80);
+	    document.getElementById("outp").innerHTML="";
+	}
+	if(!document.getElementById("check").checked) {
+	    document.getElementById("outp").innerHTML="";
+	}
+    }
+    function resuelve() {
+	const canvas = document.getElementById('canvas');
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = "green";
+	ctx.font = "30px Sans";
+	ctx.fillText((columns * rows) , 210, 130);
+    }
+
+  </SCRIPT>
+  <BODY  onload="genera();">
+      <div style="width:80%;height:10%; left:10px; background-color: lightyellow;" id="div1">
+	<select id="sel" onchange="if(this.value=='dossumas') metodo=2;if(this.value=='unasuma') metodo=1; if(this.value=='entero') metodo=0;funca();">
+	  <option value="dossumas">VARIAS SUMAS</option>
+	  <option value="unasuma">DOS SUMAS</option>
+	  <option value="entero">Entero</option>
+	</select>
+	<select id="sel2"  onchange="tabla=this.value*1;funca();">
+	  <option value="3">Tabla del 3</option>
+	  <option value="4">Tabla del 4</option>
+	  <option value="5">Tabla del 5</option>
+	  <option value="6">Tabla del 6</option>
+	  <option value="7">Tabla del 7</option>
+	  <option value="8">Tabla del 8</option>
+	</select>
+	<input type="checkbox" id="check" value="1" onchange="if(this.checked)this.value=1;else value=0;funca();" name="check">Muestra SUMAS</input>
+      </div>
+      <canvas id="canvas" style="width:85%;height:95%;float:left;" onclick="resuelve();"></canvas>
+      <div style="float: left;width:15%;height:95%;left:10px; background-color: black; font-family: 'sans-serif';font-size:16pt;color:white;font-weight:bolder;" id="outp">
+      </div>
+  </body>
+</html>

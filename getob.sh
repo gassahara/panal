@@ -1,0 +1,1 @@
+echo -e "GET /sangha/ HTTP/1.1\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:55.0) Gecko/20100101 Firefox/55.0\nAccept: */* Accept-Language: en-US,en;q=0.5\nConnection: keep-alive\r\n\r\n\r\n"

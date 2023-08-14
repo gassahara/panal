@@ -1,0 +1,316 @@
+<html>
+<head>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  background-repeat: no-repeat;
+  background-size: 95%;
+  background-attachment:fixed;
+  background-position: top center;
+}
+input {
+	border-width:0px;
+	border-color:gray;
+	background-color:lightblue;
+	border-collapse: collapse;
+	font-size:14pt;
+	font-face: Sans;
+	width:100px;
+}
+td {
+  border-collapse: collapse;
+  border-color: black;
+  font-size: 10pt;
+  vertical-align:top;
+}
+caption {
+  font-size: 10pt;
+}
+table {
+  border-width: 0;
+  line-height: 120%;
+}
+li {
+   list-style-type: none;
+   margin-left:1em;
+}
+.nn {
+	position: absolute; 
+	z-index: 4; 
+	top: 10; 
+	left: 10;  
+	height: 40px; 
+	width: 40px;
+        background-color: red;
+        opacity: 0;
+}
+.ocul {
+	border-width: 0;
+	width: 3%;
+	vertical-align: top;
+	background-color: lightgray;
+}
+.act {
+	background-color: red;
+}
+.desact {
+	background-color: gray;
+}
+.yellow {
+	color: red;
+	font-weight: bold;
+}
+.green {
+	color: green;
+	font-weight: normal;
+}
+img {
+	width:200;
+}
+div {
+	border-collapse:collapse; 
+	border: 1px solid; 
+	border-color: lightblue; 
+	position: absolute;
+	z-index:4000;
+ }
+</style>
+<script src = "funciones.js"></script>
+<script src = "s1.js"></script>
+<script>
+	function ocultalos () {
+		var di=1;
+		while(document.getElementById("oculta"+di)) {
+			oculta(document.getElementById("oculta"+di).parentNode);
+			di++;
+		}
+	}
+
+	function oculta (objeto) {
+		document.getElementById('negro').innerHTML = "";
+		document.getElementById('negro').xo=null;
+		if(objeto.cells[1].innerHTML.length>1) {
+			objeto.cells[0].innerHTML = "+";
+			objeto.oculto = objeto.cells[1].innerHTML;
+			objeto.cells[1].innerHTML = "";
+			objeto.cells[0].onclick = function () {muestra(objeto)};
+		}
+	}
+
+	function checks() {
+		filas=document.getElementById("matas").rows;
+		var fi=1;
+		while(fi<filas.length) {
+			filas[fi].insertCell(0);
+			filas[fi].cells[0].innerHTML="<input type='radio' name='cultivo'></input>";
+			fi++;
+		}
+	}
+	function muestra (objetp) {	
+		ocultalos();
+		objetp.cells[0].innerHTML = "-";
+		objetp.cells[1].innerHTML = objetp.oculto;
+		objetp.cells[0].onclick = function () {oculta(objetp)};
+		var A = objetp.parentNode;
+		while(!A.style.top) {	
+			A = A.parentNode;
+		}
+		rline(document.getElementById('negro'), parseInt(A.style.left) + (parseInt(A.style.width)/2), parseInt(A.style.top)-10, parseInt(objetp.getElementsByTagName("div")[0].style.left) + (parseInt(objetp.getElementsByTagName("div")[0].style.width)/2), parseInt(objetp.getElementsByTagName("div")[0].style.top));
+	}
+
+	function revisa() {
+		var tablas=document.getElementById("matas");
+		i=1;
+		while(i<tablas.rows.length) {
+			fila=tablas.rows[i];
+			ci=0;
+			while(ci < fila.cells.length) {
+				ai=0;
+				tituloa=tablas.rows[0].cells[ci].innerHTML.trim();
+				valora=fila.cells[ci].innerHTML.trim();
+				menor=null;
+				mayor=null;
+				if(valora.indexOf("-")) {
+					menor=valora.substring(0,valora.indexOf("-"));
+					mayor=valora.substring(valora.indexOf("-")+1,valora.length);
+				}
+				filab=document.getElementById("cuadros").rows[1];
+				bi=0;
+				while(bi < filab.cells.length) {
+					titulob=filab.cells[bi].innerHTML.trim().substring(0,filab.cells[bi].innerHTML.trim().indexOf("<"));
+					pasa=true;
+					if(valora.length>0) {
+					if(tituloa.trim()===titulob.trim()) {
+						valorb=filab.cells[bi].getElementsByTagName("input")[0].value;
+						if(!mayor) {
+							if(parseInt(valora)>0) {
+								if(parseInt(valora)===parseInt(valorb)) {
+									pasa=true;
+									fila.cells[ci].className="green";
+								} else {
+									pasa=false;
+									fila.cells[ci].className="yellow";
+									bi=filab.cells.length+1;
+									ci=fila.cells.length+1;
+								}
+							}
+						} else {
+							if(parseInt(menor)>0) {
+								if(parseFloat(valorb)>=parseFloat(menor) && parseFloat(valorb)<=parseFloat(mayor)) {
+									pasa=true;
+									fila.cells[ci].className="green";
+								} else {
+									pasa=false;
+									bi=filab.cells.length+1;
+									fila.cells[ci].className="yellow";
+									ci=fila.cells.length+1;
+								}
+							}
+						}
+//alert(fila.cells[0].innerHTML+"#"+pasa+";"+tituloa+"("+parseInt(menor)+","+parseInt(mayor)+")"+":"+titulob+"("+valorb+")");
+						}
+					}
+					bi++
+				}
+				ci++;
+			}
+			i++;
+			if(pasa) {
+				fila.className="act";
+				fila.getElementsByTagName("input")[0].disabled=false;
+			} else {
+				fila.className="desact";
+				fila.getElementsByTagName("input")[0].disabled="true";
+			}
+		}
+	}
+</script>
+</head>
+<body onload="ocultalos();checks();" style="background-color:black; background-image: url('hexa21.jpg'); background-attachment: fixed; background-position: center ; background-size: 95%; width:80%;left:10%;"  >
+<div id="blanco"  style = "background-color: ''; border:0px; position: absolute; left: 0; top: 0; z-index:-1; width: 100%; height: 100%;" ><div id="negro">!!</div>
+</div>
+<div id = "centroA" onmouseover = "xmueve(event.target);" style = "background-color: ''; border-color:black; border-width: 2px; border-collapse: 'collapse'; position: absolute; left: 350; top: 250; z-index:1; width:10%; height:10%;" onload = "this.cc = 'yellow';">
+<img src = "abejaprueba.gif" onload = "this.cc = ''; this.lleva = true; this.llevan = 'centroA';"  style = "position:absolute; left: 0; top: 0; width: 200; height: 200; z-index: 2;" id = "centro" >
+<!--<div style = "background-color: yellow; position: absolute; left: 350; top: 350; z-index:4; width: 160; height: 160;" id = "c3"  onload = "this.cc = 'pink'; this.lleva = true; this.llevan = 'c3';" >
+<br><br><br><br>AAAA
+<img src = "ui.png" onload = "this.cc = 'purple'; this.lleva = true; this.llevan = 'c3';"  style = "position:absolute; width: 150; left: 0; top: 0; height: 150; z-index:26; " id = "3c" >
+</div>-->
+<!--
+<img src = "play.gif"  onmouseover = "xmueve(event.target);" style = "position: absolute; top: 100; left: 100; z-index: 14; height: 40px; width: 40px;"  alt = "3"  id = "3">
+-->
+<div style = "position: fixed; top: 120; right: 156; background-color: purple; width: 40; height: 40;" onclick = "document.getElementById('centroA').xo=null; plgn(document.getElementById('centroA'), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), Math.ceil(parseInt(document.getElementById('centroA').style.height)/2), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), 4);">
+	Poligono Cuadrado
+</div>
+
+<div style = "position: fixed; top: 120; right: 56; background-color: purple; width: 40; height: 40;" onclick = "document.getElementById('centroA').xo=null; plgn2(document.getElementById('centroA'), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), Math.ceil(parseInt(document.getElementById('centroA').style.height)/2), (parseInt(document.getElementById('centroA').style.width)/2), 4);">
+	Area Cuadrada
+</div>
+
+
+<div style = "position: fixed; top: 160; right: 156; background-color: purple; width: 40; height: 40;" onclick = "document.getElementById('centroA').xo=null; plgn(document.getElementById('centroA'), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), Math.ceil(parseInt(document.getElementById('centroA').style.height)/2), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), 5);">
+	Poligono Pentagononal
+</div>
+
+<div style = "position: fixed; top: 160; right: 56; background-color: purple; width: 40; height: 40;" onclick = "document.getElementById('centroA').xo=null; plgn2(document.getElementById('centroA'), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), Math.ceil(parseInt(document.getElementById('centroA').style.height)/2), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), 5);">
+	Area Pentagononal
+</div>
+
+<div style = "position: fixed; top: 210; right: 156; background-color: purple; width: 40; height: 40;" onclick = "document.getElementById('centroA').xo=null; plgn(document.getElementById('centroA'), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), Math.ceil(parseInt(document.getElementById('centroA').style.height)/2), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), 6);">
+	Poligono Hexagononal
+</div>
+
+<div style = "position: fixed; top: 210; right: 56; background-color: purple; width: 40; height: 40;" onclick = "document.getElementById('centroA').xo=null; plgn2(document.getElementById('centroA'), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), Math.ceil(parseInt(document.getElementById('centroA').style.height)/2), Math.ceil(parseInt(document.getElementById('centroA').style.width)/2), 6);">
+	Area Hexagononal
+</div>
+
+<div style = "position: absolute; z-index:3000; top: 175; left: 0; background-color: green; width: 50; height: 50;" onclick = "scircula(this, 0, 3);">
+	B
+</div>
+
+
+</div>
+
+<div id="mueve" border = 1 style = "overflow: hidden; width: 100; height: 100px; position: absolute; top: 300; left: 400;border: 0;  background-color: '';z-index: 3000;" onmousedown = "this.mueve = true;" onmousemove = "qm3(event, this);" onmouseup = "this.mueve = false; this.style.width = 0;this.style.height = 0; suelta();">
+</div>
+
+
+
+<table valign="top" style="position: fixed; left: 30; top: 100; width:200;top:150;left:60;" id="cuadros">
+<tr>
+<td colspan=3 style="width:100%;text-align:center;"><b>EVALUACION DEL SUELO</b></td>
+<tr>
+<td>PH <br> <input id="PH" name="PH"></input><br>
+<table>
+<td id="oculta1" colspan = "100" onclick = "oculta(this.parentNode); " class = "ocul"> - </td> </td>
+<td>
+<div style="width:500; height:400;overflow:scroll;background-color:lightblue;position:fixed;top:200;left:640;" align="left">
+<CENTER>METODO CASERO DE PRUEBA DE PH DEL SUELO</CENTER>
+<p> Para este experimento se requiere Bicarbonato de Soda, Vinagre y las Muestras de Suelo </p>
+<p>
+<ol>
+<li>Separa las muestras de suelo en dos contenedores <img src="vinagre1.jpg"></img></li>
+<li>Añade Vinagre a uno de los Contenedores, si la muestra efervesce significa que el suelo es Alcalino, osea que su pH es Muy Alto (por encima de 7) ... <img src="vinagre2.jpg"></img></li>
+<li>Añade Agua al otro recipiente hasta obtener una muestra lodosa, Añade Bicarbonato si efervesce la muestra es Ácido ... <img src="vinagre3.jpg"></img></li>
+<li>Si ninguna de las muestras efervesce significa que el pH es 7, lo que es optimo para la mayoria de los cultivos ... <img src="vinagre4.jpg"></img></li>
+</ol>
+</p>
+</div>
+</td>
+</table>
+</tr><tr>
+<td>HUMEDAD SUELO<input id="SH" name="SH"></input><br>
+<table style="width:80%;" align="left">
+<td id="oculta2" colspan = "100" onclick = "oculta(this.parentNode);" class = "ocul"> - </td> </td>
+<td>
+<div style="width:500; height:400;overflow:scroll;background-color:lightblue;position:fixed;top:200;left:640;" align="left">
+<table border="1" width="100%" cellpadding="1" cellspacing="1">
+<tr align="left">
+<td colspan="4"><strong>Tabla de Interpretacion de Humedad del Suelo </strong></td></tr>
+<tr valign="TOP"><td><strong>Deficiencia de Humedad del Suelo </strong></td>
+<td><strong>Textura moderadamente aspera </strong></td>
+<td><strong>Textura Media</strong></td>
+<td><strong>Textura Fina y Muy Fina</strong></td></tr>
+<tr valign="TOP"><td>0% (capacidad de campo)</td>
+<td colspan="3">Al apretar, no se libera agua en el suelo pero pero la bola deja una silueta humeda en la mano.</td></tr>
+<tr valign="TOP"><td>0-25%</td>
+<td>Forma una bola debil, se rompa facilmente al rebotar en la mano.*</td>
+<td>Se forma una bola flexible que mancha facilmente.*</td>
+<td>Se escurre facilmente entre los dedos.*</td></tr>
+<tr valign="TOP"><td>25-50%</td>
+<td>Se forma una bola, pero se desarma al rebotar.*</td>
+<td>Se forma una bola, mancha bajo presion.*</td>
+<td>Se forma una bola escurridiza.*</td></tr>
+<tr valign="TOP"><td>50-75%</td>
+<td>Parece seco no se forma una bola al presionar.*</td>
+<td>Desmoronadizo, se mantiene junto al presionar.*</td>
+<td>Algo flexible, se forma bola bajo presion.*</td></tr>
+<tr valign="TOP"><td>75-100%</td>
+<td>Seco, suelto, fluye por los dedos.</td>
+<td>Polvoroso, se desmorona facilmente.</td>
+<td>Duro.</td></tr>
+<tr valign="TOP"><td colspan="4">*Aprieta un puñado de la tierra del suelo firmemente para hacer la prueba de la bola.</td></tr></table>
+</div>
+</td>
+</table>
+</td>
+</tr><tr>
+<td colspan=3 style="width:100%;text-align:center;"><b>EVALUACION DEL AMBIENTE</b></td></tr>
+<td>TEMPERATURA SUELO <br><input id="TS" name="TS"></input><br></td>
+</tr><tr>
+<td>HUMEDAD AIRE <br><input id="AH" name="AH"></input><br></td>
+</tr><tr>
+<td>LUZ <br><input id="LU" name="LU"></input> Horas diarias<br></td>
+</tr><tr>
+<td>TEMPERATURA AMBIENTE <br><input id="TA" name="TA"> </input> Promedio <br></td>
+</tr>
+</table>
+<br>
+<input type="button" onclick="revisa();"></input>
+<table id="matas" align="center" style="width:75%; top: 90%; left:15%; position:absolute; background-color: #dcdcdc;">
+<tr style="">
+<td></td><td>PLANTA</td> <td> ESTACION </td><td>PH </td><td>LUZ </td> <td> TEMPERATURA SUELO </td> <td> TEMPERATURA AMBIENTE </td> <td> HUMEDAD AIRE </td> </tr>
+<td>CILANTRO </td> <td>ANUAL</td><td></td> <td></td><td>15-18</td><td></td></tr>
+<td>BERENJENA </td> <td>ANUAL</td><td>5.5 - 7 </td> <td>10-12</td><td>15-22</td><td></td><td>50-60</td></tr>
+</table>

@@ -1,0 +1,61 @@
+<HTML>
+  <head>
+    <script>
+      var clicked=false;
+      function eje() {
+	  setTimeout(function () {alert(document.getElementById("TA1").selectionStart);}, 1000);
+	  setTimeout(function () {alert(document.getElementById("in1").selectionStart);}, 1000);
+	  setTimeout(function () {alert(document.getElementById("div1").parentNode.selectionStart);}, 1000);
+      }
+      function procesa(cadena) {
+	  var cadenatemporal=""
+	  var cadena2=""
+	  while(cadena.indexOf("<")>=0) {
+	      cadenatemporal=cadena.substring(0, cadena.indexOf("<"));
+	      alert(cadenatemporal+"\n"+cadena+"\n"+cadena.indexOf(">"));
+	      cadena2+=cadenatemporal;
+	      var indice=cadena.indexOf(">")*1;
+	      indice++;
+	      cadena=cadena.substring(indice, cadena.length);
+	  }
+	  cadena2=cadena2.concat(cadena);
+	  return cadena2;
+      }
+      function cambia() {
+	  textarias=document.getElementsByTagName("textarea");
+	  var ty=0;
+	  var cobjeto=null;
+	  while(ty<textarias.length) {
+	      if(textarias[ty].edited) cobjeto=textarias[ty];
+	      ty++;
+	  }
+	  if(cobjeto) {
+	      texto1=cobjeto.value;
+	      cobjeto.parentNode.innerHTML=texto1;
+	      clicked=false;
+	  }
+      }
+      function transforma(objeto) {
+	  if(!clicked) {
+	      clicked=true;
+	      var textobjeto=objeto.innerHTML;
+	      objeto.innerHTML="<TEXTAREA>"+procesa(textobjeto)+"</TEXTAREA>";
+	      objeto.getElementsByTagName("textarea")[0].edited=true;
+	      onblur=function() { cambia(); };
+	  }
+      }
+      </script>
+    <style>
+      textarea,div {
+	  color:red;
+	  font-size:40px;
+	  font-weight:bolder;
+	  font-family:'Sans';
+      }
+    </style>
+  </head>
+  <BODY>
+    <input id="in1" ></input>
+    <textarea id="TA1"></TEXTAREA>
+    <div id="div1" onclick="transforma(event.target);" >texto en <p>div</p></div>
+    <input type="button" onclick="eje();">

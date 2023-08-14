@@ -1,0 +1,147 @@
+<HTML>
+  <HEAD>
+    <STYLE>
+.heart {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 205px;
+  height: 205px;
+  margin: -152.5px 0 0 -152.5px;
+}
+.heart::before {
+    content: '';
+  display: block;
+  transition: all 200ms;
+  width: 1px;
+  height: 1px;
+  margin: -200px 0 0 -200px;
+
+  box-shadow: 10px 10px red, 20px 10px red, 30px 10px red, 40px 10px red, 10px 30px red, 20px 30px red, 40px 30px red, 50px 30px red, 60px 30px red, 70px 30px red, 80px 30px red, 10px 50px red, 20px 50px red, 30px 50px red, 40px 50px red, 50px 50px red, 60px 50px red, 70px 50px red, 10px 80px red, 20px 80px red, 30px 80px red, 40px 80px red, 50px 80px red, 60px 80px red, 70px 80px red, 10px 120px red, 20px 120px red, 30px 120px red, 40px 120px red, 50px 120px red, 10px 150px red, 20px 150px red, 30px 150px red, 40px 150px red;
+
+	  -moz-animation: animac 6s ease-in-out;
+	  -webkit-animation: animac 6s ease-in-out;
+	  animation: animac 6s ease-in-out;
+	  -moz-animation-fill-mode: forwards;
+	  -webkit-animation-fill-mode: forwards;
+	  animation-fill-mode: forwards;
+	  -moz-animation-delay: 1s;
+	  -webkit-animation-delay: 1s;
+	  transform: scale(5);
+	  animation-delay: 1s;
+}
+
+
+
+
+      @-moz-keyframes animac {
+	  100% {
+	      width: 20px;
+	      height: 20px;
+	      top: -50px;
+	      left: -50px;
+	      transform: scale(1.5);
+	      margin: -15px 0 0 -15px;
+
+
+
+	      box-shadow: 10px 10px #8e1a19, 30px 10px #ac0500, 50px 10px #f73f0c, 70px 10px #fa5f27, 130px 10px #740100, 150px 10px #8e0500, 180px 10px #8e1918,
+			  10px 30px #ca1300, 90px 30px #f34f2b, 120px 30px #df351f, 150px 30px #f77c2a,
+			  10px 60px #4b0000, 30px 60px #690100, 60px 60px #8e0f0b,    100px 60px #bf1000, 110px 60px #f84010, 150px 60px #f04222,
+			  10px 90px #fa5724,                                         110px 60px #451312, 80px 60px #5a0100,  150px 60px #840e0c,
+			  10px 120px #a51d1a, 30px 120px #ed2805, 60px 120px #d9321e, 115px 120px #f44622, 150px 120px #3b0000, 180px 120px #5d1a1b, 210px 120px #8e1a19, 75px 75px #a80700, 90px 75px #b90a00, 45px 90px #3d0000, 60px 90px #551415, 75px 90px #670100, 60px 105px #340000;
+	  }
+      }
+      @-ms-keyframes animac {
+	  100% {
+	      width: 20px;
+	      height: 20px;
+	      top: -50px;
+	      left: -50px;
+	      transform: scale(1.5);
+	      margin: -15px 0 0 -15px;
+
+	      box-shadow: 10px 10px #8e1a19, 30px 10px #ac0500, 50px 10px #f73f0c, 70px 10px #fa5f27, 130px 10px #740100, 150px 10px #8e0500, 180px 10px #8e1918,
+			  10px 30px #ca1300, 90px 30px #f34f2b, 120px 30px #df351f, 150px 30px #f77c2a,
+			  10px 60px #4b0000, 30px 60px #690100, 60px 60px #8e0f0b,    100px 60px #bf1000, 110px 60px #f84010, 150px 60px #f04222,
+			  10px 90px #fa5724,                                         110px 60px #451312, 80px 60px #5a0100,  150px 60px #840e0c,
+			  10px 120px #a51d1a, 30px 120px #ed2805, 60px 120px #d9321e, 115px 120px #f44622, 150px 120px #3b0000, 180px 120px #5d1a1b, 210px 120px #8e1a19, 75px 75px #a80700, 90px 75px #b90a00, 45px 90px #3d0000, 60px 90px #551415, 75px 90px #670100, 60px 105px #340000;
+	  }
+      }
+      @keyframes animac {
+	  100% {
+	      height: 20px;
+	      width: 20px;
+	      top: -50px;
+	      left: -50px;
+	      transform: scale(1.5);
+	      margin: -15px 0 0 -15px;
+
+	      box-shadow: 10px 10px #8e1a19, 30px 10px #ac0500, 50px 10px #f73f0c, 70px 10px #fa5f27, 130px 10px #740100, 150px 10px #8e0500, 180px 10px #8e1918,
+			  10px 30px #ca1300, 90px 30px #f34f2b, 120px 30px #df351f, 150px 30px #f77c2a,
+			  10px 60px #4b0000, 30px 60px #690100, 60px 60px #8e0f0b,    100px 60px #bf1000, 110px 60px #f84010, 150px 60px #f04222,
+			  10px 90px #fa5724,                                         110px 60px #451312, 80px 60px #5a0100,  150px 60px #840e0c,
+			  10px 120px #a51d1a, 30px 120px #ed2805, 60px 120px #d9321e, 115px 120px #f44622, 150px 120px #3b0000, 180px 120px #5d1a1b, 210px 120px #8e1a19, 75px 75px #a80700, 90px 75px #b90a00, 45px 90px #3d0000, 60px 90px #551415, 75px 90px #670100, 60px 105px #340000;
+	  }
+      }
+      @-webkit-keyframes $animationName {
+	  100% {
+	      height: 20px;
+	      width: 20px;
+	      top: -50px;
+	      left: -50px;
+	      transform: scale(1.5);
+	      margin: -15px 0 0 -15px;
+
+	      box-shadow: 10px 10px #8e1a19, 30px 10px #ac0500, 50px 10px #f73f0c, 70px 10px #fa5f27, 130px 10px #740100, 150px 10px #8e0500, 180px 10px #8e1918,
+			  10px 30px #ca1300, 90px 30px #f34f2b, 120px 30px #df351f, 150px 30px #f77c2a,
+			  10px 60px #4b0000, 30px 60px #690100, 60px 60px #8e0f0b,    100px 60px #bf1000, 110px 60px #f84010, 150px 60px #f04222,
+			  10px 90px #fa5724,                                         110px 60px #451312, 80px 60px #5a0100,  150px 60px #840e0c,
+			  10px 120px #a51d1a, 30px 120px #ed2805, 60px 120px #d9321e, 115px 120px #f44622, 150px 120px #3b0000, 180px 120px #5d1a1b, 210px 120px #8e1a19, 75px 75px #a80700, 90px 75px #b90a00, 45px 90px #3d0000, 60px 90px #551415, 75px 90px #670100, 60px 105px #340000;
+	  }
+      }
+
+
+
+
+
+
+      @-moz-keyframes animat {
+	  100% {
+	      top: 300px;
+	      left: 100px;
+	      transform: scale(0.8);
+	      color: blue;
+	  }
+      }
+      @-ms-keyframes animat {
+	  100% {
+	      top: 300px;
+	      left: 100px;
+	      transform: scale(1.8);
+	      color: blue;
+	  }
+      }
+      @keyframes animat {
+	  100% {
+	      top: 300px;
+	      left: 100px;
+	      transform: scale(1.8);
+	      color: blue;
+	  }
+      }
+      @-webkit-keyframes $animationName {
+	  100% {
+	      top: 300px;
+	      left: 100px;
+	      transform: scale(1.8);
+	      color: blue;
+	  }
+      }
+
+    </STYLE>
+  </HEAD>
+  <BODY style="background-color: yellow">
+    <div class="heart"></div>
+  </BODY>
+</HTML>

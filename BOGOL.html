@@ -1,0 +1,188 @@
+<HTML>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <SCRIPT>
+    var selju="";
+    var palabra="";
+
+    function jugad(juga) {
+	document.getElementById("jugadores").innerHTML="";
+	while(juga>0) {
+	    var jugadores=[];
+	    var rr=getRandomInt(30, 253);
+	    var gg=getRandomInt(30, 253);
+	    var bb=getRandomInt(30, 253);
+	    jugap="rgb(" + rr + "," + gg + "," + bb + ')';
+	    jugadores[juga-1]=jugap;
+	    document.getElementById("jugadores").innerHTML=document.getElementById("jugadores").innerHTML+"<div id=\"juga"+(juga-1)+"\" onclick=\"selju=this.id\" style=\"background-color:"+jugap+"\">Nombre (" + (juga-1) + ")<input id=\"tuga"+(juga-1)+"\" ></input><div></div><span ></span><span></span></div>"; //style=\"display:none;\"
+	    juga--;
+	}
+    }
+    function getRandomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    }
+    function celdd(celdaa) {
+	var pasa=false;
+	if(!document.getElementById('palabr').innerHTML.length) {
+	    pasa=true;
+	} else {
+	    if(celdaa.indice-1>=0) {
+		if(celdaa.parentNode.cells[celdaa.indice-1].style.backgroundColor != "")  pasa=true;
+	    }
+	    if(celdaa.indice+1<celdaa.parentNode.cells.length) {
+		if(celdaa.parentNode.cells[celdaa.indice+1].style.backgroundColor != "" ) pasa=true;
+	    }
+	    if(celdaa.fila-1>=0 && celdaa.indice-1>=0) {
+		if(celdaa.parentNode.parentNode.rows[celdaa.fila-1].cells[celdaa.indice-1].style.backgroundColor != "") pasa=true;
+	    }
+	    if(celdaa.fila-1>=0 && celdaa.indice+1<celdaa.parentNode.cells.length) {
+		if(celdaa.parentNode.parentNode.rows[celdaa.fila-1].cells[celdaa.indice+1].style.backgroundColor != "") pasa=true;
+	    }
+	    if(celdaa.fila-1>=0) {
+		if(celdaa.parentNode.parentNode.rows[celdaa.fila-1].cells[celdaa.indice].style.backgroundColor != "") pasa=true;
+	    }
+	    if(celdaa.fila+1<celdaa.parentNode.parentNode.rows.length && celdaa.indice-1>=0) {
+		if(celdaa.parentNode.parentNode.rows[celdaa.fila+1].cells[celdaa.indice-1].style.backgroundColor != "") pasa=true;
+	    }
+	    if(celdaa.fila+1<celdaa.parentNode.parentNode.rows.length &&  celdaa.indice+1<celdaa.parentNode.cells.length) {
+		if(celdaa.parentNode.parentNode.rows[celdaa.fila+1].cells[celdaa.indice+1].style.backgroundColor != "") pasa=true;
+	    }
+	    if(celdaa.fila+1<celdaa.parentNode.parentNode.rows.length) {
+		if(celdaa.parentNode.parentNode.rows[celdaa.fila+1].cells[celdaa.indice].style.backgroundColor != "") pasa=true;
+	    }
+	}
+	if(pasa && selju && document.getElementById('palabr').innerHTML.indexOf(celdaa.id)<0){
+	    limpia(celdaa.parentNode.parentNode);
+	    document.getElementById('palabr').innerHTML+=celdaa.id;
+	    celdaa.style.backgroundColor="red";
+	    celdaa.id;document.getElementById('palabra').innerHTML+=celdaa.innerHTML;
+	}
+    }
+    vocales="AEIOU";
+    letras="ABCDEFGHIJKLMNÑOPQRSTUVXYZ";
+    function genera(cols) {
+	var vocalprom=0;
+	var vocalen=0;
+	while(vocalprom<0.38) {
+	    vocalen=0;
+	    tabla=document.getElementsByTagName("table")[0];
+	    i=0;
+	    tablai="";
+	    while(i<cols) {
+		ii=0;
+		tablai=tablai+"<tr>";
+		while(ii<cols) {
+		    ind=getRandomInt(0, letras.length-1)*1;
+		    letra=letras.charAt(ind);
+		    tablai=tablai+"<td>" + letra+"</td>";
+		    ii++;
+		}
+		tablai=tablai+"</tr>";
+		i++;
+	    }
+	    tabla.innerHTML=tablai;
+	    i=0;
+	    while(i<cols) {
+		row=tabla.rows[i];
+		ii=0;
+		while(ii<cols) {
+		    if(vocales.indexOf(row.cells[ii].innerHTML)>=0) vocalen++;
+		    ii++;
+		}
+		i++;
+	    }
+	    vocalprom=vocalen/(i*ii);
+	}
+	i=0;
+	while(i<cols) {
+	    row=tabla.rows[i];
+	    ii=0;
+	    while(ii<cols) {
+		cell=row.cells[ii];
+		cell.id='f'+i+"c"+ii;
+		cell.indice=ii;
+		cell.fila=i;
+		cell.onclick=function(){celdd(this);};
+		ii++;
+	    }
+	    i++;
+	}
+
+    }
+
+    function limpia(tablaobjeto) {
+	i=0;
+	while(i<tablaobjeto.rows.length) {
+	    row=tablaobjeto.rows[i];
+	    ii=0;
+	    while(ii<row.cells.length) {
+		cell=row.cells[ii];
+		cell.style.backgroundColor="";
+		ii++;
+	    }
+	    i++;
+	}
+    }
+
+    var timo=null;
+    function timerr(objeto) {
+	var tim=objeto.time;
+	if(objeto.time==0) objeto.style.backgroundColor="";
+	objeto.time=objeto.time+1;
+	var segundos=0;
+	var minutos=0;
+	if(tim<60) {
+	    segundos=objeto.time%60;
+	} else {
+	    minutos=objeto.time/60;
+	}
+	var minutoss="";
+	if(minutos<9) minutoss+="0";
+	var segundoss="";
+	if(segundos<9) segundoss+="0";
+	minutoss+=minutos;
+	segundoss+=segundos;
+	objeto.innerHTML=minutoss+":"+segundoss;
+	if(objeto.time<300) timo=setTimeout(function (){timerr(objeto);}, 1000);
+	else objeto.style.backgroundColor="red";
+    }
+    function verifica(palabra, palabras) {
+	jugadoresd=document.getElementById("jugadores").getElementsByTagName("div");
+	jj=0;
+	var reto=false;
+	while(jj<jugadoresd.length) {
+	    if(jugadoresd[jj].id.substring(0,4)=="juga") {
+		if(jugadoresd[jj].getElementsByTagName("span")[0].innerHTML.indexOf(";"+palabra+";")>=0) {
+		    jugadoresd[jj].getElementsByTagName('div')[0].innerHTML=jugadoresd[jj].getElementsByTagName('div')[0].innerHTML.replace("<br>"+palabras+" "," ");
+		    reto=true;
+		}
+	    }
+	    jj++;	    
+	}
+	return reto;
+    }
+    </SCRIPT>
+  <STYLE>
+    td {
+	background-color: lightblue;
+    }
+  </STYLE>
+  
+</BODY>
+Columnas: <input id="columns" ><br>
+Jugadores: <input id="jugas" ><br>
+<input type="button" value="INICIA" onclick="if(document.getElementById('columns').value && document.getElementById('jugas').value) ; jugad(document.getElementById('jugas').value); genera(document.getElementById('columns').value); clearTimeout(timo); document.getElementById('timerr').time=0; timerr(document.getElementById('timerr'));"><br>
+<div id="timerr"></div>
+<table border=1 style="border-collapse:collapse;border-width:2px;font-size:14pt;font-weight:bolder;font-family:'Sans';" >
+  <tr><td></td></tr>
+</table>
+<input type="button" value="Cancelar Palabra" onclick="limpia(document.getElementsByTagName('table')[0]); document.getElementById('palabr').innerHTML='';document.getElementById('palabra').innerHTML=''">
+<input type="button" value="Listo Palabra" onclick="limpia(document.getElementsByTagName('table')[0]);if(!verifica(document.getElementById('palabr').innerHTML, document.getElementById('palabra').innerHTML)) {document.getElementById(selju).getElementsByTagName('div')[0].innerHTML+='<br>'+document.getElementById('palabra').innerHTML+' ';document.getElementById(selju).getElementsByTagName('span')[0].innerHTML+=';'+document.getElementById('palabr').innerHTML+';';}document.getElementById('palabr').innerHTML='';document.getElementById('palabra').innerHTML='';">
+<br>
+Palabra: <span id="palabra" style="font-size:33pt;font-weight:bolder;font-family:'Sans';color: green"></span><br>
+<span id="palabr" style="font-size:33pt;font-weight:bolder;font-family:'Sans';color: green"></span>
+<div id="jugadores" style="width:60%;">
+</div>
+</BODY>
+</HTML>

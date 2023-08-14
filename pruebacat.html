@@ -1,0 +1,814 @@
+<HTML>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script>
+      var clicked=false;
+      var categorias="";
+      var categoriasn="";
+      var elementos="";
+      var acciones="";
+      var myDate = new Date();
+      myDate.setYear("2022");
+      document.cookie = "expires=" + myDate + ";domain=" + window.location.hostname + ";path=/;";	  
+      function agarramenor(cadenamenor) {
+	  var menor="";
+	  if(cadenamenor.indexOf(">") >=0 ) {
+	      menor=cadenamenor.substring(cadenamenor.indexOf(">")+1, cadenamenor.length);
+	  } else if(cadenamenor.indexOf("<") >=0 ) {
+	      menor=cadenamenor.substring(0, cadenamenor.indexOf("<"));
+	  }
+	  return menor;
+      }
+      function agarramayor(cadenamayor) {
+	  var mayor="";
+	  if(cadenamayor.indexOf(">") >=0 ) {
+	      mayor=cadenamayor.substring(0, cadenamayor.indexOf(">"));
+	  } else if(cadenamayor.indexOf("<") >=0 ) {
+	      mayor=cadenamayor.substring(cadenamayor.indexOf("<")+1, cadenamayor.length);
+	      if(mayor.indexOf("<")>=0 || mayor.indexOf(">")>=0) {
+		  if(mayor.indexOf("<")>=0) {
+		      mayor=mayor.substring(0, mayor.indexOf("<"))
+		  }
+		  if(mayor.indexOf(">")>=0) {
+		      mayor=mayor.substring(0, mayor.indexOf(">"));
+		  }
+	      }
+	  }
+	  return mayor;
+      }
+      function agarra_resto(cadenamayor) {
+	  var mayor=cadenamayor;
+	  var resto="";
+	  if(cadenamayor.indexOf(">") >=0 ) {
+	      mayor=cadenamayor.substring(cadenamayor.indexOf(">")+1, cadenamayor.length);
+	      if(mayor.indexOf("<") >=0 ) {
+		  resto=mayor.substring(cadenamayor.indexOf("<"), cadenamayor.length);
+	      }	      
+	  } else if(cadenamayor.indexOf("<") >=0 ) {
+	      mayor=cadenamayor.substring(cadenamayor.indexOf("<")+1, cadenamayor.length);
+	      if(mayor.indexOf(">") >=0 ) {
+		  resto=mayor.substring(cadenamayor.indexOf(">"), cadenamayor.length);
+	      }
+	      if(mayor.indexOf("<") >=0 ) {
+		  resto=mayor.substring(cadenamayor.indexOf("<"), cadenamayor.length);
+	      }	      
+	  }
+	  return resto;
+      }
+
+      function addhecho(objeto) {
+	  if(!objeto.hechob && seleccionar(document.getElementById("TA1"))) {
+	      var text1 = document.createElement ("input");
+	      var text2 = document.createElement ("input");
+	      text1.id = "catedescr";
+	      text2.id = "catename";
+	      text2.style.width="20%";
+	      objeto.parentNode.appendChild(text1);
+	      objeto.parentNode.appendChild(text2);
+	      objeto.hechob=true;
+	  } else {
+	      var i=0;
+	      elems=objeto.parentNode.getElementsByTagName("input");
+	      while(i<elems.length) {
+		  if(elems[i].id=="catename"||elems[i].id=="catedescr")  {
+		      objeto.parentNode.removeChild(elems[i]);
+		      elems=objeto.parentNode.getElementsByTagName("input");
+		      i=-1;
+		  }
+		  i++;
+	      }
+	      objeto.hechob=false;
+	  }
+      }
+
+      function prhechos(cadena_hechos) {
+	  var hechost=cadena_hechos;
+	  var hechosf=""
+	  var hechosr=""
+	  var hechosv="";
+	  while(hechost.indexOf(";")>=0) {
+	      hechosv=hechost.substring(0, hechost.indexOf(";"));
+	      while(hechosv.indexOf(">")>=0 || hechosv.indexOf("<")>=0)  {
+		  hechosf=agarramayor(hechosv)+"("+agarramenor(hechosv)+")"+agarra_resto(hechosv);
+		  hechosv=hechosf;
+	      }
+	      hechosr+=hechosv+";";
+	      hechost=hechost.substring(hechost.indexOf(";")+1, hechost.length);
+	  }
+	  return hechosr;
+      }
+
+      function damecate_abiertas(objeto, categoria) {
+	  var catecadena=objeto.value;
+	  var len=0;
+	  var catemp="";
+	  var catcad="";
+	  var cadr="";
+	  var abierto=0;
+	  while(len < catecadena.length) {
+	      if(catecadena.charAt(len) == ";") {
+		  if(catemp==categoria) {
+		      cadr+=catcad;
+		  }
+		  catemp="";
+	      }
+	      else if(catecadena.charAt(len) == "(") {
+		  abierto++;
+		  if(catemp==categoria) cadr+=catcad;
+		  else catcad+=catemp+";"
+		  catemp="";
+	      }
+	      else if(catecadena.charAt(len) == ")" && abierto) {
+		  abierto--;
+		  if(catemp!=categoria) {
+		      var lenc=catcad.length-2;
+		      while(lenc>0 && catcad.charAt(lenc)!=";") lenc--;
+		      catcad=catcad.substring(0, lenc)+";";
+		      while(catcad.indexOf(";;")>=0) catcad=catcad.replace(";;", ";");
+		  } else cadr+=catcad;
+		  catemp="";
+	      }
+	      else catemp+=catecadena.charAt(len);
+	      len++;
+	  }
+	  return cadr;
+      }
+
+      function damecate_hijos(objeto, categoria) {
+	  parenscadena=objeto.value;
+	  entidad=categoria+"(";
+	  if(parenscadena.indexOf(entidad)>=0) {
+	      var parent=parenscadena.substring(parenscadena.indexOf(entidad)+entidad.length, parenscadena.length);
+	      var pt=parensdentro(parent);
+	      return pt;
+	  }
+	  return "";
+      }
+
+      function parens(parensscadena) {
+	  var categoriasc=categoriasn;
+	  while(categoriasc.indexOf(";")>=0) {
+	      entidadc=categoriasc.substring(0, categoriasc.indexOf(";"));
+	      categoriasc=categoriasc.substring(categoriasc.indexOf(";")+1, categoriasc.length);
+	      entidads="";
+	      if(parensscadena.indexOf(entidadc)>=0) {
+		  entidads=parens_d(parensscadena, entidadc);
+		  padres=parens_padres(parensscadena, entidadc);
+		  parensscadena=parens_quitaentidad(parensscadena, entidadc);
+		  if(padres.length<1||padres.indexOf(";")<0) parensscadena=entidads+";"+parensscadena+";";
+		  while(padres.indexOf(";")>=0) {
+		      var padres_s=padres.substring(0, padres.indexOf(";"));
+		      var parensi=parensscadena.substring(0, parensscadena.indexOf(padres_s)+padres_s.length+1);
+		      var parensf=parensscadena.substring(parensscadena.indexOf(padres_s)+padres_s.length+1);
+		      if(parensi.charAt(parensi.length-1)==';') parensscadena=parensi.substring(0, parensi.length-1) +"("+entidads+");"+parensf;
+		      else parensscadena=parensi+entidads+";"+parensf;
+		      padres=padres.substring(padres.indexOf(";")+1);
+		  }
+		  while(parensscadena.indexOf(";;")>=0 || parensscadena.indexOf(";)")>=0 || parensscadena.indexOf("(;")>=0 || parensscadena.indexOf(";(")>=0 || parensscadena.indexOf("()")>=0) {
+		      parensscadena=parensscadena.replace(";;", ";");
+		      parensscadena=parensscadena.replace(";)", ")");
+		      parensscadena=parensscadena.replace("(;", "(");
+		      parensscadena=parensscadena.replace(";(", ";");
+		      parensscadena=parensscadena.replace("()", ";");
+		  }
+	      }
+	  }
+	  return parensscadena;
+      }
+      
+      function parens_d(parenscadena, entidad) {
+	  entidadtemp="";
+	  var cadetemp="";
+	  var previo=0
+	  if(parenscadena.indexOf(entidad)>=0) {
+	      var len=0;
+	      cadetemp="";
+	      while(len<parenscadena.length) {
+		  if(parenscadena.charAt(len)==")" || parenscadena.charAt(len)==";") {
+		      cadetemp="";
+		  }
+		  if(parenscadena.charAt(len)=="(") {
+		      if(cadetemp==entidad) {
+			  abierto=1;
+			  previo=len;
+			  len++;
+			  while(abierto>0 && len<parenscadena.length) {
+			      if(parenscadena.charAt(len) == '(' ) {
+				  abierto++;
+			      }
+			      if(parenscadena.charAt(len) == ')' ) {
+				  abierto--;
+				  if(abierto==0) {
+				      if(entidadtemp.length) entidadtemp+=";";
+				      entidadtemp+=parenscadena.substring(previo+1, len);
+				      len++;
+				      break;
+				  }
+			      }
+			      len++;
+			  }
+		      }
+		      cadetemp="";
+		  }
+		  if(parenscadena.charAt(len)!="(" && parenscadena.charAt(len)!=")" && parenscadena.charAt(len)!=";" ) cadetemp+=parenscadena.charAt(len);
+		  len++;
+	      }
+	  }
+	  if(entidadtemp.length>0)  return entidad+"("+entidadtemp+");";
+	  else return entidad;
+      }
+			      
+      function parens_padres (parenscadena, entidad) {
+	  var previo="";
+	  var cadetemp="";
+	  var padres=""
+	  var len=0;
+	  while(len<parenscadena.length) {
+	      if(parenscadena.charAt(len) == '(' ) {
+		  if(cadetemp==entidad && previo.length) padres+=previo.substring(0, previo.indexOf(";"))+";";
+		  else previo=cadetemp+";"+previo;
+		  cadetemp="";
+	      }
+	      if(parenscadena.charAt(len)==")" || parenscadena.charAt(len)==";") {
+		  if(cadetemp==entidad && previo.length) padres+=previo.substring(0, previo.indexOf(";"))+";";
+		  if(parenscadena.charAt(len)==")") {
+		      previo=previo.substring(previo.indexOf(";")+1);
+		  }
+		  cadetemp="";
+	      }
+	      if(parenscadena.charAt(len)!="(" && parenscadena.charAt(len)!=")" && parenscadena.charAt(len)!=";" ) cadetemp+=parenscadena.charAt(len);
+	      len++;
+	  }
+	  while(padres.indexOf(";;")>=0) padres=padres.replace(";;", ";");
+	  return padres;
+      }
+      
+      function parens_quitaentidad (parenscadena, entidad) {
+	  var cadetemp="";
+	  var previo=0
+	  if(parenscadena.indexOf(entidad)>=0) {
+	      var len=0;
+	      cadetemp="";
+	      while(len<parenscadena.length) {
+		  if(parenscadena.charAt(len)!="(" && parenscadena.charAt(len)!=")" && parenscadena.charAt(len)!=";") cadetemp+=parenscadena.charAt(len);
+		  if(parenscadena.charAt(len)==")" || parenscadena.charAt(len)==";") {
+		      if(cadetemp==entidad) {
+			  parenscadena=parenscadena.substring(0, len-entidad.length)+parenscadena.substring(len);
+			  len=-1;
+		      }
+		      cadetemp="";
+		  }
+		  if(len>=0 && parenscadena.charAt(len)=="(") {
+		      if(cadetemp==entidad) {
+			  abierto=1;
+			  previo=len;
+			  len++;
+			  while(abierto>0 && len<parenscadena.length) {
+			      if(parenscadena.charAt(len) == '(' ) {
+				  abierto++;
+			      }
+			      if(parenscadena.charAt(len) == ')' ) {
+				  abierto--;
+			      }
+			      len++;
+			  }
+			  parenscadena=parenscadena.substring(0, previo-entidad.length)+parenscadena.substring(len);
+			  len=-1;
+		      }
+		      cadetemp="";
+		  }
+		  len++;
+	      }
+	  }
+	  return parenscadena;
+      }
+			      
+      
+      function parensdentro(parendentrocadena) {
+	  abierto=0;
+	  var parensd="";
+	  abierto=1;
+	  var len=0;
+	  while(abierto>0 && len<parendentrocadena.length) {
+	      empieza=0;
+	      if(parendentrocadena.charAt(len) == '(' ) {
+		  abierto++;
+	      }
+	      if(parendentrocadena.charAt(len) == ')' ) {
+		  abierto--;
+		  if(abierto==0) parensd=parendentrocadena.substring(0, len);
+	      }
+	      len++;
+	  }
+	  return parensd;
+      }
+      function parensfuera(parendentrocadena) {
+	  abierto=0;
+	  abierto=1;
+	  var len=0;
+	  parenttemp=0;
+	  while(abierto>0 && len<parendentrocadena.length) {
+	      empieza=0;
+	      if(parendentrocadena.charAt(len) == '(' ) {
+		  abierto++;
+	      }
+	      if(parendentrocadena.charAt(len) == ')' ) {
+		  abierto--;
+		  if(abierto==0) parendentrocadena=parendentrocadena.substring(len, parendentrocadena.length);
+	      }
+	      len++;
+	  }
+	  return parendentrocadena;
+      }
+
+      function transforma(cadena) {
+	  var len=0;
+	  var cadr="";
+	  var cadetemp="";
+	  var wit=100;
+	  var colore=10;
+	  while(len < cadena.length) {
+	      if(cadena.charAt(len)=="(" || cadena.charAt(len)==")" || cadena.charAt(len)==";") {
+		  if(cadena.charAt(len)=="(") {
+		      wit-=10;
+		      var le=(100-wit)/2;
+		      colore+=47;
+		      cadr+="<div style=\"position:relative;left:"+le+"%;background-color:rgba("+((colore*5)%255)+","+((colore*2)%255)+","+((colore*3)%255)+",0.8);width:"+ wit+"%;\" id=\""+cadetemp+"\">" + busca_linea(document.getElementById('cats'), "("+cadetemp+")");
+		      colore+=47;
+		      cadr+="<div style=\"position:relative;left:"+le+"%;background-color:rgba("+((colore*5)%255)+","+((colore*2)%255)+","+((colore*3)%255)+",0.8);width:"+ wit+"%;\" id=\""+cadetemp+"\">" 
+		  }
+		  if(cadena.charAt(len)==")") {
+		      wit+=10;
+		      colore-=47;
+		      colore-=47;
+		      if(cadetemp.length>1) cadr+="<hr style=\"width:"+wit+"%;\">"+busca_linea(document.getElementById('cats'), "("+cadetemp+")");
+		      else cadr+="<br>";
+		      cadr+="</div></div><br>";
+		  }
+		  if(cadena.charAt(len)==";") {
+		      if(cadetemp.length>1) cadr+="<hr style=\"width:"+wit+"%;\">"+busca_linea(document.getElementById('cats'), "("+cadetemp+")");
+		  }
+		  cadetemp="";
+	      } else {
+		  cadetemp+=cadena.charAt(len);
+	      }
+	      len++;
+	  }
+	  return cadr;
+      }
+
+      function seleccionar(objeto) {
+	  var indices="";
+	  var indice=0;
+	  while(indice<objeto.value.length) {
+	      if(objeto.value[indice]=='\n') indices+=indice+";";
+	      indice++;
+	  }
+	  var sele=(objeto.selectionEnd-objeto.selectionStart);
+	  if(sele>0) {
+	      var previo=0;
+	      while(indices.indexOf(";")>=0) {
+		  indice=indices.substring(0, indices.indexOf(";"))*1;
+		  if(indice<objeto.selectionStart) previo=indice;
+		  if(indice>=objeto.selectionStart) break;
+		  indices=indices.substring(indices.indexOf(";")+1, indices.length);
+	      }
+	      if(previo>0) previo++;
+	      return objeto.value.substring(previo, indice);
+	  }
+	  return "";
+      }
+      
+      function busca_linea(objeto, buscadena) {
+	  if(!buscadena.length) return "";
+	  var indices="";
+	  var indice=0;
+	  while(indice<objeto.value.length) {
+	      if(objeto.value[indice]=='\n') indices+=indice+";";
+	      indice++;
+	  }
+	  var previo=0;
+	  while(indices.indexOf(";")>=0) {
+	      indice=indices.substring(0, indices.indexOf(";"))*1;
+	      if(objeto.value.substring(previo, indice).indexOf(buscadena)>=0) {
+		  if(previo)previo++;
+		  while(objeto.value.charAt(previo)==' ') previo++;
+		  return objeto.value.substring(previo, indice);
+		  break;
+	      }
+	      previo=indice;
+	      indices=indices.substring(indices.indexOf(";")+1, indices.length);
+	  }
+	  return "";
+      }
+      
+      function donde_linea(objeto) {
+	  var indices="";
+	  var indice=0;
+	  while(indice<objeto.value.length) {
+	      if(objeto.value[indice]=='\n') indices+=indice+";";
+	      indice++;
+	  }
+	  return indices;
+      }
+
+      function describerelaciones(objeto) {
+	  var len=0;
+	  cadena=objeto.value;
+	  var que=0;
+	  var questr="";
+	  while(len < cadena.length) {
+	      if(cadena.charAt(len)==">") {
+		  if(que) questr=" que ";
+		  cadena=cadena.substring(0, len) + questr + " contiene " + cadena.substring(len+1, cadena.length);
+		  que=1;
+	      }
+	      if(cadena.charAt(len)=="<") {
+		  if(que) questr=" que ";
+		  cadena=cadena.substring(0, len) + questr + " es parte de " + cadena.substring(len+1, cadena.length);
+		  que=1;
+	      }
+	      if(cadena.charAt(len)==";") {
+		  cadena=cadena.substring(0, len) + "\n" + cadena.substring(len+1, cadena.length);
+		  que=0;
+		  questr="";
+	      }
+	      len++;
+	  }
+	  return cadena;
+      }
+
+      function carga() {
+	  var cadetemp=document.cookie;
+	  var len=0;
+	  while(cadetemp.indexOf(";")>=0) {
+	      var cadena=cadetemp.substring(0, cadetemp.indexOf(";"));
+	      len=0;
+	      while(cadena.charAt(len)==' ') len++;
+	      if(len) cadena=cadena.substring(len);
+	      while(cadena.indexOf("$")>=0) cadena=cadena.replace("$", "\n");
+	      while(cadena.indexOf("#")>=0) cadena=cadena.replace("#", ";");
+	      while(cadena.indexOf('"')>=0) cadena=cadena.replace('"', "");
+	      if(document.getElementById(cadena.substring(0, cadena.indexOf("=")))) {
+		  alert(cadena.substring(0, cadena.indexOf("=")));
+		  document.getElementById(cadena.substring(0, cadena.indexOf("="))).value=cadena.substring(cadena.indexOf("=")+1);
+	      }
+	      cadetemp=cadetemp.substring(cadetemp.indexOf(";")+1);
+	  }
+      }
+      function guardar() {
+	  var ta=0;
+	  var tas=document.body.getElementsByTagName("textarea");
+	  var valo=""
+	  while(ta<tas.length) {
+	      if(tas[ta].id ) {
+		  valo=tas[ta].value;
+		  while(valo.indexOf("\n")>=0) valo=valo.replace("\n", "$");
+		  while(valo.indexOf(";")>=0) valo=valo.replace(";", "#");
+		  if(document.cookie.indexOf(tas[ta].id+"=")) {
+		      var cookii=document.cookie.substring(0, document.cookie.indexOf(tas[ta].id)+"=");
+		      var cookief=document.cookie.substring(document.cookie.indexOf(tas[ta].id)+"="+tas[ta].id.length+1);
+		      cookief=cookief.substring(cookief.indexOf(";"));
+		      document.cookie= cookii + tas[ta].id + "=\"" + valo +"\";" + cookief;
+		  }
+		  else document.cookie+=tas[ta].id + "=" + valo +";";
+	      }
+	      ta++;
+	  }
+	  alert("C:"+document.cookie);
+      }
+
+      function addestrategia() {
+	  if(!seleccionar(document.getElementById('TA1'))) {
+	      alert("Por Favor Seleccione Para Anadir");
+	      return "";
+	  }
+	  var sel=seleccionar(document.getElementById('TA1'));
+	  sel=busca_linea(document.getElementById('cats'), sel);
+	  document.getElementById("estrategia").value+=busca_linea(document.getElementById('cats'), sel)+"\n";
+	  if(!document.getElementById("estrategiavalores").value.length) {
+	      document.getElementById("estrategiavalores").value=getvalores(sel.substring(sel.indexOf("(")+1, sel.indexOf(")")));
+	      
+	      var valls=getvalores(sel.substring(sel.indexOf("(")+1, sel.indexOf(")")));
+	      while(valls.indexOf(";")>=0) {
+		  var valln=valls.substring(0, valls.indexOf("="));
+		  var vallno=valls.substring(valls.indexOf("=")+1, valls.indexOf(";"));
+		  size=(vallno*150)/10;
+		  if(size>160) size=160;
+		  document.getElementById("valores_"+valln+"_img").style.height=size+"px";
+		  
+		  if(size==160) document.getElementById("valores_"+valln+"_img").style.backgroundColor="rgba(200,50,50,0.6);";
+		  valls=valls.substring(valls.indexOf(";")+1);
+	      }
+
+	      while(document.getElementById("estrategiavalores").value.indexOf(";")>=0) document.getElementById("estrategiavalores").value=document.getElementById("estrategiavalores").value.replace(";", "\n");
+	  } else {
+	      var valls=getvalores(sel.substring(sel.indexOf("(")+1, sel.indexOf(")")));
+	      var vallo="";
+	      var vallno=1*1;
+	      var valln="";
+	      var vallt="";
+	      var vallz="";
+	      var size=0;
+	      while(valls.indexOf(";")>=0) {
+		  vallo=valls.substring(0, valls.indexOf(";"));
+		  valln=vallo.substring(0, vallo.indexOf("=")+1);
+		  vallo=vallo.substring(vallo.indexOf("=")+1);
+		  vallt=document.getElementById("estrategiavalores").value.substring(document.getElementById("estrategiavalores").value.indexOf(valln)+valln.length);
+		  vallz=vallt.substring(vallt.indexOf("\n"));
+		  vallt=vallt.substring(0, vallt.indexOf("\n"));
+		  vallno=vallt*1;
+		  vallno+=vallo*1;
+		  size=(vallno*150)/10;
+		  if(size>160) size=160;
+		  document.getElementById("valores_"+valln.substring(0, valln.length-1)+"_img").style.height=size+"px";
+		  if(size==160 && valln!="interaccion=") document.getElementById("valores_"+valln.substring(0, valln.length-1)+"_img").style.backgroundColor="rgba(200,50,50,0.6)";
+		  document.getElementById("estrategiavalores").value=document.getElementById("estrategiavalores").value.substring(0, document.getElementById("estrategiavalores").value.indexOf(valln)+valln.length) + vallno + vallz;
+		  valls=valls.substring(valls.indexOf(";")+1);
+	      }
+	  }
+      }
+      function sele_boton() {
+	  var sel=seleccionar(document.getElementById('TA1'));
+	  sel=busca_linea(document.getElementById('cats'), sel);
+	  sel=sel.substring(sel.indexOf("(")+1, sel.indexOf(")"));
+	  var cadena=damecate_abiertas(document.getElementById('TA3'), sel);
+	  document.getElementById('TA4').value="";
+	  while(cadena.indexOf(";")>=0) {
+	      document.getElementById('TA4').value+=busca_linea(document.getElementById('cats'), cadena.substring(0, cadena.indexOf(";")))+"\n";
+	      cadena=cadena.substring(cadena.indexOf(";")+1);
+	  }
+	  document.getElementById('TA5').value="";
+	  var cadena=damecate_hijos(document.getElementById('TA3'), sel);
+	  if(cadena.length) cadena+=";";
+	  var cadena2="";
+	  while(cadena.indexOf("(")>=0) {
+	      var cadetemp="";
+	      var len=0;
+	      var abierto=0;
+	      while(len<cadena.length) {
+		  if(cadena.charAt(len)=='(') {
+		      abierto++;
+		      var cadena3=busca_linea(document.getElementById('cats'), cadetemp);
+		      cadena2+=cadena3.substring(0, cadena3.indexOf("(")) + " que contiene a {";
+		  }
+		  if(cadena.charAt(len)==';') {
+		      var cadena3=busca_linea(document.getElementById('cats'), cadetemp);
+		      cadena2+=cadena3.substring(0, cadena3.indexOf("("))+" y ";
+		  }
+		  if(cadena.charAt(len)==')') {
+		      abierto--;
+		      var cadena3=busca_linea(document.getElementById('cats'), cadetemp);
+		      cadena2+=cadena3.substring(0, cadena3.indexOf("("))+"}"
+		  }
+		  if(cadena.charAt(len)!=')' && cadena.charAt(len)!='(' && cadena.charAt(len)!=';') cadetemp+=cadena.charAt(len);
+		  else cadetemp="";
+		  len++;
+	      }
+	      cadena=cadena2+"\n";
+	  }
+	  while(cadena.indexOf(";")>=0) {
+	      var cadena3=busca_linea(document.getElementById('cats'), cadena.substring(0, cadena.indexOf(";")))
+	      document.getElementById('TA5').value+=cadena3.substring(0, cadena3.indexOf("("))+" y ";
+	      cadena=cadena.substring(cadena.indexOf(";")+1);
+	  }
+	  if(cadena.length) document.getElementById('TA5').value+=cadena;
+	  len=document.getElementById('TA5').value.length-1;
+	  while(document.getElementById('TA5').value.charAt(len)==' '||document.getElementById('TA5').value.charAt(len)=='y'||document.getElementById('TA5').value.charAt(len)=='\n') len--;
+	  document.getElementById('TA5').value=document.getElementById('TA5').value.substring(0, len+1);
+	  document.getElementById('ta_valores').value="";
+	  document.getElementById('ta_valores').value=getvalores(sel);
+	  document.getElementById('textorelacioninputs').innerHTML=busca_linea(document.getElementById('cats'), seleccionar(document.getElementById('TA1')));
+	  while(document.getElementById('ta_valores').value.indexOf(";")>=0) document.getElementById('ta_valores').value=document.getElementById('ta_valores').value.replace(";", "\n");
+      }
+
+      function setvalores(cate) {
+	  sel=busca_linea(document.getElementById('cats'), cate);
+	  sel=sel.substring(sel.indexOf("(")+1, sel.indexOf(")"));
+	  var valores=document.getElementById('ta_valores').value;
+	  var valorn="";
+	  var valorv=0;
+	  var cadetemp=""
+	  while(valores.indexOf("\n")>=0) {
+	      valorn=valores.substring(0, valores.indexOf("="));
+	      if(!document.getElementById("valores_"+valorn)) {
+		  alert("Lo siento, no entiendo " + valorn);
+		  return;
+	      }
+	      valorv=valores.substring(valores.indexOf("=")+1, valores.indexOf("\n"))*1;
+	      if(document.getElementById("valores_"+valorn).value.indexOf(sel+"=")>=0) {
+		  cadetemp=document.getElementById("valores_"+valorn).value.substring(document.getElementById("valores_"+valorn).value.indexOf(sel+"=")+sel.length+1);
+		  cadetemp=cadetemp.substring(cadetemp.indexOf(";"));
+		  document.getElementById("valores_"+valorn).value=document.getElementById("valores_"+valorn).value.substring(0, document.getElementById("valores_"+valorn).value.indexOf(sel+"=")+sel.length+1)+valorv+cadetemp;
+	      } else {
+		  document.getElementById("valores_"+valorn).value+=sel+"="+valorv+";";
+	      }
+	      valores=valores.substring(valores.indexOf("\n")+1);
+	  }
+      }
+      function editavalores() {
+	  var sel=seleccionar(document.getElementById('TA1'));
+	  if(!sel) {
+	      alert('Por favor dime en cual categorias estas trabajando, seleccionando parte del Nombre en la lista de Categorias');
+	      return;
+	  }
+	  sel=busca_linea(document.getElementById('cats'), sel);
+	  sel=sel.substring(sel.indexOf("(")+1, sel.indexOf(")"));
+	  var valores=document.getElementById('ta_valores').value;
+	  var valorn="";
+	  var valorv=0;
+	  var cadetemp=""
+	  while(valores.indexOf("\n")>=0) {
+	      valorn=valores.substring(0, valores.indexOf("="));
+	      if(!document.getElementById("valores_"+valorn)) {
+		  alert("Lo siento, no entiendo " + valorn);
+		  return;
+	      }
+	      valorv=valores.substring(valores.indexOf("=")+1, valores.indexOf("\n"))*1;
+	      if(document.getElementById("valores_"+valorn).value.indexOf(sel+"=")>=0) {
+		  cadetemp=document.getElementById("valores_"+valorn).value.substring(document.getElementById("valores_"+valorn).value.indexOf(sel+"=")+sel.length+1);
+		  cadetemp=cadetemp.substring(cadetemp.indexOf(";"));
+		  document.getElementById("valores_"+valorn).value=document.getElementById("valores_"+valorn).value.substring(0, document.getElementById("valores_"+valorn).value.indexOf(sel+"=")+sel.length+1)+valorv+cadetemp;
+	      } else {
+		  document.getElementById("valores_"+valorn).value+=sel+"="+valorv+";";
+	      }
+	      valores=valores.substring(valores.indexOf("\n")+1);
+	  }
+      }
+
+      function getvalores(cate) {
+	  var ta=0;
+	  var getvalres="";
+	  var tas=document.getElementsByTagName("textarea");
+	  while(ta<tas.length) {
+	      if(tas[ta].id.substring(0, tas[ta].id.indexOf("_"))=="valores") {
+		  if(tas[ta].value.indexOf(cate+"=")>=0) valor=tas[ta].value.substring(tas[ta].value.indexOf(cate+"=")+cate.length+1);
+		  else valor="0;";
+		  getvalres+=tas[ta].id.substring(tas[ta].id.indexOf("_")+1)+"="+valor.substring(0, valor.indexOf(";"))+";";
+	      }
+	      ta++;
+	  }
+	  return getvalres;
+      }
+
+      function reinicia() {
+	  document.getElementById('TA1').value='';
+	  var i=0;
+	  categorias="";
+	  categoriasd="";
+	  var indicat=donde_linea( document.getElementById("cats"));
+	  previo=0;
+	  var linea="";
+	  while(indicat.indexOf(";")>=0) {
+	      indicet=indicat.substring(0, indicat.indexOf(";"))*1;
+	      if(previo)previo++;
+	      while(document.getElementById("cats").value.charAt(previo)==' ') previo++;
+	      linea=document.getElementById("cats").value.substring(previo, indicet);
+	      categoriasn+=linea.substring(linea.indexOf("(")+1, linea.indexOf(")"))+";";
+	      categorias+=linea.substring(0, linea.indexOf("("))+";";
+	      indicat=indicat.substring(indicat.indexOf(";")+1);
+	      previo=indicet;
+	  }
+	  var categorias2=categorias;
+	  var categorias3=categoriasn;
+	  while(categorias2.indexOf(";")>=0) {
+	      document.getElementById("TA1").value+=categorias2.substring(0, categorias2.indexOf(";"))+"\n";
+	      categorias2=categorias2.substring(categorias2.indexOf(";")+1, categorias2.length);
+	      categorias3=categorias3.substring(categorias3.indexOf(";")+1, categorias3.length);
+	  }
+	  document.getElementById('resetes').click();
+      }
+
+      function addcate() {
+	  if(document.getElementById('tablainputs').style.display=='none') {
+	      if (seleccionar(document.getElementById('TA1'))) {
+		  document.getElementById('tablainputs').style.display='inline';
+		  document.getElementById('textorelacioninputs').innerHTML=busca_linea(document.getElementById('cats'), seleccionar(document.getElementById('TA1')));
+		  sele_boton();
+	      } else {
+		  alert('Por Favor Seleccione una Categorias para Expresar relacion')
+	      };
+	  } else {
+	      if(document.getElementById('cats').value.indexOf(document.getElementById('catedescr').value)>=0 ||  document.getElementById('cats').value.indexOf('('+document.getElementById('catename').value+')')>=0) alert('Ya Hay Categoria con ese Nombre');
+	      if(!document.getElementById('catedescr').value.length || !document.getElementById('catename').value.length) alert('Por favor llene los Campos');
+	      if(document.getElementById('catedescr').value.length && document.getElementById('catename').value.length && document.getElementById('cats').value.indexOf(document.getElementById('catedescr').value)<0 &&  document.getElementById('cats').value.indexOf('('+document.getElementById('catename').value+')')<0) {
+		  document.getElementById('cats').value+=document.getElementById('catedescr').value+'('+document.getElementById('catename').value+')\n';
+		  document.getElementById('ta_hechos').value+=document.getElementById('catename').value+document.getElementById('relacioninputs').value+document.getElementById('textorelacioninputs').innerHTML.substring(document.getElementById('textorelacioninputs').innerHTML.indexOf('(')+1, document.getElementById('textorelacioninputs').innerHTML.indexOf(')'))+';';
+		  setvalores(document.getElementById('catename').value);
+	      };
+	      if(!document.getElementById('catedescr').value.length) document.getElementById('tablainputs').style.display='none';
+	  };
+      }
+
+    </script>
+    <style>
+      textarea,div,td {
+	  color:red;
+	  font-size:20px;
+	  font-weight:bolder;
+	  font-family:'Sans';
+	  border-width:5px;
+	  border-collapse: collapse;
+      }
+      div {
+	  color:white;
+      }
+    </style>
+  </head>
+  <BODY onload="document.getElementById('TA2').value=prhechos(document.getElementById('ta_hechos').value);document.getElementById('TA3').value=(parens(document.getElementById('TA2').value)); document.getElementById('div3').innerHTML=(transforma(document.getElementById('TA3').value)); document.getElementById('ta_hechos_d').value=describerelaciones(document.getElementById('ta_hechos'));reinicia();document.getElementById('analiza').click();">
+    <table style="width:5%;background-color:red;display:inline;">
+      <tr></tr>
+      <tr>
+      </td></tr>
+    </table>
+    <table style="width:90%;background-color:lightgreen;">
+      <tr><th style="width:10%">Operaciones Globales</th><th><strong>Categorias disponibles</strong></th><th style="width:10%;">Operaciones</th><th style="width:20%;"> Ayuda </th></tr>
+      <tr>
+	<td><input type="button" value="reset" onclick="myDate.setYear(0);document.cookie='expires=' + myDate + ';domain=' + window.location.hostname + ';path=/;';">
+	  <br><input type="button" value="guardar" onclick="guardar();">
+	  <br><input type="button" value="cargar" onclick="carga();">
+	  <br><input type="button" value="analiza" id="analiza" onclick="document.getElementById('TA2').value=prhechos(document.getElementById('ta_hechos').value);document.getElementById('TA3').value=(parens(document.getElementById('TA2').value)); document.getElementById('div3').innerHTML=(transforma(document.getElementById('TA3').value)); document.getElementById('ta_hechos_d').value=describerelaciones(document.getElementById('ta_hechos'));reinicia();"></td>
+	<td style="width:60%;"><textarea id="TA1" style="width:100%;height:500px;"></TEXTAREA></td>
+	<td style="width:10%;height:100%;">
+	  <input id="selec" type="button" value="Seleccionar" onclick="sele_boton();"></input>
+	  <br><input id="hecho" type="button" value="Añadir" onclick="addcate();"></input>
+	  <br><table id="tablainputs" style="display:none;"><tr><th style="width:80%;">Nombre</th><th style="width:20%">Abrev</th></tr><tr><td><input id="catedescr" style="width:90%;"></td><td><input id="catename" style="width:80%"></td></tr><tr><td colspan=2><select id="relacioninputs"><option value=">">contiene</option><option value="<">Es parte de</option></select><span id="textorelacioninputs"></span><input id="cancel" type="button" value="cancelar" onclick=" document.getElementById('tablainputs').style.display='none';"></input></td></table>
+	</td>
+	<td style="font-size:12pt;">
+	  <div style="overflow:scroll;height:500px;color:red;font-size:12pt;">
+	    <ul>
+	      <li>Para <b><i>Señalar</i></b> una Categoría <i>Seleccione o Resalte</i> la Linea que la contiene en el Area "Categorias Disponibles" o Solo una Parte.</li>
+	      <li>Para <b><i>Seleccionar</i></b> una Categoria o Recurso, <b><i>Señale</i></b> la Categoria o Recurso deseado y haga Click en el botón etiquetado "Seleccionar", los datos de la Categoria aparecerán en la Zona de Descripcion de Categorias.</li>
+	      <li> Para <b></i>Añadir</i></b> Una Categoria o Recurso, <b><i>Seleccione</i></b> o <b><i> Señale </i></b> una Categoria o Recurso sobre la que tiene relación (Puede ser la Categoria de la Que Es Parte o una Categoria que Sera Parte de la Categoria a Añadir) y Haga Click en Añadir, La nueva Categoria compartira los costos de la Categoria Seleccionada.</li>
+<li> Para Añadir un Recurso a la Estrategia, <b><i>Seleccione</i></b> o <b><i> Señale </i></b> el Recurso a Añadir y Haga Click en "Añadir" del <i>Menú Operaciones</i> de la <b><i>Zona Descripción de Estrategias</i></b>, Mientras Añade Recursos se actualizaran el <b>Area de Costos</i> de la Estrategia, presentando el Costo Total en cada uno de los renglones y la Representacion Grafica de Estos, el Fondo Rojo en los Iconos refleja Renglones sobre los que depende enormemente la Estrategia </li>
+             <li> Si desea guardar Categorias y Hechos Agregados, Haga click en <b><i>guardar</i> del Menú <b>Operaciones Globales</b>, los valores se guaradaran en un <b><i>cookie</i></b> del Navegador, para recuperarlos en otra sesión, con el mismo navegador, haga click en cargar.</li>
+         </div>
+	</td>
+      </tr>
+    </table>
+    <br>
+    <table style="width:100%; background-color: blue;">
+      <tr colspan=10><h1>Descripción de Categorias</h1></th></tr>
+      <tr><td style="width:33%;"><strong>Es parte de </strong></td><td style="width:33%;">Contiene</td><td style="width:33%;">Costos</td></tr>
+      <tr>
+	<td><textarea id="TA4" style="background-color:yellow; width:100%;height:300px;"  disabled=1 ></TEXTAREA></td>
+	<td> <textarea id="TA5" style="background-color:lightblue; width:100%;height:300px;"  disabled=1 ></TEXTAREA></td>
+	<td> <textarea id="ta_valores" style="background-color:pink; width:100%;height:300px;" disabled=1 ></TEXTAREA><br><input type="button" value="Editar Valores" onclick="document.getElementById('ta_valores').disabled=0;document.getElementById('actvalores').style.display='inline';"></input><input type="button" id="actvalores" value="actualizar" onclick="editavalores();" style="display:none;"></input></td>
+      </tr>
+    </table>
+    <br>
+    <table style="width:100%; background-color: yellow;">
+      <tr><th colspan=10><h1>Descripción de Hechos</h1></th></tr>
+      <tr><th><strong>Describe Hechos </strong></th><th> Grafica Relaciones </th></tr>
+      <tr>
+	<td><textarea id="ta_hechos_d"  style="width:500px;height:300px;"  disabled=1 ></textarea></td><td style="width:60%;"><div id="div3" style="background-color:pink; height:100%;text-align:center;color:white;"></div></td>
+      </tr>
+    </table>
+    <hr style="width:100%">
+    <table style="width:90%;display:inline;">
+      <tr><th colspan=10><h1>Descripción de Estrategias</h1></th></tr>
+      <tr><td style="width:80%"><strong>Estrategia </strong></td><td> Operaciones </td><td> Costos </td></tr>
+      <tr><td><textarea id="estrategia" style="background-color:pink; width:100%;height:300px;adisplay:none;"></TEXTAREA></td><td> <input id="addes" type="button" value="Añadir" onclick="addestrategia();"><input id="resetes" type="button" value="Reiniciar" onclick="document.getElementById('estrategiavalores').value='';document.getElementById('estrategia').value='';"></input> </td> <td><textarea id="estrategiavalores" style="background-color:pink; width:300px;height:300px;adisplay:none;"></TEXTAREA></td></tr>
+    </table>
+      <h1>Representación Gráfica de la Estrategia</h1>
+    <div style="position:relative;width:100%;">
+      <img src="burbuja.png" style="width:400px;height:500px;position:relative">
+      <table style="position:relative;top:-450px;width:250px;left:80px;">
+	<tr><td><img src="persona.png" style="width:80px;height:100px;"></td><td><img src="persona.png" style="width:50px;height:50px;"></td><td><img src="persona.png" style="width:80px;height:100px;"></td></tr>
+	<tr><td colspan=3><img src="interaccion.png" style="width:100%;height:30px;" id="valores_interaccion_img"> <br>Interaccion<span id="valores_interaccion_texto"></span></td></tr>
+      </table>
+      </div>
+      <div style="position:relative;width:400px;left:50px;top:-420px;">
+	<table><tr><td><img src="recursos.png" style="width:150px;height:200px;" id="valores_recurso_img"><br>Recursos<span id="valores_recurso_texto"></span></td><td><img src="tecnologias.png" style="width:150px;height:200px;" id="valores_tecnologia_img"><br>Tecnologias<span id="valores_tecnologia_texto"></span></td></tr></table>
+      </div>
+      <img src="burbuja.png" style="width:400px;position:relative;top:-850px;left:500px;">
+      <div style="position:relative;width:250px;height:300px;left:350px;top:-1150px;color:red;">
+	<img src="comunicacion.png" style="width:200px;height:350px;" id="valores_comunicacion_img" />
+	<br>Comunicacion <span id="valores_comunicacion_texto"></span>
+      </div>
+      <div style="position:relative;top:-1450px;left:600px;width:200px;">
+	<img src="experto.png" style="width:50px;height:100px;">
+	<br>Docente
+      </div>
+    </div>
+    <div style="display:none">
+    <input id="cate"></input>
+    <input id="prhechos" type="button" value="hechos" onclick=""></input>
+    <textarea id="TA2" style="background-color:pink; width:300px;height:300px;adisplay:none;"></TEXTAREA>
+    <textarea id="TA3" style="background-color:lightgreen; width:300px;height:300px;adisplay:none;"></TEXTAREA>
+    <textarea id="ta_hechos" style="adisplay:none;">COM<TEC;HER>DOC>FAM>AUD;AUD<TEC<HER;AUD<MAT<HER;HER>DOC;</textarea>
+    <textarea id="cats" style="background-color: rgba(200, 160, 200, 0.8);">Materiales Didácticos (MAT)
+      Actividades Familiares (FAM)
+      Estrategias Autodidactas (AUD)
+      Herramientas Disponibles (HER)
+      Estrategias con Docentes (DOC)
+      Herramientas Tecnologicas(TEC)
+      COMPUTADORA (COM)
+    </textarea>
+    <textarea id="valores_tecnologia" style="background-color: rgba(200, 160, 200, 0.8);">TEC=5;COM=10;</textarea>
+    <textarea id="valores_recurso" style="background-color: rgba(200, 160, 200, 0.8);">MAT=10;FAM=10;AUD=10;TEC=5;COM=10;</textarea>
+    <textarea id="valores_comunicacion" style="background-color: rgba(200, 160, 200, 0.8);">DOC=10;TEC=1;COM=1;</textarea>
+    <textarea id="valores_interaccion" style="background-color: rgba(200, 160, 200, 0.8);">MAT=1;FAM=10;AUD=1;HER=1;DOC=10;TEC=1;COM=1;</textarea>
+    </div>
+  </BODY>
+</HTML>

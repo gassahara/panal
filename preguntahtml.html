@@ -1,0 +1,34 @@
+#!/bin/bash
+#<!--
+#--> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><BODY><!--
+c=1
+d=""
+e=""
+puerto=5000
+echo $puerto #--> <FORM ACTION="http://127.0.0.1:5000">NECESIDAD<input name="A1"></input></FORM></BODY></HTML> <!--    
+e=$(nc -l -p $puerto -C -q 1 -vvvvv)
+if [ -n "$e" ];then
+    echo $e
+else
+    puerto=$((puerto+1))
+    if [ $puerto -gt 6000 ];then
+	puerto=5000
+    fi
+
+    w=$(wc -l preguntahtml.html | cut -d " " -f1)
+    archivos=""
+    warchivos=1
+    while [ "$w" -gt "$warchivos" ];do
+	d=$(cat preguntahtml.html | head -n$warchivos | tail -n1 | sed "s/$((puerto-1))/$puerto/g;" | base64)
+	d=$(echo $d | head -n$warchivos | tail -n1 | base64)
+    done
+    warchivos=$((warchivos+1))
+    archivos="$archivos $d \n "
+    archivos="$archivos \n "
+    echo "" > preguntahtml.html
+    while read d;do
+	echo "$d" | base64 -d -i >> preguntahtml.html
+    done < <(echo -e $archivos)
+fi
+nc -l $puerto | echo $necesidad
+#-->

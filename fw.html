@@ -1,0 +1,129 @@
+<HTML>
+  <HEAD>
+    <SCRIPT LANGUAGE="JavaScript">
+    <!-- Begin
+      var Clrs = new Array(9);
+      Clrs[0] = 'fe0000';
+      Clrs[1] = '00fc00';
+      Clrs[2] = '000afa';
+      Clrs[3] = 'fa00fe';
+      Clrs[4] = 'feb500';
+      Clrs[5] = 'ffff00';
+      Clrs[6] = '00ff00';
+      Clrs[7] = 'ffffff';
+      Clrs[8] = 'fffff0';
+      var sClrs = new Array(5);
+      sClrs[0] = 'ffa500';
+      sClrs[1] = '55ff66';
+      sClrs[2] = 'AC9DFC';
+      sClrs[3] = 'fff000';
+      sClrs[4] = 'fffff0';
+      var yBase;
+      var xBase;
+      var step;
+      var currStep = 0;
+      var Xpos = 1;
+      var Ypos = 1;
+      var initialStarColor = 'ffa000';
+      var Mtop = 800;
+      var Mleft = 800;
+      function Fireworks() {
+	  yBase=150;
+	  xBase=150;
+	  step = 5;
+	  divisor=Math.round(Math.random()*6);
+	  if(divisor===0) divisor=2;
+	  for ( i = 0 ; i < document.getElementById("starsDiv").getElementsByTagName("div").length/divisor ; i++ ) {
+	      for (ai = 0; ai < Clrs.length; ai++) {
+		  var c = Math.round(Math.random()*[ai]);
+	      }
+	      if (currStep < 90) document.getElementById("starsDiv").getElementsByTagName("div")[i].style.background=initialStarColor;
+	      if (currStep > 90) document.getElementById("starsDiv").getElementsByTagName("div")[i].style.background=Clrs[c];
+	      document.getElementById("texto").style.transform="rotate(-"+(currStep%33)+"deg)";
+	      document.getElementById("starsDiv").getElementsByTagName("div")[i].style.top = Mtop + yBase*Math.sin((currStep+i*5)/3)*Math.sin(550+currStep/100)
+	      document.getElementById("starsDiv").getElementsByTagName("div")[i].style.left = Mleft + yBase*Math.cos((currStep+i*5)/3)*Math.sin(550+currStep/100)
+	  }
+	  currStep+= step;
+	  T=setTimeout("Fireworks()",20);
+	  if (currStep == 220) {
+	      currStep = -20;
+	      for (n = 0; n < sClrs.length; n++) {
+		  var k = Math.round(Math.random()*n);
+	      }
+	      initialStarColor = sClrs[k];
+	      Dtop = 300; //window.document.body.clientHeight - 250;
+	      Dleft = xBase * 3.5;
+	      Mtop = Math.round(Math.random()*Dtop);
+	      Mleft = Math.round(Math.random()*Dleft);
+	      document.getElementById("starsDiv").style.top = Mtop+document.body.scrollTop;
+	      document.getElementById("texto").style.top = Mtop+document.body.scrollTop;
+	      document.getElementById("starsDiv").style.left = Mleft+document.body.scrollLeft;
+	      if ((Mtop < 30) || (Mleft < 30)) {
+		  Mtop += 90;
+		  Mleft += 90;
+	      } 
+	  }
+      }
+//      Fireworks();
+      //  End -->
+    </script>
+    <style>
+div {
+    transition-timing-function: ease-out;
+    transition: width 0.2s, height 0.3s, transform 0.3s;
+    transform: rotate(10deg);
+}
+div:hover {
+  transform: rotate(60deg);
+}
+</style>
+    </style>
+  </HEAD>
+  <base target="_blank">
+  <BODY bgcolor="#000000" onload="Fireworks();">
+    <div id="texto" style="transform: rotate(-5deg);color: white; font-size: 40px; font-family: Sans-Serif; font-weight: bolder; position: fixed; left: 100px; top: 100px;"> FELIZ ANNO NUEVO!! </div>
+    <div id="starsDiv" style="position:absolute;top:0px;left:0px">
+      <div style="position:relative;width:3px;height:3px;background:#ffffff;font-size:2px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#fff000;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:1px;background:#ffa000;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:2px;background:#ff00ff;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:3px;background:#00ff00;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#0000ff;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ffffff;font-size:1px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#fff000;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#ffa000;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#ff00ff;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ff00ff;font-size:2px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#0000ff;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:3px;background:#00ff00;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#0000ff;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ffffff;font-size:1px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#fff000;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#ffa000;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#ff00ff;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ff00ff;font-size:2px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#0000ff;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ffffff;font-size:1px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#fff000;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#ffa000;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#ff00ff;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ff00ff;font-size:2px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#0000ff;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#FF0000;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ffffff;font-size:1px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#fff000;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#ffa000;font-size:1px"></div>
+      <div style="position:relative;width:4px;height:4px;background:#ff00ff;font-size:1px"></div>
+      <div style="position:relative;width:1px;height:1px;background:#ff00ff;font-size:2px"></div>
+      <div style="position:relative;width:2px;height:2px;background:#0000ff;font-size:1px"></div>
+      <div style="position:relative;width:3px;height:3px;background:#FF0000;font-size:1px"></div>
+    </div>
+  </BODY>
+</HTML>

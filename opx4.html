@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>A S T R O</title>
+    <script src="openpgpjs/dist/openpgp.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      var pubkey=`-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBF8wBjABEAC13xRoxre28P2BCkjG8ImajL3iFfiWvkwOa9YyXklSmCc51ISr
+V8CmTz57ZhsxyRUWWvUXCh5kYnJf+pKzWInXoM6BvFwUwX43IkV1fadmU/sQRG+P
+HK7W52KxisRHkUTKIgKKauwecjDXH85rDlGNzfqyrmMrpv+JFG1LrWTUKhWIdNP9
+yQu1qpkZdjW22ibWKCHd9VGjaXI35KoC3A88jXPRpqRar2oUVa7BrIKbwa88O6MF
+kkA7R03YlhB+ZzZWu2aXzIAgiJi3qnRXdnEuGgiYQlzDvCxDwWu8HtsZK6t17JTl
+6QS3b9Y+xY00RDw16SHb1yUUJk03NkXDIj+Bc1VcH8U8VoWPCC46YzkssqTmSRVO
+JXhjFEPjM0T8YPpj9d+MZegd9gTacejM3WjxQLx1sOf7ShlWWKliT/aezdqbpjQP
+5+JykQFkYYY1gi3UjAw0MEjHPxy3Mr1TKZTH9XBA4EtZ+p9S7js//t1Zj6VuQHKx
+ZH0jOFvWWRj/FMSsB3Tz3yqcgd69GJ1UEMuL9LpLNCO0eB/msiWcsOLvNYSkPkD6
+Uei8HwChPatSSnicuGdEM+Ul1aTp/sMeGEYF5b4gm3Ovhf6Tn7m1guepZLKWZTCZ
+ET2kqKlIymTALW98s+KI/W0LfoeR6z0NpxEMaKIpGxQETWuP9Jz279X6/wARAQAB
+tAVub3JtYYkCTgQTAQoAOBYhBJMvwsuvla5hvDXzJl7mR5k0Ew8wBQJfMAYwAhsP
+BQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEF7mR5k0Ew8wKbIQAKMfchUogeh4
+BWZPSAJM/1ov8oCmJnusOkK3hAQKWR2+0jmlC0bkQq5RI6ICI1MBu+KmRkhK4zk2
+EP/QVm6zrW9Rb/HDw2BYO1i2oG89e3RlKCnSu8aHzrtBUc3khgrl0LfdPLWzRQem
+bT3AO0xJPQeaQr9+9UzKGxx/AWIrMIxY/MSQYUOUcvHjbKzqC6GkHHRXoRCyTmpV
+UUwxJM24jXrGo/U6OaNNPSscgW9ULYYZC3ITy4HOUzsv7XncxD8QMlEwEG2K5M1u
+rkz6R0FzWkbgm2UBSoHJEgZMGq6wTLT8F1oM9H7NN7hfpd6AH4VM38Gi5htPahLD
+0Sspp9Z5MKAxU99FVknlz3JFApVTFRWZq8x2ACJNVmj47kw2+KhA1ehjNJ9+fL1i
+H+cQ8Fp8pPxznD1mhV+14z/7uV7sZ/Sqz2xNtIG18tMOeLJJpEvYL1Jvs33ukXi2
+TAUsDtgqMgfVDNSH8l0ZNFH7dLjgcHowZgNMb9uY71Vil8nEQYhg4FeTulISirF+
+2Sxjsg4IWuPC/ls+fDqd34uOasre9T3lxF3AsGd6bKn+/BYpPhX5RPM403CFkz9m
+5cP4E/Z5Dq6bi8niv1c0a9G2egbhOgmPcIqHUOEv1yDJ9LpAEKCI/2VDhsO3rvrm
+fvZiFno/dSf/tNnqPdNO6pLuX6vTWtSm
+=yssG
+-----END PGP PUBLIC KEY BLOCK-----`;//document.getElementById("pubkey").value;
+
+      var encrypted=new Uint8Array([3,96,114,11,129,93,249,74,36,158,134,95,238,182,181,159,22,229,171,153,110,136,230,151,25,83,20,253,54,225,100,95,130,129,138,1,222,54,230,111,82,63,222,246,179,203,58,79,234,178,28,200,124,48,115,179,127,40,161,95,90,114,95,107,63,5,98,157,119,0,184,196,249,2,206,223,81,44,79,40,85,40,201,215,4,104,24,20,226,127,45,128,11,101,108,101,189,232,126,165,64,50,48,235,168,124,125,97,252,172,139,165,243,231,142,255,62,165,66,88,112,230,36,171,193,112,40,249,27,4,8,246,255,33,20,113,232,158,123,218,169,82,175,188,7,155,188,164,40,254,169,127,83,52,77,32,222,129,158,225,207,130,131,53,215,126,254,105,150,3,8,179,73,17,133,10,168,159,183,249,246,106,255,76,49,124,231,193,9,216,126,12,190,101,91,42,238,96,133,22,37,12,16,232,47,174,228,0,79,114,138,113,95,41,233,33,56,108,28,54,170,193,244,79,184,79,62,154,167,39,2,213,251,55,152,169,219,95,215,61,143,253,226,86,89,201,160,14,130,2,99,127,210]);
+      var iv=new Uint8Array([165,215,21,203,48,193,124,107,44,116,49,104,143,124,126,240]);
+      function importSecretKey(rawKeyz) {
+	  return window.crypto.subtle.importKey(
+	      "raw",
+	      rawKeyz,
+	      "AES-CTR",
+	      false,
+	      ["encrypt", "decrypt"]
+	  );
+      }
+
+      var rawKey="";
+      var kkey=0;
+      
+      async function decr() {
+	  rawKey=Uint8Array.from(document.getElementById("passphrase").value);
+	  kkey= await importSecretKey(rawKey);
+	  ciphertext = await window.crypto.subtle.decrypt(
+	      {
+		  name: "AES-CTR",
+		  counter:iv,
+		  length: 128
+	      },
+	      kkey,
+	      encrypted
+	  );
+	  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+	  var c=0;
+	  var bb="";
+	  while(c<buffer.length) {
+	      bb+=String.fromCharCode(buffer[c]);
+	      c++;
+	  }
+	  document.getElementById("texto2").value=bb;
+      }
+
+
+      function undale(){
+	  if(window.crypto.getRandomValues){
+	      textop=document.getElementById("texto2").value;
+	      if(textop != ""){
+		  (async () => {
+		      const { data:verified } = await openpgp.verify({
+			  message: await openpgp.message.readArmored(textop),
+			  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+		      });
+		      var vi=0;
+		      var decrypted="";
+		      while(vi<verified.length){
+			  decrypted+=String.fromCharCode(verified[vi]);
+			  vi++;
+		      }
+		      document.getElementById("texto2").value=decrypted;
+		  })();
+	      }
+	  }else{
+	      window.alert("This browser does not support basic cryptography!");
+	  }
+      }
+      function undaleAES() {
+	  
+      }
+      
+    </script>
+  </head>
+  <body>
+    <p>passphrase: <input id="passphrase" /></p>
+    <input type="button" id="gener" value = "AES" onclick="decr();">
+    <input type="button" id="gener" value = "RSA" onclick="undale();">
+    <input type="button" id="gener" value = "RSA-AES" onclick="undaleAES();">
+    <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="80" id="texto2"  name="texto2" ></textarea>
+  </body>
+</html>

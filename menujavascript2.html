@@ -1,0 +1,294 @@
+<html>
+ 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content=en-us>
+ 
+<meta name="title" content="JavaScriptBank.com - free JavaScripts, Tutorials, Example Codes, DHTML, CSS, Resources and more">
+<meta name="description" content="JavaScriptBank.com - Bank of JavaScript code, provide thousands of free JavaScripts. Provide free DHTML/JavaScript code, menus, calendars, popup windows, games, browser and more">
+ 
+<meta name="author" content="Unknown" >
+<meta name="copyright" content="JavaScriptBank.com, Thai Cao Phong">
+<meta name="robots" content="INDEX,FOLLOW">
+<title>Customize Dropdown Menu - Form - JavaScriptBank.com</title>
+ 
+<style type=text/css>
+/*
+    Customize Dropdown Menu 1.0
+    Author: Thái Cao Phong
+    Website: www.JavaScriptBank.com
+    Please keep these comments above to contact author when you use this script. Thank you very much.
+    Vietnamese: Xin ban hay giu lai nhung thong tin tren de nguoi khac co the lien he voi tac gia neu ban co 
+su dung doan ma nay. Cam on ban rat nhieu.
+*/
+img
+{
+    vertical-align: middle;
+}
+.title_dropdown
+{
+    padding: 1px;
+    background: url(dropdown_arrow.jpg) no-repeat right;
+    width: 15px;
+    vertical-align: middle;
+    border: 1px solid silver;
+    width: 180px;
+    height: 17px;
+    font: 12px verdana bold;
+    text-align: left;
+    cursor: hand;
+}
+.content_dropdown
+{
+    position: relative;
+    vertical-align: middle;
+    border: 1px solid black;
+    width: 180px;
+}
+.content_dropdown a
+{
+    text-decoration: none;
+    color: black;
+}
+.content_dropdown p.off
+{
+    margin: 0px;
+    color: black;
+    padding: 3px;
+    padding-left: 10px;
+    cursor: hand;
+    text-align: left;
+}
+.content_dropdown p.on
+{
+    background-color: #000077;
+    color: white;
+    margin: 0px;
+    padding: 3px;
+    padding-left: 10px;
+    cursor: hand;
+    text-align: left;
+}
+.content_dropdown img
+{
+    width: 30px;
+    height: 20px;
+    border: none;
+    margin-right: 5px;
+}
+</style>
+<script language=javascript>
+/*
+         
+            xxxxxxxxxxxxxxx   xxxxxxxxxxx     xxxx
+            xxxxxxxxxxxxxxx  xxxxxxxxxxxxx    xxxx
+            xxxxxxxxxxxxxxx  xxxxxxxxxxxxx    xxxx
+                 xxxxx       xxxxxxxxxxxx     xxxx
+                 xxxxx       xxxxx            xxxx
+                 xxxxx       xxxxxxxxxxxx     xxxx
+                 xxxxx       xxxxxxxxxxxxx    xxxxxxxxxxx           www.JavaScriptBank.com
+                 xxxxx        xxxxxxxxxxxx    xxxxxxxxxxxxx
+                 xxxxx               xxxxx    xxxx     xxxx
+           xxx   xxxxx        xxxxxxxxxxxx    xxxx     xxxx
+           xxx  xxxxxx       xxxxxxxxxxxxx    xxxx     xxxx
+           xxxxxxxxxx        xxxxxxxxxxxxx    xxxxxxxxxxxxx
+            xxxxxxxx          xxxxxxxxxxx      xxxxxxxxxxx
+ 
+    Customize Dropdown Menu 1.0
+    Author: Thái Cao Phong
+    Website: www.JavaScriptBank.com
+    Please keep these comments above to contact author when you use this script. Thank you very much.
+    Vietnamese: Xin ban hay giu lai nhung thong tin tren de nguoi khac co the lien he voi tac gia neu ban co 
+su dung doan ma nay. Cam on ban rat nhieu.
+*/
+var ie = navigator.appName=='Microsoft Internet Explorer'?true:false;
+function toggle_dropdown(id)
+{
+    var div = document.getElementById(id);
+    if(div.style.display == 'none')
+        div.style.display = 'block';
+    else
+        div.style.display = 'none';
+}
+function getObject(evt)
+{
+    var srcElem;
+    if(ie)
+    {
+        srcElem = event.srcElement;
+    }
+    else
+    {
+        srcElem = evt.target;
+    }
+    return srcElem;
+}
+function go_any_page()
+{
+    alert('This is example');
+}
+function changeStyle(pTag)
+{
+    pTag.className = (pTag.className == 'off' ? 'on' : 'off');
+}
+function dropdown_on(evt)
+{
+    var pTag = getObject(evt);
+    if(pTag.tagName == 'P' && pTag.parentNode.id == 'language_dropdown')
+        changeStyle(pTag);
+}
+function dropdown_off(evt)
+{
+    var pTag = getObject(evt);
+    if(pTag.tagName == 'P' && pTag.parentNode.id == 'language_dropdown')
+        changeStyle(pTag);
+}
+function click(evt)
+{
+    var pTag = getObject(evt);
+    if(!document.getElementById('language_dropdown'))
+        return;
+    if(pTag.tagName == 'DIV' && pTag.className == 'title_dropdown')
+        toggle_dropdown('language_dropdown');
+    else if(document.getElementById('language_dropdown').style.display == 'block')
+        toggle_dropdown('language_dropdown');
+}
+document.onmouseover = dropdown_on;
+document.onmouseout = dropdown_off;
+document.onclick = click;
+</script>
+</head>
+ 
+<body>
+<h3>Customize Dropdown Menu</h3>
+ 
+<p><b>Customize Dropdown Menu</b> is designed to display some choices, such as languages, countries, and themes; but it's differrent from the original version in browsers. This tool combines CSS and JavaScript to create a dropdown wherein you can add an image to the title, on every choice.</p>
+ 
+<p>Try the dropdown below and feel the differences. Tested: IE 7, Opera 9, Firefox 2, Netscape 9</p>
+ 
+<fieldset style="border: 1px solid silver; padding: 15px;">
+<legend style="background-color: silver; padding: 5px;">Sampled by JavaScriptBank.com</legend>
+<div class=title_dropdown><img class=imgclass src="flag.png">Choose your country</div>
+<div id=language_dropdown style='display: none;' class=content_dropdown>
+<p class=off onClick="go_any_page();"><img src='brazil.gif'>Brazil</p>
+<p class=off onClick="go_any_page();"><img src='japan.gif'>Japan</p>
+<p class=off onClick="go_any_page();"><img src='usa.gif'>USA</p>
+<p class=off onClick="go_any_page();"><img src='vietnam.gif'>Vietnam</p>
+</div>
+</fieldset>
+<fieldset style="border: 1px solid silver;">
+<legend style="background-color: silver; margin: 5px; padding: 15px;">Setup</legend>
+<table border="0" width="100%" cellspacing="3" cellpadding="3">
+<tr>
+<td align="center"><b>CSS Code</b><br>
+<textarea cols=35 rows=10 name="css">
+<style type=text/css>
+/*
+    Customize Dropdown Menu 1.0
+    Author: Thái Cao Phong
+    Website: www.JavaScriptBank.com
+    Please keep these comments above to contact author when you use this script. Thank you very much.
+    Vietnamese: Xin ban hay giu lai nhung thong tin tren de nguoi khac co the lien he voi tac gia neu ban co 
+su dung doan ma nay. Cam on ban rat nhieu.
+*/
+img
+{
+    vertical-align: middle;
+}
+.title_dropdown
+{
+    padding: 1px;
+    background: url(dropdown_arrow.jpg) no-repeat right;
+    width: 15px;
+    vertical-align: middle;
+    border: 1px solid silver;
+    width: 180px;
+    height: 17px;
+    font: 12px verdana bold;
+    text-align: left;
+    cursor: hand;
+}
+.content_dropdown
+{
+    position: relative;
+    vertical-align: middle;
+    border: 1px solid black;
+    width: 180px;
+}
+.content_dropdown a
+{
+    text-decoration: none;
+    color: black;
+}
+.content_dropdown p.off
+{
+    margin: 0px;
+    color: black;
+    padding: 3px;
+    padding-left: 10px;
+    cursor: hand;
+    text-align: left;
+}
+.content_dropdown p.on
+{
+    background-color: #000077;
+    color: white;
+    margin: 0px;
+    padding: 3px;
+    padding-left: 10px;
+    cursor: hand;
+    text-align: left;
+}
+.content_dropdown img
+{
+    width: 30px;
+    height: 20px;
+    border: none;
+    margin-right: 5px;
+}
+</style></textarea>
+</td></tr>
+ 
+<tr><td align="center"><b>JavaScript Code</b><br>
+<textarea cols=35 rows=10 name="js">
+/*
+         
+            xxxxxxxxxxxxxxx   xxxxxxxxxxx     xxxx
+            xxxxxxxxxxxxxxx  xxxxxxxxxxxxx    xxxx
+            xxxxxxxxxxxxxxx  xxxxxxxxxxxxx    xxxx
+                 xxxxx       xxxxxxxxxxxx     xxxx
+                 xxxxx       xxxxx            xxxx
+                 xxxxx       xxxxxxxxxxxx     xxxx
+                 xxxxx       xxxxxxxxxxxxx    xxxxxxxxxxx           www.JavaScriptBank.com
+                 xxxxx        xxxxxxxxxxxx    xxxxxxxxxxxxx
+                 xxxxx               xxxxx    xxxx     xxxx
+           xxx   xxxxx        xxxxxxxxxxxx    xxxx     xxxx
+           xxx  xxxxxx       xxxxxxxxxxxxx    xxxx     xxxx
+           xxxxxxxxxx        xxxxxxxxxxxxx    xxxxxxxxxxxxx
+            xxxxxxxx          xxxxxxxxxxx      xxxxxxxxxxx
+ 
+    Customize Dropdown Menu 1.0
+    Author: Thái Cao Phong
+    Website: www.JavaScriptBank.com
+    Please keep these comments above to contact author when you use this script. Thank you very much.
+    Vietnamese: Xin ban hay giu lai nhung thong tin tren de nguoi khac co the lien he voi tac gia neu ban co 
+su dung doan ma nay. Cam on ban rat nhieu.
+*/</textarea>
+</td></tr>
+ 
+<tr><td align="center"><b>Dropdown HTML Code</b><br>
+<textarea cols=35 rows=10 name="html"><div class=title_dropdown><img class=imgclass src="flag.png">Choose your country</div>
+<div id=language_dropdown style='display: none; z-index: -100;' class=content_dropdown>
+<p class=off onClick="go_any_page();"><img src='brazil.gif'>Brazil</p>
+<p class=off onClick="go_any_page();"><img src='japan.gif'>Japan</p>
+<p class=off onClick="go_any_page();"><img src='usa.gif'>USA</p>
+<p class=off onClick="go_any_page();"><img src='vietnam.gif'>Vietnam</p>
+</div></textarea>
+</td></tr>
+</table>
+</fieldset>
+ 
+<p>I hope that this tool is useful to ad to your web page. <a href="http://www.javascriptbank.com" target="new">Contact me</a> if you need any help to solve it.</p>
+</body>
+ 
+</html>

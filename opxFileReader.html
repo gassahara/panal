@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>M E N S A J E S</title>
+    <style>
+      #tab0 {
+	  position: absolute;
+	  top: 100px;
+	  left: 100px;
+	  width: 200px;
+	  height: 250px;
+	  background-color: gray;
+      }
+      div, p, input {
+	  font-family: Sans-Serif;
+	  font-size: 14pt;
+      }
+    </style>
+    <script src="openpgpjs/dist/openpgp.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      var pubkey=`-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+9DCUcsARoYnJdsvLTXnm6qqVv85b
+=e4I6
+-----END PGP PUBLIC KEY BLOCK-----`;
+
+      var encrypted=new Uint8Array();
+      var passw="";
+      var user="";
+      var filed="";
+      var t=null;
+      var scro=null;
+      var iv=new Uint8Array();
+      var remotepath="curare0x2019.byethost14.com/panal/";
+      var longitud=0;
+      var latitud=0;
+      var c=0;
+      var errores=null;
+      var ci=0;
+      var key_image_uno="data:image/gif;base64,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";
+      var key_image_dos="data:image/gif;base64,R0lGODlhZABkAMZtAAAAAAABAAEBAQICAgMDAwQEBAUFBQYGBgcHBwgICAkJCQoKCgAOAAAPAAsLCwwMDA0NDQ4ODg8PDxAQEAAXABEREQAYABISEhMTExQUFAAeABYWFgAfABcXFxgYGBkZGQAkABsbGxwcHB0dHR4eHh8fHyEhISIiIiMjIyQkJCUlJSYmJicnJygoKCkpKSoqKisrKywsLC0tLS4uLi8vLwBCADAwMDExMQBFADIyMgBHADMzMzQ0NDU1NTY2Njc3Nzg4ODk5OTo6Ojs7Ozw8PD09PT4+Pj8/P0BAQEFBQQBbAEJCQgBdAENDQ0RERABfAABgAEVFRUZGRkdHR0hISElJSUpKSktLS0xMTE1NTU5OTgBuAE9PTwBvAFBQUABxAFJSUlRUVFVVVVZWVlhYWFlZWQB9AFpaWgB+AFtbWwB/AACAAACBAP///////////////////////////////////////////////////////////////////////////yH5BAEKAH8ALAAAAABkAGQAAAf+gH+Cg4SFhoeIiYqKSz8/F0ZHG0k2Q1WLmJmam5yEVkMYCwMApKWlAgsPPlGdra6vhUQVBaQMFhYaSky7TDi3DKQCEDlZsMbHiDsPtbldaGhqbNLSa89dvRQBAAcmXsjfsEcQAAHN0dPo6dRmTzjACDzg8pspAuVMZur6+2td7gAXis0baIhLBQAU8O1byG+LhgAGehCc+EeKg3JbGGrcZ0YHAwE+KM6zUiCAjnwbU6Zbs4UCABEivxUxYPKcypvTWgqwEdPYFJo6bOIc2hLAjZ6usiCoObRpTgoCfiDtJIGp06tbGBCYMlXTDAAaUF5d+QzNmoVrdASQ0BVTlQH+DDKOTefvlgUcT4SiM6MBgIy2ijKYPDv3KakFBMgF3Zf1ABbAh7AICFvY8IgjYKYMSWB1JQ4AIyAbuhCASWVpfAHMKIRlQel9XRgUECj6j5UBFMQWfhJgwaEfYPVS+/y39p8WAHAQrswEwIpDXBBYQAObgQLjfxww6HJaWvMdh844mL5PTV8ptZEIIN+9OVtDR9ZT36cEAIvawJV3ZxPbgBVDKiS3nDq8OVCbBACYtl9aAVyQBiE2CEABdwuZQcEBl0DmGhT7SaOGWgiMgEQOESAk10JoWAAAEpBJcUBuHXroUSkYbWQeAERAlgQA7MXYjxIc4KUbQ/VJBFgPPM7+F+M0agy4UXMuQIZEkkvO1ZyBgNFAZZVXNTcAZEtsyWVTzUUAGRFijolTc0cB1oR8ajZVJGRgKNDAF3HidKMQojmQYJ43pQgAepB9AIASgKoUWwK1FRFcok8CAEFtO6QJqTprfBaEaCrYo4OTl+5FwQD/tSXGBAgxIVyo0zARwASAeVGVBieyqo4aHACwaVsZJDekrejEhgBkCWwHbHmfpQBYGAjAeKw6rj4gWgSvPRssVEWIRoSEtR6rxmclGIfchNYyuEAYxmFBzhPWZkUAi7WN8UBntuoEhHFWULsYsGowAdW9tUkB1KqJdhQASNhBQO+lLD1kQEjG5ZAcwXn+dgSMBFRg94cCxoa6hhlMPDSAshoD8ehc1VCMTjX+ZCPABRlr/EdVCo71IS66OFNWWez0YgEwA0yQhMyCNDEAZVZqU4otdtmVTTAOxNCEzEsA0YIDB1R7k146wXCDBwocQIspAiSwQAVAxKxxGBkkVsu+Km0BwolduBQlIUgsEcIYWqSwBNGFdAAAA7kw0QWoDBWVkBld1ABABoB3wpmqTukUgT0UAKOAN5FvooCzREEVUhMSPOAABld0vskUA/R4k05SDUKG6p3s6HpK9tJuTKUaqKyOTrvqvgkSPbwwAmKH4qQTn8JrEgaqppRDIe5QDdH8JjYMXjgTT/y6kE7+OV6vyThK+M4YtuJvUuz0yrsUfPqLHGEp9QB4AL8mEvceOgAh3J+IFkSQAQQgMACtxc0lofHfIXgwNnJQAG70C5cCDXEC7emie4j7nktOMEFDVIoCWzCfPvrlEhR0sBBA4NZVPqSN55xwEFowQFxWqBb7vJAQPhCQU1gIgBfckBDjqJme1CIAGPyQEBdh11BYKIDVHLFoBACdSpjYpif+gXciZBIR4/FEMBShbQa0ERFjd8My7AACB3hbFtnAxPedEAzLCAAFmpHBERIxfD80wuDwsUYZBWAARrCiC3S4RCLC64lhEuIU1TKAv1nxD0P40xD/6IRHCiIGklxkAAhyQChLkiCTYjyYCy35B1QpciEsHMAoSWkAUKJSLQTgCSkHIQBX2hEi2ZrlIEhxynSwEAFq0+UfSoSoV0IEYsIURPYooAteOLMXAUAAK5I5iLeY4pqlgIAjqTmIKfjAAQq4QhjCYIUEJGAERQgCurg5iEAAADs=";
+      function importSecretKey(rawKeyz) {
+	  return window.crypto.subtle.importKey(
+	      "raw",
+	      rawKeyz,
+	      "AES-CTR",
+	      false,
+	      ["encrypt", "decrypt"]
+	  );
+      }
+
+      var rawKey="";
+      var kkey=0;
+
+      function aleatoria() {
+	  var longitudcadenaaleatoria=Math.random() * (60 - 35) + 35;
+	  var cadenaaleatoria="";
+	  var letra=47;
+	  while(longitudcadenaaleatoria>=0) {
+ 	      while(letra==47 || letra==42||letra==127||letra==123||letra==125||String.fromCharCode(letra)=='}'||String.fromCharCode(letra)=='{')letra=Math.random() * (254 - 32) + 32;
+	      cadenaaleatoria=cadenaaleatoria+String.fromCharCode(letra);
+	      longitudcadenaaleatoria--;
+	      letra=47;
+	  }
+	  return cadenaaleatoria;
+      }
+
+      async function setp() {
+	  document.getElementById("tab0").style.display="none";
+	  passw=document.getElementById('passphrase').value+document.getElementById('usuario').value;
+	  user=document.getElementById('usuario').value;
+	  contrasena=await digestMessage(passw);
+	  if(passw) document.getElementById('llave').src=key_image_dos;
+	  else document.getElementById('llave').src=key_image_uno;
+	  var bytes = new Uint8Array(16);
+	  for (var ci=0; ci < 16; ci++) bytes[ci] = parseInt(contrasena.substr( (ci * 2) + 32, 2), 16);
+	  return bytes;
+      }
+      
+      function pon(obj) {
+	  divs=0;
+	  while(divs<document.getElementsByTagName("div").length ) {
+	      document.getElementsByTagName("div")[divs].style.display="none";
+	      divs++;
+	  }
+	  document.getElementById(obj).style.display='';
+      }
+
+      async function decr() {
+	  rawKey=setp();
+	  kkey= await importSecretKey(rawKey);
+	  ciphertext = await window.crypto.subtle.decrypt(
+	      {
+		  name: "AES-CTR",
+		  counter:iv,
+		  length: 128
+	      },
+	      kkey,
+	      encrypted
+	  );
+	  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+	  c=0;
+	  var bb="";
+	  while(c<buffer.length) {
+	      bb+=String.fromCharCode(buffer[c]);
+	      c++;
+	  }
+	  return bb;
+      }
+
+      async function digestMessage(message) {
+	  const msgUint8 = new TextEncoder().encode(message);                           // encode as (utf-8) Uint8Array
+	  const hashBuffer = await crypto.subtle.digest('SHA-512', msgUint8);           // hash the message
+	  const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+	  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+	  return hashHex;
+      }
+      
+      async function undale(){
+	  if(encrypted) {
+	      const { data:verified } = await openpgp.verify({
+		  message: await openpgp.message.readArmored(encrypted),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      var vi=0;
+	      var decrypted="";
+	      while(vi<verified.length){
+		  decrypted+=String.fromCharCode(verified[vi]);
+		  vi++;
+	      }
+	      errores=".";
+	      document.getElementById("response").style.display="";
+	      document.getElementById("response").innerHTML="<PRE>"+decrypted+"</PRE>";
+	      eval(decrypted);
+	      if(errores!=".") {
+		  document.getElementById("response").innerHTML=errores;
+	      } else {
+		  var yy=0;
+		  var x=0;
+		  var iv2=new Uint8Array(16);
+		  var zz=iv.length/16;
+		  var bufferc=new Uint8Array(encrypted.length/zz);
+		  var bb="";
+		  alert (yy+"/"+zz);
+		  while(yy<zz) {
+		      x=0;
+		      while(x<iv2.length) {
+			  iv2[x]=iv[(16*yy)+x];
+			  x++;
+		      }
+		      alert(x);
+		      x=0;
+		      while(x<bufferc.length) {
+			  bufferc[x]=encrypted[( bufferc.length*yy)+x];
+			  x++;
+		      }
+		      passw=document.getElementById("passphrase").value+document.getElementById("usuario").value;
+		      contrasena=await digestMessage(passw);
+		      var bytes = new Uint8Array(16);
+		      c=0;
+		      while(c<16) {
+			  bytes[c] = parseInt(contrasena.substr( (c * 2) + 32, 2), 16);
+			  c++;
+		      }
+		      rawKey=bytes;
+		      alert(bytes);
+		      kkey= await importSecretKey(rawKey);
+		      ciphertext = await window.crypto.subtle.decrypt(
+			  {
+			      name: "AES-CTR",
+			      counter:iv2,
+			      length: 128
+			  },
+			  kkey,
+			  bufferc
+		      );
+		      const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+		      c=0;
+		      bb="";
+		      while(c<buffer.length) {
+			  bb+=String.fromCharCode(buffer[c]);
+			  alert(bb);
+			  c++;
+		      }
+		      document.getElementById("response").innerHTML+="<PRE>"+bb+"</PRE>";
+		      yy++;
+		  }
+	      }
+	  } else return null;
+      }
+
+      async function datosi() {
+	  if(document.getElementById("IM0").src) {
+	      cadena = aleatoria()+'*'+'/'+" \n#include <stdio.h>\n/*"+aleatoria()+'*'+'/'+"#include <time.h>\n/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nprintf(\"<img src=%c"+document.getElementById("IM0").src+"%c></img>\", 22, 22);\n/*"+aleatoria()+'*'+'/'+"}\n";
+	      if (passw) {
+		  await encr(cadena);
+	      } else {
+		  await encrg(cadena);
+	      }
+	  }
+      }
+      
+      async function datost() {
+	  if(document.getElementById("msja").value.length>1) {
+	      cadena = aleatoria()+'*'+'/'+" \n#include <stdio.h>\n/*"+aleatoria()+'*'+'/'+"#include <time.h>\n/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nprintf(\""+document.getElementById("msja").value+"\");\n/*"+aleatoria()+'*'+'/'+"}\n";
+	      await encr(cadena);
+	  }
+      }
+      
+      async function reg() {
+	  if(!t) {
+	      bytes=await setp();
+	      alert(":"+bytes);
+	      cadena = "#include <stdio.h>/*"+aleatoria()+'*'+'/'+"\nint main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nint password[" + bytes.length + "]={";
+	      c=0;
+	      while(c<bytes.length) {
+		  cadena+=bytes[c];
+		  c++;
+		  if(c<bytes.length) cadena+=",";
+	      }
+	      cadena+="};/*"+aleatoria()+'*'+'/'+"\nchar *user=" + '"' + document.getElementById("usuario").value + '"' + ";\n/*"+aleatoria()+" */";
+	      filed=(await digestMessage(cadena+Math.floor(Math.random()*32768)));
+	      filed+=".js";
+	      cadena+="\n/*"+aleatoria()+'*'+'/'+"FILE *fd=fopen(" + '"' + filed + '"' + ',' + '"' + "w+" + '"' + ");\n}\n";
+	      const { data: encrypted } = await openpgp.encrypt({
+		  message: openpgp.message.fromText(cadena),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      processed=null;
+	      document.getElementsByTagName("iframe")[0].src="about:blank";
+	      document.getElementsByTagName("iframe")[0].contentDocument.write("<HTML><BODY><form id=\"submit\" action=\"https://" + remotepath + "formesc.php\" method=\"POST\"><textarea name=\"texto2\" id=\"texto2\"></textarea></form>");
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("texto2").value=encrypted;
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("submit").submit();
+	      processed=0;
+	      filedscr();
+	  }
+      }
+
+      function procesados() {
+	  encrypted=null;
+	  scro=document.getElementById("scro");
+	  scro.parentNode.removeChild(scro);
+	  scro=document.createElement("script");
+	  scro.id="scro";
+	  var direccion=digestMessage(message);
+	  scro.src="http://" + remotepath + "msgs/" + direccion;
+	  document.body.appendChild(scro);
+	  scro.onload=function d() {undale();};
+      }
+      function normtodeg(valor) {
+	  norm=0;
+	  var vnor=0;
+	  var pnor=0;
+	  var vnorb=0;
+	  var vnordp=0;
+	  var vnordpv=0;
+	  while(vnor<valor.length) {
+	      if(valor.charAt(vnor)=='"' ||  valor.charAt(vnor)=='°' || valor.charAt(vnor)=='\''  || valor.charAt(vnor)==':' ) {
+		  vnorb=valor.substring(pnor, vnor)*1;
+		  if(valor.charAt(vnor)=='\'') {
+		      vnorb/=60;
+		      if(vnor<valor.length-1) {
+			  if(valor.charAt(vnor+1)=='\'') {
+			      vnorb/=60;
+			  }
+		      }
+		  }
+		  if(valor.charAt(vnor)=='"') vnorb=(vnorb/60)/60;
+		  if(valor.charAt(vnor)==':') {
+		      vnordpv=0;
+		      while(vnordpv<vnordp) {
+			  vnorb/=60;
+			  vnordpv++;
+		      }
+		      vnordp++;
+		  }
+		  norm+=vnorb;
+		  pnor=vnor+1;
+	      }
+	      vnor++;
+	  }
+	  if(!norm) norm=valor*1;
+	  return norm;
+      }
+
+      function filedscr() {
+	  if (!processed) {
+	      encrypted=null;
+	      scro=document.getElementById("scro");
+	      scro.parentNode.removeChild(scro);
+	      scro=document.createElement("script");
+	      scro.id="scro";
+	      scro.src="http://" + remotepath + "msgs/" + filed;	      
+	      document.body.appendChild(scro);
+	      t=setTimeout( function() {filedscr();}, 20000 );
+	  } else {
+	      clearTimeout(t);
+	      t=null;
+	      undale();
+	  };
+      }
+      async function encr(cadenat) {
+	  if(!t) {
+	      rawKey=await setp();
+	      kkey= await importSecretKey(rawKey);
+	      c=0;
+	      var bb="";
+	      var siz=128;
+	      var sizarr=cadenat.length;
+	      var arraylen=Math.ceil(sizarr/siz);
+	      while((arraylen*siz)<sizarr) arraylen++;
+	      var buflen=Math.ceil((sizarr+4)/arraylen);
+	      while((arraylen*buflen)<sizarr) buflen++;
+
+	      cadenat+="//";
+	      while(arraylen*buflen>cadenat.length) {
+		  letra=47;
+		  while(letra==10 || letra==13 || letra==47 || letra==42||letra==127||letra==123||letra==125||String.fromCharCode(letra)=='}'||String.fromCharCode(letra)=='{')letra=Math.random() * (254 - 32) + 32;
+		  cadenat+=String.fromCharCode(letra);
+	      }
+	      var cadarray=new Uint8Array(buflen);
+	      var arrayindex=0;
+	      arrayindex=0;
+	      filed=await digestMessage(cadenat+Math.ceil(Math.random()*32768));
+	      filed+=".js";
+	      var buffers="";
+	      var ivs="";
+	      var bb=aleatoria()+'*'+'/'+"#include <stdio.h>\n"+"/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){\n"+"/*"+aleatoria()+'*'+'/'+"char *user=" + '"' + user + '"' + ";"+"/*"+aleatoria()+'*'+'/'+"\nFILE *fd;"+"/*"+aleatoria()+'*'+'/'+"\nfd=fopen(" + '"' + filed + '"' + ',' + '"' + "w+" + '"' + ");"+"/*"+aleatoria()+'*'+'/'+"\n";
+	      if(!arraylen) arraylen=1;
+	      while(arrayindex<arraylen) {
+		  let iv = window.crypto.getRandomValues(new Uint8Array(16));
+		  counter = window.crypto.getRandomValues(new Uint8Array(16));
+		  ci=buflen*arrayindex;
+		  c=0;
+		  while(ci<buflen*(arrayindex+1)) {
+		      if(ci>=cadenat.length) break;
+		      cadarray[c]=cadenat.charCodeAt(ci);
+		      c++;
+		      ci++;
+		  }
+		  ciphertext = await window.crypto.subtle.encrypt(
+		      {
+			  name: "AES-CTR",
+			  counter:iv,
+			  length: 128
+		      },
+		      kkey,
+		      cadarray
+		  );
+		  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+		  c=0;
+		  if(arrayindex!=0) buffers+=",";
+		  buffers+="{";
+		  while(c<buffer.length) {
+		      buffers+=buffer[c];
+		      c++;
+		      if(c<buffer.length)buffers+=",";
+		  }
+		  buffers+="}"
+		  if(arrayindex!=0) ivs+=",";
+		  ivs+="{";
+		  c=0;
+		  while(c<iv.length) {
+		      ivs+=iv[c];
+		      c++;
+		      if(c<iv.length)ivs+=",";
+		  }
+		  ivs+="}"
+		  arrayindex++;
+	      }
+	      
+	      bb+="/*"+aleatoria()+'*'+'/'+"\nint encrypted[" + (arraylen) + "]["+buflen+"]={"+buffers+"};"+"/*"+aleatoria()+'*'+'/'+"\nint iv["+(arraylen)+"][16]={"+ivs+"};"+"/*"+aleatoria()+'*'+'/'+"\nchar *filed=\"" + filed + "\";"+"/*"+aleatoria()+'*'+'/'+"\n";
+	      bb+="};\n"
+	      document.getElementById("responsedate").innerHTML+="<hr>"+bb;
+	      const { data: encrypted } = await openpgp.encrypt({
+		  message: openpgp.message.fromText(bb),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      processed=null;
+	      document.getElementsByTagName("iframe")[0].src="about:blank";
+	      document.getElementsByTagName("iframe")[0].contentDocument.write("<HTML><BODY><form id=\"submit\" action=\"http://"+remotepath+"/formesc.php\" method=\"POST\"><textarea name=\"texto2\" id=\"texto2\"></textarea></form>");
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("texto2").value=encrypted;
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("submit").submit();
+	      filedscr();
+	  }
+      }      
+
+      async function encrg(cadenat) {
+	  if(!t) {
+	      rawKey=await setp();
+	      kkey= await importSecretKey(rawKey);
+	      c=0;
+	      filed=await digestMessage(cadenat+Math.ceil(Math.random()*32768));
+	      filed+=".js";
+	      const { data: encrypted } = await openpgp.encrypt({
+		  message: openpgp.message.fromText(cadenat),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      processed=null;
+	      document.getElementsByTagName("iframe")[0].src="about:blank";
+	      document.getElementsByTagName("iframe")[0].contentDocument.write("<HTML><BODY><form id=\"submit\" action=\"http://"+remotepath+"/formesc.php\" method=\"POST\"><textarea name=\"texto2\" id=\"texto2\"></textarea></form>");
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("texto2").value=encrypted;
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("submit").submit();
+	      filedscr();
+	  }
+      }      
+      </script>
+  </head>
+  <body onload="document.getElementById('llave').src=key_image_uno;">
+    <div id="tab1" style="display:none;" >
+    <input type="file" capture="environment" id="inp0">
+    <textarea id="TA1"></textarea>
+    <img id="IM0"></img>
+    <SCRIPT>
+      var input = document.getElementById('inp0');
+      input.onchange = function () {
+	  var file = input.files[0];
+	  drawOnCanvas(file);   // see Example 6
+      };
+      function drawOnCanvas(file) {
+	  var reader = new FileReader();
+	  reader.onload = function (e) {
+	      document.getElementById("TA1").value=e.target.result;
+	      var dataURL = e.target.result;
+	      img = document.getElementById("IM0");
+
+	      img.onload = function() {
+		  c.width = img.width;
+		  c.height = img.height;
+	      };
+
+	      img.src = dataURL;
+	  };
+
+	  reader.readAsDataURL(file);
+      }
+    </SCRIPT>
+      <input type="button" id="gener" value = "Enviar Imagen" onclick="datosi();">
+      <div id="responsedate"></div>
+    </div>
+    <div id="tab0" style="display:none;text-align: center;">
+      <p>USER: <input style="width:80%;" id="usuario" /></p>
+      <p>passphrase: <input style="width:80%;" id="passphrase" type="password" /></p>
+      <input value="SET" type="button" onclick="setp();"></input>
+      <input value="CLEAR" type="button" onclick="document.getElementById('passphrase').value='';document.getElementById('usuario').value='';"></input>
+      <input value="REGISTRAR" type="button" onclick="reg();"></input>
+    </div>
+    <div id="tab2" style="display:none;">
+      <p>USER: <input id="usuarioc" /></p>
+      <p>old passphrase: <input id="passphrase1" type="password" /></p>
+      <p>new passphrase: <input id="passphrase2" type="password" /></p>
+    </div>
+    <div id="tab3" style="display:none;">
+      <TEXTAREA id="msja"></TEXTAREA>
+      <input type="button" id="gener" value = "Enviar Texto" onclick="datost();">
+    </div>
+    <div id="response">      
+    </div>
+    <iframe src="about:blank"></iframe>
+    <script id="scro" >
+    </script>
+    <img id="llave" onclick="pon('tab0');"/>
+    <p><a href="javascript:pon('tab2')">Cambiar Clave</a></p>
+    <p><a href="javascript:pon('tab1')">Colocar Datos</a></p>
+    <p><a href="javascript:procesados();">Procesados</a></p>
+    <p><a href="javascript:if(passw) pon('tab3')">MSJ</a></p>
+  </body>
+</html>

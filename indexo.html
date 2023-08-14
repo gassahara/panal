@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title> Servicio de Transferencia de Archivos  </title>
+<link rel="icon" 
+      type="image/png" 
+      href="imagenes/nube.png">
+    <style>
+      #show-menu {
+            display: none;
+            background-color: red;
+      }
+      #menu {
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 14px;
+      font-style: normal;
+      text-align: center;
+      float:left;  
+      width:48%;
+      right:-49.5%;
+      top:1px;
+      }
+
+      #menu ul ul {
+      display: none;
+      }
+
+      #menu ul li:hover > ul {
+      display: block;
+      }
+
+      #menu ul {
+      list-style: none;
+      display:inline-block;
+      position: relative;
+      }
+
+      #menu ul:after {
+      content: "";
+      clear: both;
+      display: block;
+
+      }
+
+      #menu ul li {
+      #      margin: -1px 1px;
+      #border-right: 1px solid white;
+      #border-radius: 10px;
+      float: left;
+      position:relative;
+      height: 20px;
+      padding: 10px;
+      width:70px;;
+#      background-color:#666666;  
+      }
+
+      #menu ul li a {
+      display: flex;
+      justify-content: center;
+      #flex-direction: column;
+      max-width: 100px;
+      height: 35px;
+      color: white;
+      text-decoration: none;
+      }
+
+      #menu ul li:hover {
+      background: none;
+#      background-color:#666666;  
+}
+
+      #menu > ul > li >a:hover {
+      #      color: #fff;
+      #     background: #f00;
+      }
+
+      #menu ul ul {
+      border-radius: 0px;
+      padding: 0 1px;
+      position: absolute;
+      }
+
+      #menu ul ul li {
+      float: none;
+      border-radius: 0px;
+      position: relative;
+      height: 35px;
+      top:-10px;
+      width:100%;
+      z-index:1000;
+      border-right: 0px solid white;      
+      }
+
+      #menu ul ul li a {
+      color: white;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      #height: 55px;
+      text-decoration: none;
+      }
+
+      #menu ul ul li a:hover {
+      #    background: red;
+      #    color: white;
+      }
+      .divu {
+      display:inline;
+      }
+
+
+
+
+
+      #menu2 {
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 14px;
+      font-style: normal;
+      text-align: center;
+      float:left;  
+      text-align:left;
+      left:61px;
+      position:relative;
+      top:25px;
+      }
+
+      #menu2 ul ul {
+      display: none;
+      }
+
+      #menu2 ul li:hover > ul {
+      display: block;
+      }
+
+      #menu2 ul {
+      list-style: none;
+      display:inline-block;
+      position: relative;
+      }
+
+      #menu ul:after {
+      content: "";
+      clear: both;
+      display: block;
+
+      }
+
+      #menu2 ul li {
+      #      margin: -1px 1px;
+      border-right: 1px solid white;
+      #border-radius: 10px;
+      float: left;
+      position:relative;
+#      background-color:#666666;
+      padding: 10px;
+      }
+
+      #menu2 ul li a {
+      display: flex;
+      justify-content: center;
+      #flex-direction: column;
+      max-width: 100px;
+      height: 35px;
+      color: white;
+      text-decoration: none;
+      }
+
+      #menu2 ul li:hover {
+      background: none;
+ #     background-color:#666666;  }
+
+      #menu2 > ul > li >a:hover {
+      #      color: #fff;
+      #     background: #f00;
+      }
+
+      #menu2 ul ul {
+      border-radius: 0px;
+      padding: 0 1px;
+      position: absolute;
+      }
+
+      #menu2 ul ul li {
+      float: none;
+      border-radius: 0px;
+      position: relative;
+      height: 35px;
+      top:-10px;
+      width:100%;
+      z-index:1000;
+      border-right: 0px solid white;      
+      }
+
+      #menu2 ul ul li a {
+      color: white;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      #height: 55px;
+      text-decoration: none;
+      }
+
+      #menu2 ul ul li a:hover {
+      #    background: red;
+      #    color: white;
+      }
+      .divu {
+      display:inline;
+      }
+
+
+
+      .gali {
+      position: relative;
+      width: 270px;
+      left: 26px;
+      top: 60px;
+      margin: 10px 16px 10px 16px;
+      display: inline-block;
+      #        background-color:red;
+      }
+
+      .gali2 {
+      margin: 10px 16px 10px 16px;
+      display: inline-block;
+      width:357px;
+      height:480px;
+      border-color:black;
+      border-size:1px;
+      }
+      table, td, tr {
+ vertical-align: top;
+     width: 100%;
+      }
+
+
+      a:link { border: 0; text-decoration: none; color:black;}
+      a:visited { border: 0;  text-decoration: none; color:black;}
+      .tda {
+      width:8%;
+      }
+      .imgc {
+      width:100%;
+      }
+      .pub {
+      width: 33%;
+      height: 100%;
+      position:relative;
+      float:left;
+      left:-1%;
+      }
+      .pub a:link { width:50%; margin-right:20px; border: 0; text-decoration: none; color:#343434; font-size:90%;}
+      .pub a:visited { width:50%; padding: 20px; margin-right:20px; border: 0;  text-decoration: none; color:#343434; font-size:90%;}
+
+      .pubimg {
+      position:relative;
+      width: 100%;
+      height: 90%;
+      display:inline;
+      display:inline-block;
+      left:0px;
+      top:0px;
+      background-color:white;
+      }
+      .lleva {
+      position:absolute;
+      top:-3000px;
+      width: 100%;
+      height: 100%;
+      display:inline-block;
+      left:0px;
+      background-color:black;
+      }
+      .pubp {
+      display:inline;
+      display:inline-block;
+      position:absolute;
+      overflow:hidden;
+      width:42%;
+      white-space: normal;
+      height:30%;
+      left:0;
+      bottom:-10%;
+      z-index:300;
+      text-align:right;
+      font-family: Sans-Serif;
+      font-size:100%;
+      color:blue;
+      #background-color: #6e6e6e;
+      }
+      
+      div, p, span {
+      text-align: justify;
+      color: black;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;		
+      }
+      .cintillo {
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      background-color:;
+      position:relative;
+      top:73%;
+      left:-67%;
+      z-index:29;
+      }
+      .dentro1{
+	color:white;
+	text-align:center;
+	font-weight:normal;
+	text-align:center;
+	font-size:13pt;
+      }
+     
+      .fuera {
+      position:absolute;
+      top:-1200%;
+      }
+      .m1 {
+      font-size:120%;
+      overflow:hidden;
+      width:35%;
+      text-align:center;
+      height:100%;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      }
+      .m1:hover {
+      background-color:#b3001a
+      }
+      .m1 a:link { margin-right:20px; border: 0; text-decoration: none; color:white;}
+      .m1 a:visited { padding: 20px; margin-right:20px; border: 0;  text-decoration: none; color:white;}
+
+
+@media (max-width: 750px) {
+      #menu ul ul li {
+      float: none;
+      border-radius: 0px;
+      position: relative;
+      height: 35px;
+      top:-60px;
+      left:60px;
+      width:100px;
+      z-index:1000;
+      border-right: 0px solid white;      
+      }
+
+
+  #menu {
+    display:none;
+  }
+  
+      #show-menu {
+            display: inline-block;
+      }
+      #show-menu:focus ~ #menu { display:block; position: relative;width:10%;left:-61px;top:20px;};
+
+}
+
+    </style>
+
+    <script type="text/javascript" src="funciones.js"></script>
+    <script>
+      var tim=null;
+      var tom=null;
+      var tem=0;
+      var boletos=[ ["imagenes/imagen21.jpg", 3500000, 1500000], ["imagenes/600.png", 3500000, 1500000], [ "imagenes/DM.jpg", 1500000, 1000000],  ["imagenes/DT.jpg", 3000000, 1800000], [ "imagenes/DU.jpg", 3200000, 2500000 ], ["imagenes/Di.jpg", 3500000, 1500000] ];
+
+      function popup() {
+      document.getElementById('pop_up').innerHTML = "";
+      document.getElementById('pop_up').style.top = -3000;
+      }
+
+      function hazDivA(i1, cadena) {
+                return "<div style=\' position:relative; left: 60px; top:80px; width:85%;padding: 30px;\'> <img src=" + cadena + " style=\'float:left; min-width:400px;max-width: 600px\'> <span style=\'font-size: 16pt;width:10%;position:relative;left:50px;\'> <p style=\'color: #f7931e;\'> <b> <u> INCLUYE <\/u> <\/b> <\/p><p style=\'width:90%; color: #666666;\'> - Boleto ida y vuelta por persona <br> - Un 50% para nios menores de 3 años. <br> - Traslado desde el aeropuerto al hotel. <br> - Desayunos y Cenas en el hotel. <br> - Seguro de Equipaje y Personal <\/p> <\/span> <div  style=\'float:left;width: 100%;font-size: 16pt;\'> <p  style=\'color: #f7931e;\'><b> BOLETOS </b> <\/p>  <p  style=\'color: #666666;\'>  <b> Precio Adultos: <\/b>" + boletos[i][1] + "<\/p><p  style=\'color: #666666;\'> <b> Precio Niños: <\/b> " + boletos[i][2] + "<\/div> <\/div>";
+      }
+    </script>
+  </head>
+
+  <body style="background-color: #101010;">
+	  <div id="pubt" style="position:absolute;width:100%;top:95px;left:-1px;height:434px;overflow:hidden;white-space:nowrap;z-index:100;" align="center" onMouseOver="if(tem) { clearTimeout(tim);document.getElementById('centro').className='pubp';document.getElementById('cintillo').className='cintillo';}" onMouseOut="if(tem){tim=setTimeout('dale(' + unescape('%22')+this.id+unescape('%22')+');',500);document.getElementById('centro').className='fuera';document.getElementById('cintillo').className='fuera';}">
+	    <div id="pubs" style="width:310%;height:110%;position:relative;overflow:hidden;white-space:nowrap;background-color:black;top:0;left:-100%;" align="center">
+	      <div id="hijos" class="lleva">
+		<img class="lleva" src="imagenes/imagen21.jpg"></img> 
+<p style="color:white;text-align:center;text-align:center;padding:10px;white-space:normal;font-size:22pt;font-weight:bold; "> Desempeño Confiable </p>
+		<img class="lleva" src="imagenes/imagen19.jpg"></img>
+<p style="color:white;text-align:center;text-align:center;padding:10px;white-space:normal; font-size:22pt;font-weight:bold; "> Seguimiento de entrega </p>
+		<img class="lleva" src="imagenes/imagen14.jpg"></img>
+<p style="color:white;text-align:center;text-align:center;padding:10px;white-space:normal; font-size:22pt;font-weight:bold; "> <br> Historial de transferencias </p>
+	      </div>
+	      <span class="pub"><p class="pubp">IZQ</p><img class="pubimg" src="imagenes/imagen19.jpg"></img></span>
+	      <span class="pub"><p class="pubp" id="centro" > </p><img class="pubimg" src="imagenes/f6.jpg"></span>
+	      <span class="pub"><p class="pubp">DERECHO</p><img class="pubimg" src="imagenes/600.png"></img></span>
+	      <img id="cintillo" class="cintillo" src="barra1.jpg" onload="document.getElementById('centro').className='fuera';this.className='fuera';">
+	    </div>
+	  </div>
+	  <div style="margin: auto;padding-top:180px;position:absolute;width:100%;top:130px;left:-1px;height:654px;overflow:hidden;white-space:nowrap;z-index:100;font-family:'Sans-serif';font-weight:bolder;font-size:40pt;" >
+		<p style="position:relative;left:20%;color:white;text-align:center;width:65%;text-align:center;padding:10px;white-space:normal; "> <br> </p>
+	  </div>
+	  <script>
+	      imgsOk("pubt",tim=setTimeout("dale('pubt');tem=1;",6000));
+	  </script>
+
+	  <div style="margin: auto;width:100%;position:absolute;top:650px;left:-1px;height:654px;overflow:hidden;white-space:nowrap;z-index:100;font-family:'Sans-serif';" >
+		<table style = "width:90%;left:5%;"><tr>
+		<td style="width:25%">
+		<p class="dentro1" style="position:relative;top:20%;left:20%;padding:15px;white-space: normal;">
+	<img src="imagenes/odo2.png" style="width:65%;"><br>
+	<span style="font-size:18pt;color:white;">
+<b>Desempeño Confiable</b></span><br><br>
+UpsDowns fue diseñado para cargar y descargar conjuntos de archivos tan rápido  como su conexión a Internet puede manejar a través de la red UpsDowns, una red privada acelerada de gran ancho de banda distribuida a nivel mundial. UpsDowns  puede transferir sus datos tan rápido como las soluciones UDP competidoras,  por una fracción del costo y sin todas las molestias. Y a diferencia de otras herramientas sencillas de transferencia de archivos, hemos creado UpsDowns para  brindar un rendimiento máximo confiable y consistente.
+	        </p>
+		</td>
+		<td style="width:25%">
+		<p class="dentro1" style="position:relative;top:20%;left:20%;padding:15px;white-space: normal;">
+	<img src="imagenes/d2.png" style="width:65%;"><br>
+	<span style="font-size:18pt;color:white;">
+<b>Seguimiento de entrega</b></span><br><br>
+Las notificaciones por correo electrónico lo ayudan a controlar dónde están  sus datos y cuando se recibieron. UpsDowns calcula el tiempo de entrega, le notifica una vez que el archivo ha sido cargado y le notifica cuando el destinatario descarga el archivo. Los archivos se eliminan de nuestra red cuando finalizan las descargas o  después de un vencimiento de 15 días.
+	        </p>
+		</td>
+		<td style="width:25%">
+		<p class="dentro1" style="position:relative;top:20%;left:20%;padding:15px;white-space: normal;">
+	<img src="imagenes/h3.png" style="width:65%;"><br>
+	<span style="font-size:18pt;color:white;">
+<b>Historial de transferencias</b></span><br><br>
+Sumérjase en un rico historial de transferencias que se puede buscar para revisar su estado de transferencia: qué se envió, a quién, cuándo se recibió y crear informes basados en proyectos para facilitar la devolución a sus clientes, tal como lo haría al enviar discos duros.
+	        </p>
+		</td>
+		</tr>
+		</table>
+	  </div>
+
+	  <div style="margin: auto;width:100%;position:absolute;top:1350px;left:-1px;height:654px;overflow:hidden;white-space:nowrap;z-index:100;font-family:'Sans-serif';background-image: url('imagenes/imagen6.jpg');background-size:100% 80%;background-repeat: no-repeat;" >
+		<p class="dentro1" style="position:relative;top:20%;left:60%;padding:15px;width:35%;white-space: normal;font-size:20pt;">
+"Es rápido, más que capaz de tomar todos los archivos que puedo arrojar y fácil de usar. Sin embargo, lo mejor que UpsDowns tiene a su favor es su estructura de pago".
+		</p>
+	  </div>
+
+
+	  <div style="margin: auto;width:100%;position:absolute;top:1850px;left:-1px;height:654px;overflow:hidden;white-space:nowrap;z-index:100;font-family:'Sans-serif';" >
+	<iframe style="width: 90%;position:relative;top: 10%; left:5%;border-width: 0;height:80%;" src="loginpage.html"></iframe>
+	</div>
+
+	  <div style="margin: auto;width:100%;position:absolute;top:2250px;left:-1px;height:654px;overflow:hidden;white-space:nowrap;z-index:100;font-family:'Sans-serif';" >
+		<p class="dentro1" style="position:relative;top:20%;left:5%;padding:15px;width:85%;white-space: normal;font-size:12pt">
+		Contacto: <br>plataforma@mikro-wan.com<br><br>(+52)0212 2414263<br>
+		</p>
+	  </div>
+
+    <div id="barras" style="min-height:80px;max-height:120px;position:fixed;left:0px;top:0px;background-color:#262626;align:left;width:100%;background-image:url('barra_menu_1.jpg');background-size:100%;z-index:100;">
+	<img src="imagenes/logo2.png" style="position:relative;float:left;top:20px;left:52px;min-height:20px;max-height:50px;">
+      <input type="button" id="show-menu"  style="position:relative;left:61px;top:20px;width:7%;float:left;" value="MENU" onclick="if(!this.focused) {this.focus();this.focused=true;} else {this.parentNode.focus();this.focused=false;}"> </input>
+      <div id="menu" style="position:relative;float:left;text-align: left;">
+	<ul >
+	  <li style="#background-color:#666666"><a href="index.html">Inicio</a></li>
+	  <li style="#background-color:#666666">
+	    <a href="servicios.html">Servicios</a>
+	    <ul>
+	      <li><a href="servicios.html#transf">Transferencia</a></li>
+	      <li><a href="servicios.html#descarga">Descarga</a></li>
+	    </ul>
+	  </li>
+	  <li><a href="#">Contactanos</a></li>
+	</ul>
+      </div>
+    </div>
+</body>
+</html>

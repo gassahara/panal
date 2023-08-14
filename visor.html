@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title> Servicio de Transferencia de Archivos  </title>
+    <style>
+      .divu {
+	  display:inline;
+      }
+      .divu {
+	  display:inline;
+      }
+      .gali {
+	  position: relative;
+	  width: 270px;
+	  left: 26px;
+	  top: 60px;
+	  margin: 10px 16px 10px 16px;
+	  display: inline-block;
+	  #        background-color:red;
+      }
+      .gali2 {
+	  margin: 10px 16px 10px 16px;
+	  display: inline-block;
+	  width:357px;
+	  height:480px;
+	  border-color:black;
+	  border-size:1px;
+      }
+      a:link { border: 0; text-decoration: none; color:black;}
+      a:visited { border: 0;  text-decoration: none; color:black;}
+      .tda {
+	  width:8%;
+      }
+      .imgc {
+	  width:100%;
+      }
+      .pub {
+	  width: 33%;
+	  height: 100%;
+	  position:relative;
+	  float:left;
+	  left:-1%;
+      }
+      .pub a:link { width:50%; margin-right:20px; border: 0; text-decoration: none; color:#343434; font-size:90%;}
+      .pub a:visited { width:50%; padding: 20px; margin-right:20px; border: 0;  text-decoration: none; color:#343434; font-size:90%;}
+      .pubimg {
+	  position:relative;
+	  width: 100%;
+	  height: 90%;
+	  display:inline;
+	  display:inline-block;
+	  left:0px;
+	  top:0px;
+	  background-color:white;
+      }
+      .lleva {
+	  position:absolute;
+	  top:-3000px;
+	  width: 100%;
+	  height: 100%;
+	  display:inline-block;
+	  left:0px;
+	  background-color:black;
+      }
+      .pubp {
+	  display:inline;
+	  display:inline-block;
+	  position:absolute;
+	  overflow:hidden;
+	  width:42%;
+	  white-space: normal;
+	  height:30%;
+	  left:0;
+	  bottom:-10%;
+	  z-index:400;
+	  text-align:right;
+	  font-family: Sans-Serif;
+	  font-size:100%;
+	  color:blue;
+	  #background-color: #6e6e6e;
+      }
+      
+      .cintillo {
+	  width:1px;
+	  height:1px;
+	  overflow:hidden;
+	  background-color:;
+	  position:relative;
+	  top:73%;
+	  left:-67%;
+	  z-index:29;
+      }
+      .dentro1{
+	  color:white;
+	  text-align:center;
+	  font-weight:normal;
+	  text-align:center;
+	  font-size:13pt;
+      }
+      
+      .fuera {
+	  position:absolute;
+	  top:-1200%;
+      }
+      .m1 {
+	  font-size:120%;
+	  overflow:hidden;
+	  width:35%;
+	  text-align:center;
+	  height:100%;
+	  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      }
+      .m1:hover {
+	  background-color:#b3001a
+      }
+      .m1 a:link { margin-right:20px; border: 0; text-decoration: none; color:white;}
+      .m1 a:visited { padding: 20px; margin-right:20px; border: 0;  text-decoration: none; color:white;}
+      .hide{
+	  display: none;
+      }
+      .disable {
+	  pointer-events:none;
+      }
+      .unselectable {
+	  -webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	  -khtml-user-select: none;
+	  -moz-user-select: none;
+	  -ms-user-select: none;
+	  user-select: none;
+      }
+      :-webkit-full-screen {
+	  width: 100%;
+	  top:0;
+	  z-index: -100;
+	  background: none;
+      }
+
+      :-ms-fullscreen {
+	  width: auto;
+	  height: auto;
+	  margin: auto;
+      }
+      .time-display,
+      .duration-display{
+	  padding:11px;
+	  color: white;
+	  font-weight: normal;
+	  font-size: .9em;
+	  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .time-display{
+	  float:left;
+      }
+
+      .duration-display{
+	  float: right;
+      }
+      .btn-play-pause{
+	  float: left;
+	  padding:9px 10px;
+	  cursor: pointer;
+      }
+      .control-icon-layout{
+	  float: right;
+	  padding:9px 10px;
+	  cursor: pointer;
+      }
+      .btn-fullscreen {
+	  margin-right: 10px;
+      }
+
+      .volumebar {
+	  float: right;
+	  width: 70px;
+      }
+      .video-controller {
+	  min-height:35px;
+	  z-index: 2147483646;
+      }
+      .video-controller-fullscreen {
+	  position: fixed;
+	  z-index:2147483647;
+	  width: 100%;
+	  bottom: 0;
+	  left: 0;
+      }
+      .menu,
+      .video-controller {
+	  background-color: black;
+      }
+      .menu-item-unselected,
+      .menu-item-selected{
+	  font-weight: normal;
+	  font-size: .9em;
+	  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .menu-item-unselected {
+	  color: white;
+      }
+
+      .menu-item-over,
+      .menu-item-selected {
+	  background-color: white;
+	  color: black;
+      }
+
+      .menu-sub-menu-title {
+	  background-color: #191919;
+	  padding-left: 2px;
+	  font-weight: bold;
+	  font-size: 1.0em;
+	  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+      }
+
+      .menu-item-selected {
+	  opacity: .7;
+      }
+      .menu ul{
+	  list-style-type: none;
+	  padding:0;
+	  margin:0;
+      }
+
+      .menu li{
+	  padding:0 10px;
+	  cursor: pointer;
+      }
+
+      .menu {
+	  position: absolute;
+      }
+
+      #bitrateMenu .menu-sub-menu-title {
+	  min-width: 150px;
+      }
+
+      @font-face {
+	  font-family: 'icomoon';
+	  src: url("icomoon.ttf") format("truetype");
+	  font-weight: normal;
+	  font-style: normal;
+      }
+
+      .icon-play,
+      .icon-pause,
+      .icon-caption,
+      .icon-mute-off,
+      .icon-mute-on,
+      .icon-fullscreen-enter,
+      .icon-fullscreen-exit,
+      .icon-tracks,
+      .icon-bitrate {
+	  font-family: 'icomoon';
+	  font-size: 20px;
+	  color: white;
+	  text-shadow: none;
+	  -webkit-font-smoothing: antialiased;
+      }
+
+      .icon-fullscreen-enter:before {
+	  content: "\e90b";
+      }
+      .icon-fullscreen-exit:before {
+	  content: "\e90c";
+      }
+      .icon-play:before {
+	  content: "\e910";
+      }
+      .icon-pause:before {
+	  content: "\e911";
+      }
+      .icon-mute-on:before {
+	  content: "\e909";
+      }
+      .icon-mute-off:before {
+	  content: "\e918";
+      }
+      .icon-caption:before {
+	  content: "\e901";
+      }
+      .icon-bitrate:before {
+	  content: "\e905";
+      }
+      .icon-tracks:before {
+	  content: "\e90a";
+      }
+
+      .seekContainer {
+	  display: flex;
+	  overflow: auto;
+	  overflow-y: hidden;
+	  overflow-x: hidden;
+      }
+
+      input[type="range"] {
+	  -webkit-appearance: none;
+	  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	  height: 14px;
+	  border: none;
+	  margin:12px 5px;
+	  padding: 1px 2px;
+	  border-radius: 5px;
+	  background: #232528;
+	  box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
+	  -webkit-box-shadow: inset 0 1px 0 0 #0d0e0f, inset 0 -1px 0 0 #3a3d42;
+	  outline: none; /* no focus outline */
+      }
+
+      input[type=range]::-moz-focus-outer {
+	  border: 0;
+      }
+
+      input[type="range"]::-moz-range-track {
+	  border: inherit;
+	  background: transparent;
+      }
+
+      input[type="range"]::-ms-track {
+	  border: inherit;
+	  color: transparent; /* don't drawn vertical reference line */
+	  background: transparent;
+}
+
+ input[type="range"]::-ms-fill-lower,
+ input[type="range"]::-ms-fill-upper {
+     background: transparent;
+ }
+
+ input[type="range"]::-ms-tooltip {
+     display: none;
+ }
+
+ /* thumb */
+ input[type="range"]::-webkit-slider-thumb {
+     -webkit-appearance: none;
+     width: 15px;
+     height: 8px;
+     border: none;
+     border-radius: 2px;
+     background-color:rgb(0, 150, 215);
+ }
+ input[type="range"]::-moz-range-thumb {
+     width: 15px;
+     height: 8px;
+     border: none;
+     border-radius: 2px;
+     background-color:rgb(0, 150, 215);
+ }
+
+ input[type="range"]::-ms-thumb {
+     width: 15px;
+     height: 8px;
+     border: none;
+     border-radius: 2px;
+     background-color:rgb(0, 150, 215);
+ }
+
+ .thumbnail-container {
+     position: absolute;
+     text-align: center;
+ }
+
+ .thumbnail-elem {
+     position: relative;
+     box-shadow: 0px 0px 0.9em #000000;
+     transform-origin: center bottom;
+ }
+
+ .thumbnail-time-label {
+     position: relative;
+     bottom: 1.8em;
+     display: table;
+     margin: 0 auto;
+     padding: 2px 5px 2px 5px;
+     color: #ffffff;
+     background-color: rgba(0, 0, 0, 0.7);
+     font-size: 12px;
+     font-weight: bold;
+     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+ }
+
+ .seekbar-complete {
+     width: 100%;
+     height: 7px;
+     margin-top: 16px;
+     background: #999a99;
+     position: relative;
+     overflow: hidden;
+ }
+
+ .seekbar-buffer {
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width: 0%;
+     height: 7px;
+     background: lightgray;
+ }
+
+ .seekbar-play {
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width: 0%;
+     height: 7px;
+     background: rgb(0, 150, 215);
+ }
+    </style>
+
+    <script type="text/javascript" src="funciones.js"></script>
+    <script src="../dashjs/dist/dash.all.debug.js"></script>
+    <script src="../dashjs/contrib/akamai/controlbar/ControlBar.js"></script>
+    <script>
+      var tim=null;
+      var tom=null;
+      var tem=0;
+
+      function popup() {
+	  document.getElementById('pop_up').innerHTML = "";
+	  document.getElementById('pop_up').style.top = -3000;
+      }
+      var EXTERNAL_CAPTION_URL = "http://" + window.location.host ,FRAGMENTED_CAPTION_URL = "http://" + window.location.host,videoElement,controlbar,player;
+      var url = FRAGMENTED_CAPTION_URL, TTMLRenderingDiv;
+      function vvideo(){
+	  videoElement = document.querySelector(".videoContainer video");
+	  TTMLRenderingDiv = document.getElementById("ttml-rendering-div");
+	  videoElement = document.querySelector(".videoContainer video");
+	  TTMLRenderingDiv = document.getElementById("ttml-rendering-div");
+      }
+      function uvideo(){
+	  document.getElementById('videoContainer').style.display='block';
+	  videoElement = document.querySelector(".videoContainer video");
+	  TTMLRenderingDiv = document.getElementById("ttml-rendering-div");
+	  if(player)player.reset();
+	  if(controlbar)controlbar.reset();
+	  player = dashjs.MediaPlayer().create();
+	  player.initialize(videoElement, "http://" + window.location.host + "/"+document.getElementById('peliculasvalue').value, true);
+	  player.attachTTMLRenderingDiv(TTMLRenderingDiv);
+	  controlbar = new ControlBar(player);
+	  controlbar.initialize();
+	  document.getElementById("vv").controls=true;;
+      }
+    </script>
+  </head>
+
+  <body style="background-color: #101010;">
+    <input id="peliculasvalue" hidden value="datann"/>
+    <input id="directoriov" hidden value=""/>
+    <div class="dash-video-player" style="background-color:'';width:100%;position:relative;top:100px;width:90%;"  onmouseover="document.getElementById('videoController').style.display='block';" onmouseout="document.getElementById('videoController').style.display='none';" >
+      <div class="videoContainer" id="videoContainer" style="width:100%;left:5%;position:relative;">
+        <video preload="auto" autoplay="true"  id="vv" controls style="width:100%;left:0%;position:relative;"></video>
+        <div id="videoController" class="video-controller unselectable" style="display:none;">
+          <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause" style="display:none;">
+            <span id="iconPlayPause" class="icon-play"></span>
+	  </div>
+	  <span id="videoTime" class="time-display" style="display:none;">00:00:00</span>
+	  <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen" style="display:none;">
+	    <span class="icon-fullscreen-enter"></span>
+	  </div>
+	  <div id="bitrateListBtn" class="control-icon-layout" title="bitrate">
+	    <span class="icon-bitrate">br</span>
+	  </div>
+	  <input type="range" id="volumebar" class="volumebar" value="0.4" min="0" max="1" step=".001"  style="display:none;">
+	  <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute"  style="display:none;">
+	    <span id="iconMute" class="icon-mute-off"></span>
+	  </div>
+	  <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
+	    <span class="icon-tracks"></span>
+	  </div>
+	  <div id="captionBtn" class="btn-caption control-icon-layout" title="subtitulos">
+	    <span class="icon-caption">subs</span>
+	  </div>
+	  <span id="videoDuration" class="duration-display" style="display:none;">00:00:00</span>
+	  <div class="seekContainer" style="display:none;">
+	    <div id="seekbar" class="seekbar seekbar-complete">
+	      <div id="seekbar-buffer" class="seekbar seekbar-buffer"></div>
+	      <div id="seekbar-play" class="seekbar seekbar-play"></div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div id="ttml-rendering-div"> <div> </div></div>
+    <script>
+      vvideo();
+    </script>
+    <div style="margin: auto;width:100%;position:absolute;top:100%;left:-1px;height:654px;overflow:hidden;white-space:nowrap;z-index:100;font-family:'Sans-serif';" >
+    <input type="button" value="rr" onclick="uvideo();">
+      <p class="dentro1" style="position:relative;top:20%;left:5%;padding:15px;width:85%;white-space: normal;font-size:12pt">
+	Contacto: <br>upsdowns@mikro-wan.com<br><br>(+52)0212 2423228 - 2421529 <br>
+      </p>
+    </div>
+    <div id="barras" style="min-height:80px;max-height:120px;position:fixed;left:0px;top:0px;background-color:#262626;align:left;width:100%;background-image:url('barra_menu_1.jpg');background-size:100%;z-index:100;">
+      <img src="imagenes/logo2.png" style="position:relative;display:inline-block;top:20px;left:52px;min-height:20px;max-height:50px;">
+    </div>
+    <script>
+      vvideo();
+      uvideo();
+    </script>
+  </body>
+</html>

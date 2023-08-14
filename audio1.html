@@ -1,0 +1,145 @@
+<HTML>
+  <HEAD>
+  </HEAD>
+  <BODY>
+    <audio controls autoplay></audio>
+    <input value="" id="url" />
+    <input onclick="startRecording()" type="button" value="start recording" />
+    <input onclick="stopRecording()" type="button" value="stop recording and play" />
+    <input onclick="envia()" type="button" value="Envia" />
+    <input onclick="diccionario()" type="button" value="Pide!" />
+    <br>
+    <div id="response" style="width:80%;height:80%;background-color:lightgray;"></div>
+
+    <script>
+      var recorder;      
+      var audio = document.querySelector('audio');
+      var streamo;
+      var recordedChunks = [];
+      var paso=0;
+      var timer=null;
+      var formato;
+
+      function diccionario() {
+	  var xhrd = new XMLHttpRequest();
+	  xhrd.open('POST', document.getElementById("url").value, true)
+	  var boundary = '---------------------------';
+	  boundary += Math.floor(Math.random()*32768);
+	  boundary += Math.floor(Math.random()*32768);
+	  boundary += Math.floor(Math.random()*32768);
+	  var body = "";
+	  body+='--' + boundary + '\r\n' + "Content-Disposition: form-data; name=\"diccionario\"\r\n\r\n1\r\n--" + boundary + '--';;
+	  body+='--' + boundary + '\r\n' + "Content-Disposition: form-data; name=\"longitud\"\r\n\r\n4\r\n--" + boundary + '--';;
+	  xhrd.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+	  xhrd.setRequestHeader('Content-length', body.length);
+	  xhrd.onload = exitoso;
+	  xhrd.send(body);
+      }
+
+      var failr=function () {
+	  alert('failr');
+      }
+
+      function graba(stream) {
+	  streamo=stream;
+	  if(!paso) {
+	      intentos=0;
+	      formatos=["webm", "au", "raw", "ogg", "wav", "mp3"];
+	      recordedChunks = [];
+	      while(intentos<formatos.length) {
+		  try {
+		      formato="audio/"+formatos[intentos];
+		      recorder = new MediaRecorder(stream, {mimeType : formato});
+		      console.log(formato);
+		      intentos=formatos+2;
+		  } catch (e) {
+		      console.error('Exception while creating MediaRecorder: ' + e);
+		      intentos++;
+		  }
+	      }
+	      if(intentos<formatos+2) return;
+
+	      recorder.onstop = function () {
+		  blob = new Blob(recordedChunks, { type: 'audio' });
+		  console.log("STOPPED"+ recordedChunks.length);
+		  audio.src = URL.createObjectURL(blob);
+		  recordedChunks=null;
+		  recordedChunks=[];
+	      }
+	      recorder.ondataavailable = function (event) {
+		  console.log(' Recorded chunk of size ' + event.data.size + "B");
+		  recordedChunks.push(event.data);
+	      };
+	      paso=1;
+	  }
+	  console.log('A');
+	  recorder.start();
+	  setTimeout("pideaudio()", 300);
+	  console.log('Z');
+	  //	  recorder.start(100);
+      }
+
+      function pideaudio() {
+	  if(recorder.state == "recording") console.log(recorder.requestData());
+	  timer1=setTimeout("pideaudio()", 500);
+      }
+      function startRecording() {
+	  if(!paso) {
+	  if (navigator.mediaDevices.getUserMedia) {
+	      var options = {
+		  audioBitsPerSecond : 128000,
+//		  videoBitsPerSecond : 2500000,
+		  mimeType : 'audio/webm'
+	      }
+	      navigator.mediaDevices.getUserMedia({audio: true}).then(graba);
+	  } else {
+	      console.log('navigator.getUserMedia not present');
+	  }
+	  } else graba();
+      }
+
+
+      function exitoso () {
+	  /* console.log("AJAXSubmit - Success!"); */
+	  console.log(this.responseText);
+	  document.getElementById("response").innerHTML=this.responseText;
+	  /* you can get the serialized data through the "submittedData" custom property: */
+	  /* console.log(JSON.stringify(this.submittedData)); */
+      }
+      
+      function stopRecording() {
+	  recorder.stop();
+      }
+
+      function envia() {
+	  if(paso && recorder.state != "recording" && audio.src) {
+	      alert("ok");
+	      var xhr = new XMLHttpRequest();
+	      var bytess=[];
+	      xhr.open('POST', document.getElementById("url").value, true);
+	      var boundary = '---------------------------';
+	      boundary += Math.floor(Math.random()*32768);
+	      boundary += Math.floor(Math.random()*32768);
+	      boundary += Math.floor(Math.random()*32768);
+	      var body = "";
+	      body+='--' + boundary + '\r\n' + "Content-Disposition: form-data; name=\"audio\"\r\n\r\n1\r\n--" + boundary + '--';;
+	      body+='--' + boundary + '\r\n' + "Content-Disposition: form-data; name=\"formato\"\r\n\r\n"+formato+"\r\n--" + boundary + '--';;
+	      body += '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="';
+	      body += "archivo";
+	      body += '"\r\n\r\n';
+	      bytess.push(body);
+	      bytess.push(blob);
+	      body = '\r\n'
+	      body += '--' + boundary + '--';
+	      bytess.push(body);
+	      req2 = new Blob(bytess, {type : 'application/octet-stream'});
+	      xhr.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+	      xhr.setRequestHeader('Content-length', req2.length);
+	      xhr.onload = exitoso;
+	      xhr.send(req2);
+	  }
+      }
+      </script>
+      
+  </BODY>
+</HTML>

@@ -1,0 +1,107 @@
+<!doctype html>
+<!--
+-->
+<html>
+<head>
+    <title>Popup</title>
+    <script src="openpgp.js"></script>
+    <script >
+var message = "";
+var secret = "";
+
+
+function readMessage (e) {
+    var file = e.target.files[0];
+    if (!file) {
+        message = "";
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        message = e.target.result;
+    };
+    reader.readAsText (file);
+}
+
+
+function readSecret (e) {
+    var file = e.target.files[0];
+    if (!file) {
+        secret = "";
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        secret = e.target.result;
+    };
+    reader.readAsText (file);
+}
+
+
+function decrypt() {
+            var output = document.getElementById ("output");
+                alert(output);
+            output.style.color = "black";
+            if (document.getElementById ("message").value == "") {
+                output.innerHTML = "No message provided";
+                output.style.color = "red";
+            }
+            else if (document.getElementById ("secret").value == "") {
+                output.innerHTML = "No secret key provided";
+                output.style.color = "red";
+            }
+            else if (document.getElementById ("password").value == "") {
+                output.innerHTML = "No password for secret key provided";
+                output.style.color = "red";
+            }
+            else {
+                var privateKey = openpgp.key.readArmored (secret).keys[0];
+
+options = {
+    message: openpgp.message.readArmored(secret),     // parse armored message
+    publicKeys: openpgp.key.readArmored(pubkey).keys,    // for verification (optional)
+    privateKey: privKeyObj // for decryption
+};
+
+
+                var isCorrect = privateKey.decrypt (document.getElementById ("password").value);
+                alert(document.getElementById ("message").value);
+                if (isCorrect) {
+                    output.innerHTML = "";
+                    output.style.color = "black";
+                    var img = document.createElement ("img");
+                    img.src = "loading.gif";
+                    img.id = "loading";
+                    document.getElementById ("loadingDiv").appendChild (img);
+                    message = openpgp.message.readArmored (message);
+
+openpgp.decrypt(options).then(function(plaintext) {
+    return plaintext.data; // 'Hello, World!'
+});
+
+                    openpgp.decryptMessage (privateKey, message).then (function (plaintext) {
+                        output.innerHTML = plaintext;
+                    }).catch (function(error) {
+                        output.innerHTML = "Error while decrypting";
+                        output.style.color = "red";
+                    });
+                }
+                else {
+                    output.innerHTML = "Incorrect password";
+                    output.style.color = "red";
+                }
+            }
+}
+</script>
+</head>
+<body>
+  <FORM METHOD="POST" ACTION="p0.html">
+    <p>Upload message: </p><input id="message" type="file"/><br>
+    <p>Upload secret key: </p><input id="secret" type="file"/><br>
+    <p>Secret key password: </p><input id="password" type="password"/><br><br>
+    <button id="decrypt" onclick="decrypt();">Decrypt</button>
+    <p id="output"></p>
+    <div id="loadingDiv"></div>
+    <input type="submit">
+  </FORM>
+</body>
+</html>
+
