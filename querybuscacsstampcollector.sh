@@ -105,7 +105,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    variables=$(cat "$fn" |$PrPWD/stddeclaracionesdevariable|tr '
 ' ';')
 		    varos="";
-		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofindex")
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofBox")
 		    if [ -n "$varis" ];then
 			varos="$varos$varis"
 			echo "$varos"
@@ -119,7 +119,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    else
 			exit 0
 		    fi		    
-		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_content")
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_stamp")
 		    if [ -n "$varis" ];then
 			varos="$varos$varis"
 			echo "$varos"
@@ -143,14 +143,9 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentra $encuentrac) ($namepublic)"
 			if [ -n "$encuentra" -a -n "$encuentrac" ] ; then
 		            content2=$(echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | base64 -d )
-			    encuentra=$(echo "$content2"|$PrPWD/stdbuscaarg "var ")
-			    if [ -n "$encuentra" ];then
-				content=$(echo "/*$content2" | $PrPWD/stddeclaracionesdevariable_tojs | tr -d '
+			    content=$(echo "/*$content2" | $PrPWD/stddeclaracionesdevariable_tojs | tr -d '
 ' | base64 | tr -d '
 ' )
-			    else
-				content=$(echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
-			    fi
 			    echo "CONTENT $content";
 		            contentExtra=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_contentExtra["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' )
 			    echo "::>> . . . $(echo $contentExtra|wc)  <<<<<<<<<<<<<<<<<::"
