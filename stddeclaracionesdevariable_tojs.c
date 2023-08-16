@@ -14,7 +14,7 @@ static const unsigned char arrayasigfin[1]={'}' };
 static const unsigned char arraydecfin[1]={']' };
 static const unsigned char ignores[3][2][2]={ {{'/', '*'},{'*', '/'}}, {{'/', '/'},{'\n', 0}}, {{'#',0}, {'\n', 0}}};
 static const unsigned char espacios[3]={' ','\t','\n'};
-static const unsigned char cadena[2]={'"', 27/*'*/};
+static const unsigned char cadena[3]={'"', 27/*'*/, 0x60};
 static const unsigned char prefix[8]={'p','r','e','f','i','x','_',0};
 unsigned char prev;
 int main(int argc,char *argv[]) {

@@ -142,8 +142,11 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Not Found Not Found')
 			echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentra $encuentrac) ($namepublic)"
 			if [ -n "$encuentra" -a -n "$encuentrac" ] ; then
+			    echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"'
+			    echo "......................................................."
 		            content2=$(echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | base64 -d )
-			    encuentra=$(echo "$content2"|$PrPWD/stdbuscaarg "var ")
+			    echo "CONTENT $content2 <<<"
+			    encuentra=$(echo "$content2"|$PrPWD/stdbuscaarg '*/')
 			    if [ -n "$encuentra" ];then
 				content=$(echo "/*$content2" | $PrPWD/stddeclaracionesdevariable_tojs | tr -d '
 ' | base64 | tr -d '
