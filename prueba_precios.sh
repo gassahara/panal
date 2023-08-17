@@ -47,6 +47,7 @@ while [ true ];do
 	    params="recvWindow=5000&timestamp=$timed"
 	    signature=$(echo -n "$params" | openssl dgst -sha256 -hmac "$SECKEY" | $PrPWD/stdcdr "= ")
 	    saldo=$(curl -H "X-MBX-APIKEY: $APIKEY" -L "https://api.binance.com/api/v3/account?$params&signature=$signature" 2>/dev/null | $PrPWD/stdcdr "$token\"," | $PrPWD/stdcdr ':' | $PrPWD/stdcarsin ',' | tr -d '"')
+	    echo "))))))))    $saldo"
 	    s=$(echo "scale=$long;$quant-$saldo"|bc -l)
 	    saldoc=$(echo "$s"|$PrPWD/stdcarn 1)
 	    if [ "$saldoc" = "." ];then s=$(echo "0$s");fi
@@ -68,10 +69,10 @@ while [ true ];do
 	pricet=$price
 	longb=7
 	if [ "$symbol" = "ETCETH" ];then
-	    longb=6:
+	    longb=6
 	fi
 	if [ "$symbol" = "ADAETH" ];then
-	    longb=7:
+	    longb=7
 	fi
 	if [ "$symbol" = "EOSETH" ];then
 	    longb=6
@@ -95,7 +96,7 @@ while [ true ];do
 	    longb=6
 	fi
 	if [ "$symbol" = "NEOETH" ];then
-	    longb=5
+	    longb=6
 	fi
 	if [ "$symbol" = "MATICETH" ];then
 	    longb=7
@@ -150,7 +151,7 @@ while [ true ];do
 		longb=6
 	    fi
 	    if [ "$symbol" = "NEOETH" ];then
-		longb=5
+		longb=6
 	    fi
 	    if [ "$symbol" = "MATICETH" ];then
 		longb=7
@@ -159,14 +160,17 @@ while [ true ];do
 	while [ 0$quantsuma -ne 0 ];do
 	    #    while [ "$price" -ge "0$priceactual" ];do
 	    #    while [ "$saldoentoken" -ge "0$saldoentokenactual" ];do
-	    priceactual=$(curl -L "https://api.binance.com/api/v3/ticker/price?symbols=%5B%22$symbol%22%5D" 2>/dev/null | sed "s/,/$/g" | sed "s/:/=/g" | sed 's/"symbol"/symbol/g' | sed 's/"price"=/price=/g' | tr [{}$] '
+	    priceactual=""
+	    while [ -z "$priceactual" ];do
+		priceactual=$(curl -L "https://api.binance.com/api/v3/ticker/price?symbols=%5B%22$symbol%22%5D" 2>/dev/null | sed "s/,/$/g" | sed "s/:/=/g" | sed 's/"symbol"/symbol/g' | sed 's/"price"=/price=/g' | tr [{}$] '
 ' | $PrPWD/stdcdr "price=" | tr -d '"' | tr -d '
 ')
+	    done
 	    echo " - - - $priceactual "
 	    priceactual=$(echo "scale=$longb;$priceactual/1"|bc -l);
 	    priceactualc=$(echo "$priceactual"|$PrPWD/stdcarn 1);
 	    if [ "$priceactualc" = "." ]; then priceactual="0$priceactual";fi
-	    echo "($symbol) ($price) ($priceactual)"
+	    echo "($symbol) ($price) ($priceactual) (long3 $long3) [$quant $priceactual]"
 	    #	    priceactual=$(curl -L "https://api.binance.com/api/v3/ticker/price?symbol=$symbol" | $PrPWD/stdcdr price | $PrPWD/stdcdr ':' | $PrPWD/stdcarsin '}' | tr -d '"' )
 	    lugar=$(echo "$priceactual"|$PrPWD/stdbuscaarg_donde ".")
 	    longs=$(echo "$lugar+$longb+1")
@@ -174,8 +178,8 @@ while [ true ];do
 	quantentokenactual=$(echo "scale=$long;(($quant*$priceactual)*($long3))/1"|bc -l|$PrPWD/stdcarn "$long")
 	quantentokenactual=$(echo "$quantentokenactual"|$PrPWD/stdcarsin '.')
 #	    if [ "$quantentoken" -lt "0$quantentokenactual" ];then break; fi
-	    echo "s $saldentoken p $priceactual"
-	    saldoentokenactual=$(echo "$saldentoken*$priceactual"|bc -l|$PrPWD/stdcarsin '.')
+	    echo "s $saldoentoken p $priceactual"
+	    saldoentokenactual=$(echo "$saldoentoken*$priceactual"|bc -l|$PrPWD/stdcarsin '.')
 	    #	echo Q $quant "P $price A $priceactual T 0$saldoentoken 0$saldoentokenactual"
 	    echo $quantentoken-$quantentokenactual
 	    quantsuma=$(echo "scale=0;($quantentoken-$quantentokenactual)/1"|bc -l)
@@ -197,8 +201,11 @@ while [ true ];do
 	if [ "$symbol" = "NEOETH" ];then longs=2;fi
 	if [ "$symbol" = "MATICETH" ];then longs=1;fi
 	saldoc=$(echo "$saldo"|$PrPWD/stdcarn 1)
+	saldod=$(echo "$0saldo" | tr -d '
+')
 	if [ "$saldoc" = "." ];then saldo=$(echo "0$saldo"|tr -d '
 '); fi
+	echo ">>>>>>>>>>>>> $saldo"
 	lugar=$(echo "$saldo"|$PrPWD/stdbuscaarg_donde ".")
 	if [ 0$longs -eq 0 ];then longs=$lugar
 	else longs=$(expr $lugar + 1 + $longs)
@@ -276,6 +283,7 @@ while [ true ];do
 	timed=$(date +%s%N|$PrPWD/stdcarn 13)
 	params="recvWindow=5000&timestamp=$timed"
 	signature=$(echo -n "$params" | openssl dgst -sha256 -hmac "$SECKEY" | $PrPWD/stdcdr "= ")
+#	curl -H "X-MBX-APIKEY: $APIKEY" -L "https://api.binance.com/api/v3/account?$params&signature=$signature"
 	saldo=$(curl -H "X-MBX-APIKEY: $APIKEY" -L "https://api.binance.com/api/v3/account?$params&signature=$signature" | $PrPWD/stdcdr 'ETH",' | $PrPWD/stdcdr ':' | $PrPWD/stdcarsin ',' | tr -d '"')
 	echo $saldo
 	saldo=$(echo "scale=0;($saldo*1000)/1"|bc -l)
@@ -397,7 +405,7 @@ while [ true ];do
 			if [ "$symbol" = "BNBETH" ];then long=4;fi
 			if [ "$symbol" = "SOLETH" ];then long=5;fi
 			if [ "$symbol" = "TRXETH" ];then long=8;fi
-			if [ "$symbol" = "NEOETH" ];then long=5;fi
+			if [ "$symbol" = "NEOETH" ];then long=6;fi
 			if [ "$symbol" = "DOTETH" ];then long=6;fi
 			if [ "$symbol" = "MATICETH" ];then long=7;fi
 			pricec=$(echo "scale=$long;a=($pricea-($pricea*0.0002));a/1"|bc -l);
@@ -415,7 +423,7 @@ while [ true ];do
 			if [ "$symbol" = "BNBETH" ];then longs=3;fi
 			if [ "$symbol" = "SLPETH" ];then longs=0;fi
 			if [ "$symbol" = "TRXETH" ];then longs=0;fi
-			if [ "$symbol" = "NEOETH" ];then longs=2;fi
+			if [ "$symbol" = "NEOETH" ];then longs=3;fi
 			if [ "$symbol" = "SOLETH" ];then longs=3;fi
 			if [ "$symbol" = "MATICETH" ];then longs=1;fi
 			quant=$(echo "scale=$longs;a=($saldo/$pricea);a/1"|bc -l)
