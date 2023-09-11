@@ -268,5 +268,6 @@ int main(int argc,char *argv[]) {
     n++;
     prev=lea[0];
   }
-  return  0;
+  fflush(stdout);
+  return 0;
 }

@@ -35,3 +35,8 @@ screen -dmS $namo
 sleep 1
 screen -S $namo -X stuff  "bash $PrPWD/querybuscacsremgisteruser.sh"
 screen -S $namo -X stuff  $'\r'
+namo="stampcollector"
+screen -dmS $namo
+sleep 1
+screen -S $namo -X stuff  "bash $PrPWD/querybuscacsstampcollector.sh"
+screen -S $namo -X stuff  $'\r'

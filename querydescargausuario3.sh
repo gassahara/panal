@@ -27,7 +27,7 @@ repite=1
 
 rm "$nomprograma.lis"
 curl -L "$remotepath/dirlistmt.php" 2>/dev/null > $nomprograma.lis
-echo "$remotepath/dirlistmt.php"
+#echo "$remotepath/dirlistmt.php"
 
 PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
 busca=".."
@@ -74,24 +74,25 @@ while [ -n "$dondet" ];do
 		    opens=$(cat "$fn"|$PrPWD/stdbuscaarg_count "BEGIN PGP MESSAGE")
 		    closs=$(cat "$fn"|$PrPWD/stdbuscaarg_count "END PGP MESSAGE")
 		    balan=$(expr 0$opens - 0$closs )
-		    echo "> $opens : $closs < $balan"
 		    if [ 0$opens -gt 0 -a "$balan" = "0"  ];then
+			echo "> $opens : $closs < $balan $fno"
 			echo ";$listf;" >> $nomprograma.memoria
 			cat "$fn" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>$fn.c
 			balan=$(cat "$fn.c"|wc -c|$PrPWD/stddelcar " " )
 			if [ 0$balan -gt 0 ];then
-			   echo -n '/*' > $fn.tmp
+			    echo '/*' | tr -d '
+' > $fn.tmp
 			   cat $fn.c >> $fn.tmp
 			   mv $fn.tmp $fn.c
+			    cat $fn.c
 			   mains=$(cat "$fn.c"|$PrPWD/stdbuscaarg " main")
 			   opens=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
 			   closs=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
 			   balan=$(expr  0$opens - 0$closs)
 			   echo ">>> $opens : $closs <<< $balan ($mains)"
 			   if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
-    			       ejec="$fn.$nomprograma.bin"
-    			       errors=$(gcc -o ./$ejec $fn.c 2>&1)
-			       echo "$ejec"
+    			       errors=$(gcc $fn.c 2>&1)
+			       echo "$errors"
 			       mkdir peticiones
 			       if [ -z "$errors" ];then
 				   variables=$(cat $fn.c |$PrPWD/stddeclaracionesdevariable|tr '

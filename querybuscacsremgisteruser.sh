@@ -104,6 +104,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    done
 		    variables=$(cat "$fn" |$PrPWD/stddeclaracionesdevariable|tr '
 ' ';')
+		    echo ">>>>>>>>>    $variables <<<<<<<<<<<<<<<<<" 
 		    varos="";
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofindex")
 		    if [ -n "$varis" ];then
