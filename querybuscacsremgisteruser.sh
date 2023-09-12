@@ -186,8 +186,8 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    while [ -z "$encuentra" ];do
 				sha=$(echo "$name $count"| tr -d " " | tr -d '
 ' | sha512sum | $PrPWD/stdcarsin " ")
+				echo ">>>> $sha $count <<::"
 				respuesta=$(curl -L "$remotepath/fretfile.php?fname=$sha.js")
-				echo "$respuesta" 
 				encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Not Found')
 				count=$(expr "$count" + 1)
 				echo "$name $count"| tr -d " " | tr -d '
@@ -195,7 +195,6 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    done			    
 			    echo " ...................... "
 			    echo ">>>> $name"
-			    echo ">>>> $sha $count <<::"
 			    name="$sha.js"
 			    msg=$(echo -n "$content" | openssl dgst -sha256  -keyform PEM -sha256  -sign $PrPWD/user/private.pem | base64 | tr -d '
 ')
