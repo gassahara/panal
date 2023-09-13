@@ -40,3 +40,14 @@ screen -dmS $namo
 sleep 1
 screen -S $namo -X stuff  "bash $PrPWD/querybuscacsstampcollector.sh"
 screen -S $namo -X stuff  $'\r'
+
+namo="stampcontracts"
+screen -dmS $namo
+sleep 1
+screen -S $namo -X stuff  "bash $PrPWD/querybuscacsstampcontractbox.sh"
+screen -S $namo -X stuff  $'\r'
+namo="ppv"
+screen -dmS $namo
+sleep 1
+screen -S $namo -X stuff  "bash $PrPWD/querybuscacsstampPPV.sh"
+screen -S $namo -X stuff  $'\r'
