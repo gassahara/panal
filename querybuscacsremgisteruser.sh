@@ -177,7 +177,11 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			echo "$command"
 			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'APPEND')
 			if [ -n "$encuentrac" ] ; then
-		            content=$(echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
+			    content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$PaPWD/$content" ];do
+				content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    done
+		            echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' > "$PaPWD/$content"
 			    echo "CONTENT $content";
 			    count=1
 			    encuentra=""
@@ -196,13 +200,17 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    echo " ...................... "
 			    echo ">>>> $name"
 			    name="$sha.js"
-			    msg=$(echo -n "$content" | openssl dgst -sha256  -keyform PEM -sha256  -sign $PrPWD/user/private.pem | base64 | tr -d '
-')
+			    msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$PaPWD/$msg" ];do
+				msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    done
+			    cat "$PaPWD/$content" | openssl dgst -sha256  -keyform PEM -sha256  -sign $PrPWD/user/private.pem | base64 | tr -d '
+' > "$PaPWD/$msg"
 			    datee=$(date -u '+%Y-%m-%d %H:%M')
 			    echo "$datee"
 			    datesigned=$(echo -n "$datee" |  openssl dgst -sha256  -keyform PEM  -sign $PrPWD/user/private.pem | base64 | tr -d '
 ')
-			    curl -X POST -L "$remotepath/upp.php" -F "namo=\"$name\""       -F "signature=\"$msg\""      -F "content=\"$content\""      -F "datesigned=\"$datesigned\"" -F "submit=submit"
+			    curl -vvvv -X POST -L "$remotepath/uppFile.php" -F "namo=\"$name\"" -F "signature=@$PaPWD/$msg" -F "content=@$PaPWD/$content"  -F "datesigned=\"$datesigned\"" -F "submit=submit"
 			    exit
 			fi
 		    fi
