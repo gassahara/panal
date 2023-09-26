@@ -87,7 +87,7 @@ while [ -f "$PaPWD/$serverPublic" ];do
 done
 
 $0 &
-if [ -z "$encuentra" -a -n "$listf" ];then
+if [ -n "$encuentra" -a -n "$listf" ];then
     fn=$listf
     echo "<< fn $fn >>"
     ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
@@ -118,6 +118,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 ' ';')
 		    varos="";
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofDestinatary")
+		    echo "nameofDestinatary"
 		    if [ -n "$varis" ];then
 			varos="$varos$varis"
 			echo "$varos"
@@ -125,8 +126,8 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			exit 0
 		    fi
 		    echo "variables $varos"
-		    varos="";
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofSignatary")
+		    echo "nameofSignatary"
 		    if [ -n "$varis" ];then
 			varos="$varos$varis"
 			echo "$varos"
@@ -135,6 +136,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    fi
 		    echo "variables $varos"
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_command")
+		    echo "command"
 		    if [ -n "$varis" ];then
 			varos="$varos$varis"
 			echo "$varos"
@@ -143,6 +145,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    fi
 		    echo "variables $varos"
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_content")
+		    echo "content"
 		    if [ -n "$varis" ];then
 			varos="$varos$varis"
 			echo "$varos"
@@ -151,6 +154,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    fi
 		    echo "variables $varos"
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_ammount")
+		    echo "ammount"
 		    if [ -n "$varis" ];then
 			varos="$varos$varis"
 			echo "$varos"
@@ -165,24 +169,25 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		        ammount=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_ammount="|$PrPWD/stdcarsin ";")
 			echo "AMMOUNT $ammount";
 		        nameDestinatary=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofDestinatary["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
-			nameDestinatary=$(echo "$name" | tr -d '
+			nameDestinataryRemote=$(echo "$nameDestinatary" | tr -d '
 ' | sha512sum | $PrPWD/stdcarsin ' ')
-			nameDestinatary=$(echo "$nameDestinatary .js"|tr -d ' ')
-			namepublicDestinatary=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
-			echo "NAME    $nameDestinatary"
-			echo "PUBLIC  $namepublicDestinatary"
-			publicKeyofDestinatary=$(curl -L "$remotepath/fretfile.php?fname=$namepublicDestinatary.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' | base64 -d )
+			nameDestinataryRemote=$(echo "$nameDestinataryRemote .js"|tr -d ' ')
+			namepublicDestinataryRemote=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			echo "NAMEDestinatary    $nameDestinataryRemote"
+			echo "PUBLICDestinatary  $namepublicDestinataryRemote"
+			publicKeyofDestinatary=$(curl -L "$remotepath/fretfile.php?fname=$namepublicDestinataryRemote.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' | base64 -d )
+			publicKeyofDestinataryResult=$(echo "$publicKeyofDestinatary" | wc -c)
 		        nameSignatary=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofSignatary["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
-			nameSignatary=$(echo "$name" | tr -d '
+			nameSignataryRemote=$(echo "$nameSignataryRemote" | tr -d '
 ' | sha512sum | $PrPWD/stdcarsin ' ')
-			nameSignatary=$(echo "$nameSignatary .js"|tr -d ' ')
-			namepublicSignatary=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
-			echo "NAME    $nameSignatary"
-			echo "PUBLIC  $namepublicSignatary"
-			publicKeyofSignatary=$(curl -L "$remotepath/fretfile.php?fname=$namepublicSignatary.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' | base64 -d )
-
+			nameSignataryRemote=$(echo "$nameSignataryRemote .js"|tr -d ' ')
+			namepublicSignataryRemote=$(echo "$nameSignataryRemote public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			echo "NAMESignatary    $nameSignataryRemote"
+			echo "PUBLICSignatary  $namepublicSignataryRemote"
+			publicKeyofSignatary=$(curl -L "$remotepath/fretfile.php?fname=$namepublicSignataryRemote.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' | base64 -d )
+			publicKeyofSignataryResult=$(echo "$publicKeyofSignatary" | wc -c)
 			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'REGISTER')
-			echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentrac) ($namepublic)"
+			echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentrac) ($publicKeyofSignataryResult $publicKeyofDestinataryResult )"
 			textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			while [ -f "$PaPWD/$textcc" ];do
 			    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -192,37 +197,35 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    dirDestinataryTokens="$PrPWD/users/input/$nameDestinatary/tokens"
 			    mkdir $dirDestinatary
 			    mkdir $dirDestinataryTokens
-			    listaTokens=$(echo "$dirDestinataryTokens" | $PrPWD/listadodirectorio_files_from_std_extension_c)
+			    listaTokens=$(echo "$dirDestinataryTokens" | $PrPWD/listadodirectorio_files_from_std_extension_c|tr '
+' ' ')
 			    tokensAmmount=0
 			    ammountRes=0
-			    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+			    listaTokens=$(echo $listaTokens|tr '
+' ' ')
+			    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg ' ')
 			    while [ -n "$donde" ];do
-				tokenNew=$(echo $listaTokens|$PrPWD/stdcarsin " ")
+				tokenNew=$(echo $listaTokens|tr -d '
+'|$PrPWD/stdcarsin " ")
+				listaTokens=$(echo $listaTokens|tr -d '
+'|$PrPWD/stdcdr " ")
 				if [ -n "$tokenNew" ];then
 				    if [ -f "$tokenNew" ];then
 					ammountToken=$(cat "$tokenNew" | $PrPWD/stdcdr "long ammount=" | $PrPWD/stdcarsin ";")
-					uid1Token=$(cat "$tokenNew" | $PrPWD/stdcdr "long uid1=" | $PrPWD/stdcarsin ";")
-					uid2Token=$(cat "$tokenNew" | $PrPWD/stdcdr "long uid2=" | $PrPWD/stdcarsin ";")
-					uid3Token=$(cat "$tokenNew" | $PrPWD/stdcdr "long uid3=" | $PrPWD/stdcarsin ";")
-					uid4Token=$(cat "$tokenNew" | $PrPWD/stdcdr "long uid4=" | $PrPWD/stdcarsin ";")
-					dateToken=$(cat "$tokenNew" | $PrPWD/stdcdr "long date=" | $PrPWD/stdcarsin ";")
-					fname=$(cat "$tokenNew" | $PrPWD/stdcdr "long fname[" | $PrPWD/stdcdr "=" | $PrPWD/stdcarsin ";" | tr -d '"')
-					buscaUid1=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$uid1Token;")
-					buscaUid2=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$uid2Token;")
-					buscaUid3=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$uid3Token;")
-					buscaUid4=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$uid4Token;")
-					buscaDate=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long date=$dateToken;")
-					buscaAmmount=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long ammount=$ammountToken;")
-					if [ -n "$buscaUid1" -a -n "$buscaUid2" -a -n "$buscaUid3" -a -n "$buscaUid4" -a -n "$buscaDate" -a -n "$buscaAmmount" ];then
-					    tokensAmmount=(expr 0$tokensammount + $ammountToken)
-					    mv -v "$dirTokens/$fname" $dirTokensDeleted
+					echo "T: $ammountToken $tokensAmmount $dirDestinataryTokens"
+					if [ -n "$ammountToken" ];then
+					    tokensAmmount2=$(expr 0$tokensAmmount + $ammountToken)
+					    tokensAmmount=$tokensAmmount2
+					    mv -v "$tokenNew" $dirTokensDeleted
 					fi
 				    fi
 				fi
-				donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
-				echo "$donde"
+				donde=$(echo $listaTokens|tr -d '
+'|$PrPWD/stdbuscaarg " ")
+#				echo "$donde :$listaTokens:"
 			    done
-			    echo "A $tokensAmmount"
+			    echo "A $tokensAmmount ::"
+			    sleep 20
 			    if [ "0$tokensAmmount" -ge "0$ammount" ];then
 				resto=$(expr 0$tokensAmmount - 0$ammount)
 				billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -464,7 +467,53 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				echo "$contentd" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>"$PaPWD/$contentfile"
 				curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$PaPWD/$contentfile"
 			    else
-				sleep 60
+				sleep 20
+				if [ -n "$tokensAmmount" -a "0$tokensAmmount" -gt 0 ];then
+				    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$billscc.c" ];do
+					billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    cat $PrPWD/bills.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+				    echo "$tokensAmmount;" | tr -d '
+'  >> "$PaPWD/$billscc.c"
+				    cat $PrPWD/bills.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+				    gcc -o "$PaPWD/$billscc" "$PaPWD/$billscc.c"
+				    cuantos=$($PaPWD/$billscc | ../stdbuscaarg_count ',')
+				    listaAmmount=$($PaPWD/$billscc)
+				    addAmmount=$(echo $listaAmmount|tr ',' '+'|bc)
+				    dondeAmmount="ALGO"
+				    c=1
+				    ammountRes=0;
+				    datefield="Date: $(date +%s)"
+				    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$temptextcc" ];do
+					temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    while [ -n "$dondeAmmount" ];do
+					tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
+					listaTokens=$(echo "$dirNewTokens/$tokenAmmount/" | $PrPWD/listadodirectorio_files_from_std_extension_c)
+					echo "A $tokenAmmount $addAmmount $c $dirNewTokens/$tokenAmmount/"
+					donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+					while [ -n "$donde" ];do
+					    tokenNew=$(echo $listaTokens|$PrPWD/stdcarsin " ")
+					    if [ -n "$tokenNew" ];then
+						echo "A:$tokenAmmount T:$tokenNew X:$dirDestinataryTokens $chachafile"
+						if [ -f "$tokenNew" ];then
+						    mv -v $tokenNew "$dirDestinataryTokens"
+						    addAmmount=$(echo 0$addAmmount + $tokenAmmount)
+						    donde=""
+						    break
+						else
+						    listaTokens=$(echo $listaTokens|$PrPWD/stdcdr " ")
+						    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+						    echo "$donde"
+						fi
+					    fi
+					done
+				    done
+				    listaAmmount=$(echo $listaAmmount|$PrPWD/stdcdr ",")
+				    dondeAmmount=$(echo $listaAmmount|$PrPWD/stdbuscaarg ",")
+				fi
 				rm -v "$chachafile"
 			    fi
 			fi

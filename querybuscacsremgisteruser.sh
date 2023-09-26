@@ -176,7 +176,8 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			fi
 			echo "$command"
 			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'APPEND')
-			if [ -n "$encuentrac" ] ; then
+			encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Success Success')
+			if [ -n "$encuentrac" -a -n "$encuentra" ] ; then
 			    content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$content" ];do
 				content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -198,7 +199,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 ' | sha512sum | $PrPWD/stdcarsin " "
 			    done			    
 			    echo " ...................... "
-			    echo ">>>> $name"
+			    echo ">>>> $name ($count)"
 			    name="$sha.js"
 			    msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$msg" ];do

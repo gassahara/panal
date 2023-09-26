@@ -191,20 +191,17 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		        tokens_uid4=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid4["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
 		        tokens_ammounts=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_ammount["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
 		        tokens_fnames=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_stamps_fname["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr -d '"'|tr '}' ',')
-			echo "COMMAND $command";			
+			echo "COMMAND $command";
 		        name=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofDestinatary["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
-			name=$(echo "$name" | tr -d '
+			nameRemote=$(echo "$name" | tr -d '
 ' | sha512sum | $PrPWD/stdcarsin ' ')
-			name=$(echo "$name .js"|tr -d ' ')
-			namepublic=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
-			echo "NAME    $name"
+			nameRemote=$(echo "$nameRemote .js"|tr -d ' ')
+			namepublic=$(echo "$nameRemote public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			echo "NAME    $nameRemote ($name)"
 			echo "PUBLIC  $namepublic"
-			respuestaa=$(curl -L "$remotepath/fretfile.php?fname=$name" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' | $PrPWD/stdbuscaarg "Success")
-			if [ -z "$respuestaa" ];then
-			    exit
-			fi
-			respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"'  | $PrPWD/stdbuscaarg "Success")
-			if [ -z "$respuestaa" ];then
+			respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"'  | $PrPWD/stdbuscaarg "Success")			
+			if [ -z "$respuestab" ];then
+			    echo "$name not found"
 			    exit
 			fi
 			respuesta=$(echo "$respuestaa $respuestab")
@@ -220,7 +217,6 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    dirDestinataryTokens="$PrPWD/users/input/$name/tokens"
 			    mkdir $dirDestinatary
 			    mkdir $dirDestinataryTokens
-
 			    busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
 			    ammountTotal=0
 			    while [ -n "$busca" ];do
@@ -240,7 +236,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 				tokens_fnames=$(echo "$tokens_fnames" | $PrPWD/stdcdr ",")
 				fname=$(echo "$tokenFname .c"|tr -d ' ')
 				buscaDate=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long date=$tokenDate;")
-				buscaFname=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "char fname[20]=\"$tokenFname\";")
+				buscaFname=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "char fname[21]=\"$tokenFname\";")
 				buscaAmmount=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long ammount=$tokenAmmount;")
 				buscaUid1=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$tokenUid1;")
 				buscaUid2=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid2=$tokenUid2;")
@@ -257,77 +253,47 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    while [ -f "$PaPWD/$billscc.c" ];do
 				billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    done
-			    cat $PrPWD/bills.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+			    cat $PrPWD/billstostd.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
 			    echo "$ammountTotal;" | tr -d '
 '  >> "$PaPWD/$billscc.c"
-			    cat $PrPWD/bills.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
-			    gcc -o "$PaPWD/$billscc" "$PaPWD/$billscc.c"
-			    cuantos=$($PaPWD/$billscc | ../stdbuscaarg_count ',')
-			    listaAmmount=$($PaPWD/$billscc)
-			    addAmmount=$(echo $listaAmmount|tr ',' '+'|bc)
-			    dondeAmmount="ALGO"
-			    c=1
-			    ammountRes=0;
-			    datefield="Date: $(date +%s)"
-			    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-			    while [ -f "$PaPWD/$temptextcc" ];do
-				temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    cat $PrPWD/billstostd.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+
+			    ldestokens=$(echo "$dirDestinataryTokens/" | tr -d '
+' | wc -c)
+			    ldestokens=$(expr $ldestokens + 21)
+			    cat $PaPWD/$billscc.c | $PrPWD/stdcar "char tokensDirplusFilename[" > "$PaPWD/$billscc-ii.c"
+			    echo "$ldestokens]="'"'"$dirDestinataryTokens/"'"'";" | tr -d '
+'  >> "$PaPWD/$billscc-ii.c" 
+			    cat $PaPWD/$billscc.c | $PrPWD/stdcdr "char tokensDirplusFilename[" | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc-ii.c"
+			    mv -v "$PaPWD/$billscc-ii.c" "$PaPWD/$billscc.c"
+			    echo "_ _ _ _ _ _ _"
+			    echo $PaPWD/$billscc.c
+			    cat $PaPWD/$billscc.c
+			    sleep 20
+			    errors=$(gcc -o "$PaPWD/$billscc" "$PaPWD/$billscc.c" 2>&1)
+			    temptextcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$PaPWD/$textcc" ];do
+				temptextcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    done
-			    while [ -n "$dondeAmmount" ];do
-				tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
-				while [ "0$tokenAmmount" -gt 0 ];do
-				    listaTokens=$(echo "$dirNewTokens/$tokenAmmount/" | $PrPWD/listadodirectorio_files_from_std_extension_c)
-				    tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
-				    echo "A $tokenAmmount $ammountRes/$addAmmount $c $dirNewTokens/$tokenAmmount/"
-				    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
-				    while [ -n "$donde" ];do
-					tokenNew=$(echo $listaTokens|$PrPWD/stdcarsin " ")
-					if [ -n "$tokenNew" ];then
-					    echo "c=$c A:$tokenAmmount T:$tokenNew X:$PaPWD/$temptextcc"
-					    if [ -f "$tokenNew" ];then
-						mv $tokenNew $dirTokens
-						newName=$tokenNew
-						donde=$(echo $newName|$PrPWD/stdbuscaarg "/")
-						while [ -n "$donde" ];do
-						    newName=$(echo $newName|$PrPWD/stdcdr "/")
-						    donde=$(echo $newName|$PrPWD/stdbuscaarg "/")
-						done
-						cp $dirTokens/$newName $dirDestinataryTokens
-						ammountRes=$(expr $tokenAmmount + $ammountRes)
-						tokenAmmount=0
-						donde=""
-					    else
-						listaTokens=$(echo $listaTokens|$PrPWD/stdcdr " ")
-						donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
-						echo "$donde"
-					    fi
-					fi
-				    done
+			    $PaPWD/$billscc > $temptextcc
+			    if [ -z "$errores" ];then
+				cp $dirDestinataryTokens/* $dirTokens
+				textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$textcc" ];do
+				    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				done
-				listaAmmount=$(echo $listaAmmount|$PrPWD/stdcdr ",")
-				dondeAmmount=$(echo $listaAmmount|$PrPWD/stdbuscaarg ",")
-				c=$(expr 0$c + 1)
-				if [ -z "$dondeAmmount" ];then
-				    c=13
-				fi
-				if [ "0$c" -gt 9 ];then
-				    c=1
-				    while [ -f "$PaPWD/$textcc" ];do
-					textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-				    done
-				    echo "Subject: sendcoin" > "$PaPWD/$textcc"
-				    echo "Part: $ammountRes/$addAmmount" >> "$PaPWD/$textcc"
-				    echo "$datefield" >> "$PaPWD/$textcc"
-				    echo '
+				datefield="Date: $(date +%s)"
+				echo "Subject: #sendcoin" > "$PaPWD/$textcc"
+				echo "$datefield" >> "$PaPWD/$textcc"
+				echo '
 
 '  >> "$PaPWD/$textcc"
-				    cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
-				    cuantos=$(expr $cuantos - 8)
+				cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
+				utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$utcc" ];do
 				    utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-				    while [ -f "$PaPWD/$utcc" ];do
-					utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-				    done
-				    echo '-----BEGIN PGP PUBLIC KEY BLOCK-----
+				done
+				echo '-----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQINBGTROLIBEAC1irDz//mqF2O2HyzpqMZMzC5Uq8bQ3KuPcjyvEqWf5u+20Vku
 +h9IHtccyD86GcJEtIiUO2oeAFMy8bxaDDlAOzYFtXn4wkt/626PqTehFf53tcBl
@@ -379,57 +345,55 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 =5EZI
 -----END PGP PUBLIC KEY BLOCK-----' > $PaPWD/$serverPublic
 
-				    variables=$(curl -L $remotepath/formalm.php|tr -d '"')
-				    iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
-				    OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
-				    OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
-				    respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
-				    encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
-				    if [ -n "$encuentra" ] ; then
-					echo "SUBIR"
-					boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-					boundary="------- $boundaryR";
+				variables=$(curl -L $remotepath/formalmFiles.php|tr -d '"')
+				iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
+				OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
+				OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
+				respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
+				encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
+				if [ -n "$encuentra" ] ; then
+				    echo "SUBIR"
+				    boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    boundary="------- $boundaryR";
+				    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$output" ];do
 					output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-					while [ -f "$PaPWD/$output" ];do
-					    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-					done
-
-					echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
-					curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
-					signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )				
-					echo "$datefield" >> "$PaPWD/$output"
-					echo "Subject: #SENDCOIN" >> "$PaPWD/$output"
-					echo '
-
-'  >> "$PaPWD/$output"
-					echo "$boundary"  >> "$PaPWD/$output"
-					echo "Content-Type: text/plain; charset=us-ascii; field=signature;"  >> "$PaPWD/$output"
-					echo '
-
-'  >> "$PaPWD/$output"
-					echo "$signedoutput" >> "$PaPWD/$output"
-					encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
-')
-#					echo "$encryptedoutput"
-					cat $PaPWD/$textcc
-					namel=$(echo "$name"|tr -d '
-'|wc -c)
-					encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
-'|wc -c)
-					texto=$(echo " $($PrPWD/aleatorio|$PrPWD/stdcdrn 2) int main() {  $($PrPWD/aleatorio) char nameofindex[$namel]=\"$name\"; $($PrPWD/aleatorio)  char command[6]=\"APPEND\"; $($PrPWD/aleatorio)  char content[$encryptedoutputl]=\"$encryptedoutput\"; $($PrPWD/aleatorio)  }")
-					encryptedoutput=$(echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $PaPWD/$serverPublic)
-					encryptedoutput=$(echo "$encryptedoutput")
-					if [ -n "$encuentra" ] ; then
-					    curl -vvvv -X POST -L $remotepath/formalm.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=$encryptedoutput"
-
-					fi
-				    fi
-				    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-				    while [ -f "$PaPWD/$temptextcc" ];do
-					temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				    done
+
+				    echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
+				    curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
+				    signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )				
+				    echo "$datefield" >> "$PaPWD/$output"
+				    echo "Subject: #sendcoin" >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$boundary"  >> "$PaPWD/$output"
+				    echo "Content-Type: text/plain; charset=us-ascii; field=signature;"  >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$signedoutput" >> "$PaPWD/$output"
+				    encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
+')
+				    #					echo "$encryptedoutput"
+				    cat $PaPWD/$textcc
+				    namel=$(echo "$nameRemote"|tr -d '
+'|wc -c)
+				    encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
+'|wc -c)
+				    texto=$(echo " $($PrPWD/aleatorio|$PrPWD/stdcdrn 2) int main() {  $($PrPWD/aleatorio) char nameofindex[$namel]=\"$nameRemote\"; $($PrPWD/aleatorio)  char command[6]=\"APPEND\"; $($PrPWD/aleatorio)  char content[$encryptedoutputl]=\"$encryptedoutput\"; $($PrPWD/aleatorio)  }")
+				    encryptedoutput=$(echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $PaPWD/$serverPublic)
+				    encriptedOutputFiles=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$encriptedOutputFiles" ];do
+					encriptedOutputFiles=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    echo "$encryptedoutput" > $encriptedOutputFiles
+				    if [ -n "$encuentra" ] ; then
+					curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$encriptedOutputFiles"
+				    fi
 				fi
-			    done
+			    fi
 			fi
 		    fi
 		fi
