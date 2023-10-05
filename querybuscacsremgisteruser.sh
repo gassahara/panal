@@ -176,8 +176,8 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			fi
 			echo "$command"
 			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'APPEND')
-			encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Success Success')
-			if [ -n "$encuentrac" -a -n "$encuentra" ] ; then
+#			encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Success Success')
+			if [ -n "$encuentrac" ] ; then
 			    content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$content" ];do
 				content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")

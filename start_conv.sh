@@ -23,7 +23,7 @@ sleep 1
 namo="descargausuario"
 screen -dmS $namo
 sleep 1
-screen -S $namo -X stuff  "bash $PrPWD/querydescargausuario3.sh"
+screen -S $namo -X stuff  "bash $PrPWD/querydescargausuario4.sh"
 screen -S $namo -X stuff  $'\r'
 namo="buscausuario"
 screen -dmS $namo
