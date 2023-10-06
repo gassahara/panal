@@ -161,9 +161,9 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    echo "::>> . . . ($name $namepublic) "
 			    name=$(echo "$name" | sed -e 's/ /%20/g' -e 's/:/%3A/g' -e 's/,/%2C/g' -e 's/;/%3B/g' -e 's/\[/%5B/g' -e 's/\]/%5D/g' -e 's/{/%7B/g' -e 's/}/%7D/g' -e 's/(/%28/g' -e 's/)/%29/g' -e 's/\*/%2A/g' -e 's/&/%26/g' -e 's/\^/%5E/g' -e 's/%/%25/g' -e 's/\$/%24/g' -e 's/@/%40/g' -e 's/!/%21/g' -e 's/~/-%7E/g' -e 's/-/%2D/g' -e 's/_/%5F/g' -e 's/>/%3E/g' -e 's/</%3C/g' -e 's/\?/%3F/g' -e 's/\//%2F/g' )
 			    echo " ... $name <<::"
-			    msg=$(echo -n "$content" | openssl dgst -sha256  -keyform PEM -sha256  -sign $PrPWD/user/private.pem | base64 | tr -d '
+			    msg=$(echo -n "$content" | openssl dgst -sha256  -keyform PEM -sign $PrPWD/user/private.pem | base64 | tr -d '
 ')
-			    msgExtra=$(echo -n "$contentExtra" | openssl dgst -sha256  -keyform PEM -sha256  -sign $PrPWD/user/private.pem | base64 | tr -d '
+			    msgExtra=$(echo -n "$contentExtra" | openssl dgst -sha256  -keyform PEM -sign $PrPWD/user/private.pem | base64 | tr -d '
 ')
 			    datee=$(date -u '+%Y-%m-%d %H:%M')
 			    echo "$datee"
@@ -205,7 +205,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    while [ -f "$PaPWD/$msg" ];do
 				msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    done
-			    cat "$PaPWD/$content" | openssl dgst -sha256  -keyform PEM -sha256  -sign $PrPWD/user/private.pem | base64 | tr -d '
+			    cat "$PaPWD/$content" | openssl dgst -sha256  -keyform PEM -sign $PrPWD/user/private.pem | base64 | tr -d '
 ' > "$PaPWD/$msg"
 			    datee=$(date -u '+%Y-%m-%d %H:%M')
 			    echo "$datee"
