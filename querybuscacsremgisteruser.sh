@@ -19,7 +19,7 @@ PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
 #echo "$nomprograma.."
-sleep 0.1
+sleep 2
 listados="";
 listado="";
 remotepath="http://127.0.0.1/" #"185.27.134.11/htdocs"

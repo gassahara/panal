@@ -18,6 +18,7 @@ cd $PrPWD
 PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
+sleep 2
 #echo "$nomprograma.."
 listados="";
 listado="";
@@ -46,8 +47,8 @@ encuentra="ALGO"
 dirTokens="$PrPWD/users/tokens"
 dirNewTokens="$PrPWD/users/tokensNew"
 dirTokensDeleted="$PrPWD/users/tokensDeleted"
-mkdir "$dirNewTokens"
-mkdir "dirTokensDeleted"
+mkdir "$dirNewTokens" 2>/dev/null
+mkdir "dirTokensDeleted" 2>/dev/null
 while [ -n "$dondes" -a -n "$encuentra" ];do
     listf=$(echo "$lista0" | $PrPWD/stdcdrn "0$posicion"|$PrPWD/stdcarsin '
 ')
@@ -58,7 +59,7 @@ while [ -n "$dondes" -a -n "$encuentra" ];do
     if [ -n "$listf" ];then
 	chacha=$(cat "$listf"|$PrPWD/chacha20)
     fi
-    encuentra=$(cat $nomprograma.memoria | $PrPWD/stdbuscaarg ";$listf;$chacha;")
+    encuentra=$(cat "$nomprograma.memoria" | $PrPWD/stdbuscaarg ";$listf;$chacha;")
 done
 if [ -z "$encuentra" ];then
     echo ";$listf;$chacha;" >> $nomprograma.memoria

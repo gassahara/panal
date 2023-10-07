@@ -40,6 +40,7 @@ lista0=$(echo "$lista0 ")
 dondes=$(echo "$lista0" | tr '
 ' ' '| $PrPWD/stdbuscaarg_donde " ")
 pren=0
+sleep 10
 while [ -n "$continua" ];do
     ii=$(expr $i + 300)
     continua=1
