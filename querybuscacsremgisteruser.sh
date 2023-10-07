@@ -72,7 +72,7 @@ done
     $0 &
 if [ -z "$encuentra" -a -n "$listf" ];then
     fn=$listf
-    echo "<< fn $fn >>"
+#    echo "<< fn $fn >>"
     ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
     if [ -n "$ttest" ];then
 	slash=$(echo "$fn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
@@ -104,7 +104,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    done
 		    variables=$(cat "$fn" |$PrPWD/stddeclaracionesdevariable|tr '
 ' ';')
-		    echo ">>>>>>>>>    $variables <<<<<<<<<<<<<<<<<" 
+#		    echo ">>>>>>>>>    $variables <<<<<<<<<<<<<<<<<" 
 		    varos="";
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofindex")
 		    if [ -n "$varis" ];then
@@ -129,7 +129,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 		    fi
 		    echo "variables passed"
 		    if [ "$varos" = "***" ];then
-			echo "varos passed; $variables"
+#			echo "varos passed; $variables"
 		        command=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_command["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
 			echo "COMMAND $command";			
 		        name=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofindex["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
@@ -191,15 +191,14 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    while [ -z "$encuentra" ];do
 				sha=$(echo "$name $count"| tr -d " " | tr -d '
 ' | sha512sum | $PrPWD/stdcarsin " ")
-				echo ">>>> $sha $count <<::"
+#				echo ">>>> $sha $count <<::"
 				respuesta=$(curl -L "$remotepath/fretfile.php?fname=$sha.js")
 				encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Not Found')
 				count=$(expr "$count" + 1)
-				echo "$name $count"| tr -d " " | tr -d '
-' | sha512sum | $PrPWD/stdcarsin " "
+				echo "count $count name $sha"
 			    done			    
 			    echo " ...................... "
-			    echo ">>>> $name ($count)"
+#			    echo ">>>> $name ($count)"
 			    name="$sha.js"
 			    msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$msg" ];do
