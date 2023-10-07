@@ -85,10 +85,20 @@ while [ -n "$continua" ];do
 #    echo "$ii"
 done
 echo 0$pren $1
+ps1=1
+while [ -f "$nomprograma.lock-$ps1" ];do
+    if [ 0$ps1 -lt 3 ];then
+	echo "W W W W W W W W W W W W W   $ps1"
+	ps1=$(expr 0$ps1 + 1)
+    else
+	ps1=1
+	sleep 1
+    fi
+done
 if [ $pren -eq 0 ];then
 #    echo "X"
     sleep 15
-    $0 x &
+#    $0 x &
     exit
 fi
 lista0=$(cat "$PaPWD/$pn.l.$ii" | tr '
@@ -300,5 +310,6 @@ while [ -n "$lista0" ];do
     fi    
 done
 rm -v $PaPWD/$pn.l.$ii
+    $0 $ii x &
 echo "!"
 exit

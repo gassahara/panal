@@ -22,7 +22,7 @@ sleep 2
 #echo "$nomprograma.."
 listados="";
 listado="";
-remotepath="http://127.0.0.1/" #"185.27.134.11/htdocs"
+remotepath="curare2019.ddns.net" #"185.27.134.11/htdocs"
 if [ -d "$PrPWD/users/input" ];then
     listados=$(echo $PrPWD/users/input|$PrPWD/listadodirectorio_dirs_from_std|$PrPWD/stdbuscaarg_donde '
 ')

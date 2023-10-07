@@ -52,7 +52,7 @@ while [ -n "$dondes" -a -n "$encuentra" ];do
     dondes=$(echo "$dondes" |$PrPWD/stdcdr " ")
     chacha=""
     if [ -n "$listf" ];then
-	chacha=$(cat "$listf"|$PrPWD/chacha20)
+	chacha=$(cat "$listf"|sha512sum|$PrPWD/stdcarsin ' ')
     fi
     encuentra=$(cat $nomprograma.memoria | $PrPWD/stdbuscaarg ";$listf;$chacha;")
 done
