@@ -52,7 +52,7 @@ while [ -n "$continua" ];do
 	    n=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
 	    n2=$(echo 0$n - $pren)
 	    listf=$(echo "$lista0" | $PrPWD/stdcdrn 0$pren |  $PrPWD/stdcarsin ' ' )
-	    echo $pren $n $listf
+#	    echo $pren $n $listf
 	    pren=$(expr 0$n + 1)
 	    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
             echo "$listf" >> "$PaPWD/$pn.l.$ii"
@@ -131,7 +131,6 @@ while [ -n "$lista0" ];do
 		    fi
 		else			
 		    balan=$(expr 0$opens - 0$closs )
-		    echo "> $opens : $closs < $balan $fn )"
 		    if [ 0$opens -gt 0 -a "$balan" = "0"  ];then
 			echo ";$listf;" > $fn.memoria
 			cat "$fn" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>$fn.c

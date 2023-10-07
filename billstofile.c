@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <time.h>
 
-char tokensDirplusFilename[58]="/home/user/servers/nube/users/tokens/";
+char tokensDirplusFilename[46]="/root/panal/users/tokens/";
 char filename[21];
 FILE *ff;
 unsigned long uid1=0;
@@ -173,7 +173,7 @@ int writeToken(long ammount) {
 int main() {
     const long bsize=28;    
     long boxes[28] = {1000000, 500000, 250000, 200000, 125000, 100000, 50000, 25000, 20000, 12500, 10000, 5000, 2500, 2000, 1250, 1000, 500, 250, 200, 125, 100, 50, 25, 20, 10, 5, 2, 1};
-    long num_pellets = 333333;
+    long num_pellets = 3333333;
     int i = 0, j;
     for (j = bsize-1; j >=0; j--) {
       i=0;

@@ -46,6 +46,8 @@ encuentra="ALGO"
 dirTokens="$PrPWD/users/tokens"
 dirNewTokens="$PrPWD/users/tokensNew"
 dirTokensDeleted="$PrPWD/users/tokensDeleted"
+mkdir "$dirNewTokens"
+mkdir "dirTokensDeleted"
 while [ -n "$dondes" -a -n "$encuentra" ];do
     listf=$(echo "$lista0" | $PrPWD/stdcdrn "0$posicion"|$PrPWD/stdcarsin '
 ')
@@ -382,7 +384,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
 				if [ -n "$buscaUid1" -a -n "$buscaUid2" -a -n "$buscaUid3" -a -n "$buscaUid4" -a -n "$buscaDate" -a -n "$buscaFname"  -a -n "$buscaAmmount" ];then
 				    ammountTotal=$(expr 0$ammountTotal + 0$tokenAmmount)
-				    mv "$dirTokens/$fname" $dirTokensDeleted
+				    mv "$dirTokens/$fname" $dirTokensDeleted/
 				fi
 			    done
 			    datefield="Date: $(date +%s)"
@@ -546,7 +548,6 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 
 '  >> "$PaPWD/$textcc"
 			    cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
-			    cuantos=$(expr $cuantos - 8)
 			    utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$utcc" ];do
 				utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")

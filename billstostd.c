@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <time.h>
 
-char tokensDirplusFilename[58]="/home/user/servers/nube/users/tokens/";
+char tokensDirplusFilename[46]="/root/panal/users/tokens/";
 char filename[21];
 FILE *ff;
 unsigned long uid1=0;
@@ -192,7 +192,7 @@ int main() {
       i=0;
       while (num_pellets > 0 && num_pellets >= boxes[j] && i < 10) {
 	if(num_pellets<boxes[j]) break;
-	printf("%ld,", boxes[j]);
+	//	printf("%ld,", boxes[j]);
 	writeToken(boxes[j]);
 	fflush(stdout);
 	num_pellets -= boxes[j];
@@ -201,7 +201,7 @@ int main() {
     }
     for (j = 0; j < bsize && num_pellets>0; j++) {
       while (num_pellets > 0 && num_pellets >= boxes[j]) {
-	printf("%ld,", boxes[j]);
+	//	printf("%ld,", boxes[j]);
 	writeToken(boxes[j]);
 	num_pellets -= boxes[j];
       }
