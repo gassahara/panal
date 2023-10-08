@@ -18,10 +18,9 @@ cd $PrPWD
 PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
-remotepath="http://127.0.0.1/" #"https://curare2019.ddns.net/"
-lista0=$(curl -L "$remotepath/dirlistmt.php" 2>/dev/null | tr '
+remotepath="https://curare2019.ddns.net/"
+lista0=$(curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
 ' ' ' )
-
 PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
 busca=".."
 echo "" |tr -d '
@@ -40,7 +39,6 @@ lista0=$(echo "$lista0 ")
 dondes=$(echo "$lista0" | tr '
 ' ' '| $PrPWD/stdbuscaarg_donde " ")
 pren=0
-sleep 10
 while [ -n "$continua" ];do
     ii=$(expr $i + 300)
     continua=1
@@ -56,11 +54,13 @@ while [ -n "$continua" ];do
 #	    echo $pren $n $listf
 	    pren=$(expr 0$n + 1)
 	    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
-            echo "$listf" >> "$PaPWD/$pn.l.$ii"
+	    if [ ! -f "$listf.memoria" ];then
+		echo "$listf" >> "$PaPWD/$pn.l.$ii"
+	    fi
 	    if [ -z "$dondes" ];then
 		continua=0
 		break
-	    fi	    
+	    fi
 	    i=$(expr $i + 1)
 	done
 	echo "S i=$i ii=$ii $PaPWD/$pn.l.$ii"
@@ -136,6 +136,12 @@ while [ -n "$lista0" ];do
 		opens=$(cat "$fn"|$PrPWD/stdbuscaarg_count "BEGIN PGP MESSAGE")
 		closs=$(cat "$fn"|$PrPWD/stdbuscaarg_count "END PGP MESSAGE")
 		if [ -z "$opens" -o "0$opens" -eq 0 ];then
+		    firstchar=$(cat "$fn"|$PrPWD/stdcarn 2)
+		    if [ "$firstchar" != '--' -a "$firstchar" != 'BE' -a "$firstchar" != ' -' -a "$firstchar" != '- '  ];then
+			echo ";$listf;" > "$fn.memoria"
+			echo ">> >> >> $size $opens $closs"
+		    fi
+			
 		    if [ "0$size" -gt 30 -o "0$size" -lt 18 ];then
 			echo ";$listf;" > "$fn.memoria"
 			echo ">> >> >> $size $opens $closs"
