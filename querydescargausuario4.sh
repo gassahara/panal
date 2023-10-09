@@ -19,12 +19,8 @@ PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
 remotepath="https://curare2019.ddns.net/"
-lista0=$(curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
-' ' ' )
 PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
 busca=".."
-echo "" |tr -d '
-' |> $nomprograma.cha
 posicion=0;
 encuentra="ALGO"
 i=1
@@ -35,29 +31,47 @@ while [ -n "$slash" ];do
     pn=$(echo "$pn" | $PrPWD/stdcdr "/" )
     slash=$(echo $pn | $PrPWD/stdbuscaarg_donde_hasta "/" )
 done
-lista0=$(echo "$lista0 ")
-dondes=$(echo "$lista0" | tr '
-' ' '| $PrPWD/stdbuscaarg_donde " ")
 pren=0
+if [ -f "$nomprograma.lista0" ];then
+dondes=$(cat "$nomprograma.lista0" | $PrPWD/stdbuscaarg_donde " ")
 while [ -n "$continua" ];do
     ii=$(expr $i + 300)
     continua=1
-#    echo "*************** $ii $1"
     if [ ! -f "$PaPWD/$pn.l.$ii" ];then
 	touch "$PaPWD/$pn.l.$ii"
 	$0 $i &
 	echo started $i
 	while [ "0$i" -lt "$ii" ];do
-	    n=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
-	    n2=$(echo 0$n - $pren)
-	    listf=$(echo "$lista0" | $PrPWD/stdcdrn 0$pren |  $PrPWD/stdcarsin ' ' )
-#	    echo $pren $n $listf
-	    pren=$(expr 0$n + 1)
+	    n2=1;
+	    while [ 0$n2 -lt 2 ];do
+	    n2=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
+	    if [ -z "$dondes" ];then
+		n2=$(cat "$nomprograma.lista0" | wc -c | $PrPWD/stdcarsin ' ' )
+		echo -n "$n2 "
+	    fi
+	    n2=$(expr 0$n2 - 0$pren)
+	    done
+	    listf=$(dd if="$nomprograma.lista0" bs=1 skip=$(expr 0$pren) count=$n2 2>/dev/null)
+	    echo "($listf) pren 0$pren n2 0$n2"
+	    pren=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
 	    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
-	    if [ ! -f "$listf.memoria" ];then
-		echo "$listf" >> "$PaPWD/$pn.l.$ii"
+	    sleep 20
+	    fn=$listf
+	    slash=$(echo "$fn" | tr -d '
+' | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    while [ -n "$slash" ];do
+		fn=$(echo "$fn" | tr -d '
+' | $PrPWD/stdcdr "/" )
+		slash=$(echo $fn | tr -d '
+' | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    done
+	    if [ -n "$fn" -a -n "$listf" ];then
+		if [ ! -f "$fn.memoria" ];then
+		    echo "$listf" >> "$PaPWD/$pn.l.$ii"
+		fi
 	    fi
 	    if [ -z "$dondes" ];then
+		echo "XXXXXX"
 		continua=0
 		break
 	    fi
@@ -67,7 +81,6 @@ while [ -n "$continua" ];do
 	continua=0
 	break;
     else
-#	echo "N i=$i ii=$ii"
 	while [ "0$i" -lt "$ii" ];do
 	    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
 	    if [ -z "$dondes" ];then
@@ -84,37 +97,43 @@ while [ -n "$continua" ];do
     fi
 #    echo "$ii"
 done
+fi
 echo 0$pren $1
-ps1=1
-while [ -f "$nomprograma.lock-$ps1" ];do
-    if [ 0$ps1 -lt 3 ];then
-	echo "W W W W W W W W W W W W W   $ps1"
-	ps1=$(expr 0$ps1 + 1)
-    else
-	ps1=1
-	sleep 1
-    fi
-done
 if [ $pren -eq 0 ];then
-#    echo "X"
+    a=1
+    while [ "0$a" -lt 0$ii ];do
+	if [ -f "$PaPWD/$pn.l.$a" ];then
+	    echo -n "($a $ii) "
+	    a=1
+	    sleep 5
+	fi
+	a=$(expr $a + 1)
+    done
+    rm "$nomprograma.lista0"
+    curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
+' ' ' > $nomprograma.lista0
     sleep 15
-#    $0 x &
+    $0 x &
     exit
 fi
 lista0=$(cat "$PaPWD/$pn.l.$ii" | tr '
 ' ' ' )
+echo "<$lista0>"
 while [ -n "$lista0" ];do
+    if [ ! -f "$PaPWD/$pn.l.$ii" ];then
+	exit
+    fi
     encuentra="";
     listf=$(echo "$lista0" | $PrPWD/stdcarsin ' ' )
     fn=$listf
-    slash=$(echo "$fn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+    slash=$(echo "$fn" | tr -d '
+' | $PrPWD/stdbuscaarg_donde_hasta "/" )
     while [ -n "$slash" ];do
-	fn=$(echo "$fn" | $PrPWD/stdcdr "/" )
-	slash=$(echo $fn | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	fn=$(echo "$fn" | tr -d '
+' | $PrPWD/stdcdr "/" )
+	slash=$(echo $fn | tr -d '
+' | $PrPWD/stdbuscaarg_donde_hasta "/" )
     done
-    if [ -f "$fn.lock" ];then
-	encuentra="ALGO"
-    fi
     if [ -f "$fn.memoria" ];then
 	encuentra="ALGO"
     fi
@@ -140,16 +159,11 @@ while [ -n "$lista0" ];do
 		    if [ "$firstchar" != '--' -a "$firstchar" != 'BE' -a "$firstchar" != ' -' -a "$firstchar" != '- '  ];then
 			echo ";$listf;" > "$fn.memoria"
 			echo ">> >> >> $size $opens $closs"
-		    fi
-			
-		    if [ "0$size" -gt 30 -o "0$size" -lt 18 ];then
-			echo ";$listf;" > "$fn.memoria"
-			echo ">> >> >> $size $opens $closs"
-		    fi
+		    fi			
 		else			
 		    balan=$(expr 0$opens - 0$closs )
 		    if [ 0$opens -gt 0 -a "$balan" = "0"  ];then
-			echo ";$listf;" > $fn.memoria
+			echo ";$listf;" > "$fn.memoria"
 			cat "$fn" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>$fn.c
 			balan=$(cat "$fn.c"|wc -c|$PrPWD/stddelcar " " )
 			if [ 0$balan -gt 0 ];then
@@ -310,12 +324,8 @@ while [ -n "$lista0" ];do
 		fi
 	    fi
 	fi
-	if [ -f "$fn.lock" ];then
-	    rm -v "$fn.lock" 2>/dev/null
-	fi
     fi    
 done
 rm -v $PaPWD/$pn.l.$ii
-    $0 $ii x &
 echo "!"
 exit
