@@ -33,83 +33,90 @@ while [ -n "$slash" ];do
 done
 pren=0
 if [ -f "$nomprograma.lista0" ];then
-dondes=$(cat "$nomprograma.lista0" | $PrPWD/stdbuscaarg_donde " ")
-while [ -n "$continua" ];do
-    ii=$(expr $i + 300)
-    continua=1
-    if [ ! -f "$PaPWD/$pn.l.$ii" ];then
-	touch "$PaPWD/$pn.l.$ii"
-	$0 $i &
-	echo started $i
-	while [ "0$i" -lt "$ii" ];do
-	    n2=1;
-	    while [ 0$n2 -lt 2 ];do
-	    n2=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
-	    if [ -z "$dondes" ];then
-		n2=$(cat "$nomprograma.lista0" | wc -c | $PrPWD/stdcarsin ' ' )
-		echo -n "$n2 "
-	    fi
-	    n2=$(expr 0$n2 - 0$pren)
-	    done
-	    listf=$(dd if="$nomprograma.lista0" bs=1 skip=$(expr 0$pren) count=$n2 2>/dev/null)
-	    echo "($listf) pren 0$pren n2 0$n2"
-	    pren=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
-	    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
-	    sleep 20
-	    fn=$listf
-	    slash=$(echo "$fn" | tr -d '
+    dondes=$(cat "$nomprograma.lista0" | $PrPWD/stdbuscaarg_donde " ")
+    echo $dondes
+    while [ -n "$continua" ];do
+	ii=$(expr $i + 300)
+	continua=1
+	echo ii $ii $1
+	if [ ! -f "$PaPWD/$pn.l.$ii" ];then
+	    touch "$PaPWD/$pn.l.$ii"
+	    $0 $i &
+	    echo started $i
+	    while [ "0$i" -lt "$ii" ];do
+		n2=1;
+		while [ 0$n2 -lt 2 ];do
+		    n2=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
+		    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
+		    echo n2 $n2
+		    if [ -z "$dondes" ];then
+			n2=$(cat "$nomprograma.lista0" | wc -c | $PrPWD/stdcarsin ' ' )
+		    n2=$(expr 0$n2 - 0$pren)
+			break
+		    fi		    
+		    n2=$(expr 0$n2 - 0$pren)
+		    echo -n ".$n2. "
+		    sleep 10
+		done
+		listf=$(dd if="$nomprograma.lista0" bs=1 skip=$(expr 0$pren) count=$n2 2>/dev/null)
+		echo "($listf) pren 0$pren n2 0$n2"
+		pren=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
+		echo $dondes
+		fn=$listf
+		slash=$(echo "$fn" | tr -d '
 ' | $PrPWD/stdbuscaarg_donde_hasta "/" )
-	    while [ -n "$slash" ];do
-		fn=$(echo "$fn" | tr -d '
+		while [ -n "$slash" ];do
+		    fn=$(echo "$fn" | tr -d '
 ' | $PrPWD/stdcdr "/" )
-		slash=$(echo $fn | tr -d '
+		    slash=$(echo $fn | tr -d '
 ' | $PrPWD/stdbuscaarg_donde_hasta "/" )
-	    done
-	    if [ -n "$fn" -a -n "$listf" ];then
-		if [ ! -f "$fn.memoria" ];then
-		    echo "$listf" >> "$PaPWD/$pn.l.$ii"
+		done
+		if [ -n "$fn" -a -n "$listf" ];then
+		    if [ ! -f "$fn.memoria" ];then
+			echo "$listf" >> "$PaPWD/$pn.l.$ii"
+		    fi
 		fi
-	    fi
-	    if [ -z "$dondes" ];then
-		echo "XXXXXX"
-		continua=0
-		break
-	    fi
-	    i=$(expr $i + 1)
-	done
-	echo "S i=$i ii=$ii $PaPWD/$pn.l.$ii"
-	continua=0
-	break;
-    else
-	while [ "0$i" -lt "$ii" ];do
-	    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
-	    if [ -z "$dondes" ];then
-		continua=0
-		break
-	    fi
-	    i=$(expr $i + 1)
-#	    echo -n "$i "
-	done
-    fi
-    if [ -z "$dondes" ];then
-	continua=0
-	break
-    fi
-#    echo "$ii"
-done
+		echo "<<$fn>>"
+		if [ -z "$dondes" ];then
+		    echo "XXXXXX"
+		    continua=0
+		    break
+		fi
+		echo " i ($i) $ii"
+		i=$(expr 0$i + 1)
+	    done
+	    echo "S i=$i ii=$ii $PaPWD/$pn.l.$ii"
+	    continua=0
+	    break;
+	else
+	    while [ "0$i" -lt "$ii" ];do
+		dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
+		if [ -z "$dondes" ];then
+		    continua=0
+		    break
+		fi
+		i=$(expr $i + 1)
+		echo -n "$i "
+	    done
+	fi
+	if [ -z "$dondes" ];then
+	    continua=0
+	    break
+	fi
+	#    echo "$ii"
+    done
 fi
-echo 0$pren $1
+echo 0$pren $1 $ii
 if [ $pren -eq 0 ];then
     a=1
-    while [ "0$a" -lt 0$ii ];do
+    while [ "0$a" -le 0$ii ];do
 	if [ -f "$PaPWD/$pn.l.$a" ];then
-	    echo -n "($a $ii) "
 	    a=1
 	    sleep 5
 	fi
 	a=$(expr $a + 1)
     done
-    rm "$nomprograma.lista0"
+    rm -v "$nomprograma.lista0"
     curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
 ' ' ' > $nomprograma.lista0
     sleep 15
