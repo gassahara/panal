@@ -32,12 +32,13 @@ while [ -n "$slash" ];do
     slash=$(echo $pn | $PrPWD/stdbuscaarg_donde_hasta "/" )
 done
 pren=0
+proc=0
 if [ -f "$nomprograma.lista0" ];then
     dondes=$(cat "$nomprograma.lista0" | $PrPWD/stdbuscaarg_donde " ")
-    echo $dondes
+    echo DONDE $dondes
+    ii=$(expr $i + 300)
+    continua=1
     while [ -n "$continua" ];do
-	ii=$(expr $i + 300)
-	continua=1
 	echo ii $ii $1
 	if [ ! -f "$PaPWD/$pn.l.$ii" ];then
 	    touch "$PaPWD/$pn.l.$ii"
@@ -45,23 +46,22 @@ if [ -f "$nomprograma.lista0" ];then
 	    echo started $i
 	    while [ "0$i" -lt "$ii" ];do
 		n2=1;
+		proc=1
+		echo L
 		while [ 0$n2 -lt 2 ];do
 		    n2=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
 		    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
 		    echo n2 $n2
 		    if [ -z "$dondes" ];then
 			n2=$(cat "$nomprograma.lista0" | wc -c | $PrPWD/stdcarsin ' ' )
-		    n2=$(expr 0$n2 - 0$pren)
+			n2=$(expr 0$n2 - 0$pren)
 			break
 		    fi		    
 		    n2=$(expr 0$n2 - 0$pren)
 		    echo -n ".$n2. "
-		    sleep 10
 		done
 		listf=$(dd if="$nomprograma.lista0" bs=1 skip=$(expr 0$pren) count=$n2 2>/dev/null)
-		echo "($listf) pren 0$pren n2 0$n2"
 		pren=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
-		echo $dondes
 		fn=$listf
 		slash=$(echo "$fn" | tr -d '
 ' | $PrPWD/stdbuscaarg_donde_hasta "/" )
@@ -82,7 +82,6 @@ if [ -f "$nomprograma.lista0" ];then
 		    continua=0
 		    break
 		fi
-		echo " i ($i) $ii"
 		i=$(expr 0$i + 1)
 	    done
 	    echo "S i=$i ii=$ii $PaPWD/$pn.l.$ii"
@@ -103,29 +102,27 @@ if [ -f "$nomprograma.lista0" ];then
 	    continua=0
 	    break
 	fi
-	#    echo "$ii"
     done
 fi
-echo 0$pren $1 $ii
-if [ $pren -eq 0 ];then
+echo 0$proc $1 $ii
+if [ 0$proc -eq 0 ];then
     a=1
     while [ "0$a" -le 0$ii ];do
 	if [ -f "$PaPWD/$pn.l.$a" ];then
 	    a=1
-	    sleep 5
+	    sleep 2
 	fi
 	a=$(expr $a + 1)
     done
     rm -v "$nomprograma.lista0"
     curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
 ' ' ' > $nomprograma.lista0
-    sleep 15
+    sleep 1
     $0 x &
     exit
 fi
 lista0=$(cat "$PaPWD/$pn.l.$ii" | tr '
 ' ' ' )
-echo "<$lista0>"
 while [ -n "$lista0" ];do
     if [ ! -f "$PaPWD/$pn.l.$ii" ];then
 	exit
