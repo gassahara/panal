@@ -188,21 +188,13 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			    encuentra=""
 			    echo ">>> A P P E N D <<<"
 			    sha=""
-			    count=$(curl -L "$remotepath/flastfile.php?sha=$sha.js&count=1" 2>/dev/null | $PrPWD/stdcdr 'count=' | $PrPWD/stdcarsin '&')
-			    echo "COUNT $count"
-			    sleep 10
-			    while [ -z "$encuentra" ];do
-				sha=$(echo "$name $count"| tr -d " " | tr -d '
+			    curl -L "$remotepath/flastfile.php?sha=$name&count=1"
+			    count=$(curl -L "$remotepath/flastfile.php?sha=$name&count=1" 2>/dev/null | $PrPWD/stdcdr 'count=' | $PrPWD/stdcarsin '&'|$PrPWD/stdcarsin ";")
+			    sha=$(echo "$name $count"| tr -d " " | tr -d '
 ' | sha512sum | $PrPWD/stdcarsin " ")
-#				echo ">>>> $sha $count <<::"
-				respuesta=$(curl -L "$remotepath/fretfile.php?fname=$sha.js&nocontent=true" 2>/dev/null)
-				encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Not Found')
-				count=$(expr "$count" + 1)
-				echo "count $count name $sha from $name"
-			    done			    
-			    echo " ...................... "
-#			    echo ">>>> $name ($count)"
+			    echo "COUNT $count"
 			    name="$sha.js"
+			    echo ">>>> $name ($count)"
 			    msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$msg" ];do
 				msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
