@@ -18,7 +18,7 @@ cd $PrPWD
 PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
-remotepath="http://127.0.0.1" #"https://curare2019.ddns.net/"
+remotepath="http://127.0.0.1/" #"https://curare2019.ddns.net/"
 PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
 busca=".."
 posicion=0;
@@ -148,11 +148,12 @@ if [ -f "$nomprograma.lista0" ];then
 		    if [ -f "$PaPWD/$pn.l.$a" ];then
 			a=1
 			sleep 2
+			rm $pn.lock
 			exit
 		    fi
 		    a=$(expr $a + 1)
 		done
-		rm  "$nomprograma.lista0"
+		rm  -v "$nomprograma.lista0"
 		curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
 ' ' ' > $nomprograma.lista0
 		echo "X"

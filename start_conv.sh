@@ -23,7 +23,7 @@ sleep 1
 namo="descargausuario"
 screen -dmS $namo
 sleep 1
-rm $PrPWD/data/querydescargausuario4.sh.l.*
+rm $PrPWD/data/querydescargausuario4.sh.l*
 touch $PrPWD/data/querydescargausuario4.sh.lista0
 screen -S $namo -X stuff  "bash $PrPWD/querydescargausuario4.sh"
 screen -S $namo -X stuff  $'\r'
