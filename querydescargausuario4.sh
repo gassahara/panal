@@ -36,13 +36,16 @@ proc=0
 if [ -f "$nomprograma.lista0" ];then
     dondes=$(cat "$nomprograma.lista0" | $PrPWD/stdbuscaarg_donde " ")
     count=$(cat "$nomprograma.lista0" | $PrPWD/stdbuscaarg_count " ")
-    ii=$(expr $i + 300)
     continua=1
     while [ -n "$continua" ];do
-	if [ ! -f "$PaPWD/$pn.l.$ii" ];then
+	ii=$(expr $i + 300)
+	if [ 0$ii -gt 0$count ];then
+	    continua=0
+	fi	
+	if [ ! -f "$PaPWD/$pn.l.$ii" -a ! -f "$PaPWD/$pn.lock" ];then
 	    touch "$PaPWD/$pn.l.$ii"
 	    if [ 0$ii -lt 0$count ];then
-		$0 $i &
+ 		$0 $i &
 	    fi
 	    while [ "0$i" -lt "$ii" ];do
 		n2=1;
@@ -59,10 +62,6 @@ if [ -f "$nomprograma.lista0" ];then
 		    fi		    
 		    n2=$(expr 0$n2 - 0$pren)
 		done
-		#if [ 0$pren -gt 1 ];then
-		    #pren=$(expr 0$pren + 1)
-		    #n2=$(expr 0$n2 - 1)
-		#fi
 		listf=$(dd if="$nomprograma.lista0" bs=1 skip=$(expr 0$pren) count=$n2 2>/dev/null)
 		pren=$(expr 0$pren + 0$n2 + 1)
 		fn=$listf
@@ -84,7 +83,7 @@ if [ -f "$nomprograma.lista0" ];then
 			if [ -z "$encuentra" ];then
 			    echo ";$listf;" > "$fn.memoria"
 			else
-			    echo "$remotepath/$listf"
+			    echo "<:<$remotepath/$listf >:>"
 			    respcode=$(curl --head --silent --fail "$remotepath/$listf" | $PrPWD/stdbuscaarg "HTTP/1.1 200 OK")
 			    if [ -n "$respcode" ];then
 				curl -L  "$remotepath/$listf" 2>/dev/null > $fn #2>/dev/null
@@ -141,8 +140,8 @@ if [ -f "$nomprograma.lista0" ];then
 		i=$(expr 0$i + 1)
 	    done
 	    rm  -v $PaPWD/$pn.l.$ii	    
-	    if [ ! -f $pn.lock ];then
-		touch $pn.lock
+	    if [ ! -f $PaPWD/$pn.lock ];then
+		touch $PaPWD/$pn.lock
 		a=1
 		while [ "0$a" -le 0$count ];do
 		    if [ -f "$PaPWD/$pn.l.$a" ];then
@@ -158,6 +157,7 @@ if [ -f "$nomprograma.lista0" ];then
 ' ' ' > $nomprograma.lista0
 		echo "X"
 		rm $pn.lock
+		sleep 10
 		$0 x &
 		exit
 	    fi
