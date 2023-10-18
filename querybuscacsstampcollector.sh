@@ -313,7 +313,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 			    OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
 			    respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
 			    encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
-			    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuestab   ($encuentra) ($namepublic)"
+			    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  ($encuentra) ($namepublic)"
 			    if [ -n "$encuentra" ] ; then
 				echo "SUBIR"
 				boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -355,7 +355,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 
 
 			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'CONSOLIDATE')
-			echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentrac) ($namepublic)"
+			echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   ($encuentrac) ($namepublic)"
 			if [ -n "$encuentrac" ] ; then
 			    busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
 			    ammountTotal=0

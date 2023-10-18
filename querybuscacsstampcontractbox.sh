@@ -199,7 +199,7 @@ if [ -z "$encuentra" -a -n "$listf" ];then
 			namepublic=$(echo "$nameRemote public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
 			echo "NAME    $nameRemote ($name)"
 			echo "PUBLIC  $namepublic"
-			respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"'  | $PrPWD/stdbuscaarg "Success")			
+			respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr 'error' | $PrPWD/stdcdr '"' | $PrPWD/stdcarsin '"'  | $PrPWD/stdbuscaarg "Success")			
 			if [ -z "$respuestab" ];then
 			    echo "$name not found"
 			    exit

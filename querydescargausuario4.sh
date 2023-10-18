@@ -38,7 +38,7 @@ if [ -f "$nomprograma.lista0" ];then
     count=$(cat "$nomprograma.lista0" | $PrPWD/stdbuscaarg_count " ")
     continua=1
     while [ -n "$continua" ];do
-	ii=$(expr $i + 300)
+	ii=$(expr $i + 50)
 	if [ 0$ii -gt 0$count ];then
 	    continua=0
 	fi	
@@ -47,22 +47,26 @@ if [ -f "$nomprograma.lista0" ];then
 	    if [ 0$ii -lt 0$count ];then
  		$0 $i &
 	    fi
+	    pren=0
 	    while [ "0$i" -lt "$ii" ];do
 		n2=1;
 		proc=1
 		while [ 0$n2 -lt 2 ];do
-		    n2=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
-		    dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
 		    if [ -z "$dondes" ];then
 			i=$ii
 			continua=0
-			n2=$(cat "$nomprograma.lista0" | wc -c | $PrPWD/stdcarsin ' ' )
+			echo "0$ii + 1"
+			i=$(expr 0$ii + 1)
+			n2=$count
 			n2=$(expr 0$n2 - 0$pren)
 			break
-		    fi		    
+		    else
+			n2=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
+			dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
+		    fi
 		    n2=$(expr 0$n2 - 0$pren)
 		done
-		listf=$(dd if="$nomprograma.lista0" bs=1 skip=$(expr 0$pren) count=$n2 2>/dev/null)
+		listf=$(cat "$nomprograma.lista0" | $PrPWD/stdcdrn 0$pren | $PrPWD/stdcarn $n2 )
 		pren=$(expr 0$pren + 0$n2 + 1)
 		fn=$listf
 		slash=$(echo "$fn" | tr -d '
@@ -78,7 +82,10 @@ if [ -f "$nomprograma.lista0" ];then
 			echo "<<$listf>>"
 			tamano=$(echo "$listf"|tr -d '
 ' | wc -c | $PrPWD/stdcarsin ' ')
-			tamano=$(expr 0$tamano - 3)
+			echo "T $tamano"
+			if [ 0$tamano -gt 4 ];then
+			    tamano=$(expr 0$tamano - 3)
+			fi
 			encuentra=$(echo "$listf"|$PrPWD/stdcdrn $tamano| $PrPWD/stdbuscaarg ".js")
 			if [ -z "$encuentra" ];then
 			    echo ";$listf;" > "$fn.memoria"
@@ -101,32 +108,38 @@ if [ -f "$nomprograma.lista0" ];then
 						echo ">> >> >> $size $opens $closs"
 					    fi
 					fi			
-				    else			
-					balan=$(expr 0$opens - 0$closs )
-					if [ 0$opens -gt 0 -a "$balan" = "0"  ];then
-					    cat "$fn" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>$fn.c
-					    balan=$(cat "$fn.c"|wc -c|$PrPWD/stddelcar " " )
-					    if [ 0$balan -gt 0 ];then
+				    else
+					if [ 0$opens -gt 0 ];then
+					    balan=$(expr 0$opens - 0$closs )
+					    if [ "$balan" = "0"  ];then
+						echo "SAVED PGP"
 						echo ";$listf;" > "$fn.memoria"
-						echo '/*' | tr -d '
+						cat "$fn" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>$fn.c
+						balan=$(cat "$fn.c"|wc -c|$PrPWD/stddelcar " " )
+						if [ 0$balan -gt 0 ];then
+						    echo '/*' | tr -d '
 ' > $fn.tmp
-						cat $fn.c >> $fn.tmp
-						mv -v $fn.tmp $fn.c
-						mains=$(cat "$fn.c"|$PrPWD/stdbuscaarg " main")
-						opens=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
-						closs=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
-						balan=$(expr  0$opens - 0$closs)
-						echo ">>> $opens : $closs <<< $balan ($mains)"
-						if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
-    						    errors=$(gcc $fn.c 2>&1)
-						    if [ -n "$errors" ];then
-							echo "There are errors on $fn.c"
-						    else
-							mkdir $PrPWD/users
-							mkdir $PrPWD/users/input
-							mkdir $PrPWD/users/input/unencrypted
-							cp -v "$fn.c" "$PrPWD/users/input/unencrypted"
-							echo "$errores"
+						    cat $fn.c >> $fn.tmp
+						    mv -v $fn.tmp $fn.c
+						    mains=$(cat "$fn.c"|$PrPWD/stdbuscaarg " main")
+						    opens=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
+						    closs=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
+						    if [ 0$opens -gt 0 ];then
+							echo "IT IS C"
+							balan=$(expr  0$opens - 0$closs)
+							echo ">>> $opens : $closs <<< $balan ($mains)"
+							if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+    							    errors=$(gcc $fn.c 2>&1)
+							    if [ -n "$errors" ];then
+								echo "There are errors on $fn.c"
+							    else
+								mkdir $PrPWD/users
+								mkdir $PrPWD/users/input
+								mkdir $PrPWD/users/input/unencrypted
+								cp -v "$fn.c" "$PrPWD/users/input/unencrypted"
+								echo "$errores"
+							    fi
+							fi
 						    fi
 						fi
 					    fi
@@ -145,16 +158,15 @@ if [ -f "$nomprograma.lista0" ];then
 		a=1
 		while [ "0$a" -le 0$count ];do
 		    if [ -f "$PaPWD/$pn.l.$a" ];then
-			a=1
-			sleep 2
-			rm $pn.lock
-			exit
+			a=$(expr 0$count + 1)
 		    fi
 		    a=$(expr $a + 1)
 		done
 		rm  -v "$nomprograma.lista0"
-		curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
+		if [ 0$a -gt 0$count ];then
+		    curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
 ' ' ' > $nomprograma.lista0
+		fi
 		echo "X"
 		rm $pn.lock
 		sleep 10
@@ -170,7 +182,7 @@ if [ -f "$nomprograma.lista0" ];then
 		    continua=0
 		    break
 		fi
-		i=$(expr $i + 1)
+		i=$(expr 0$i + 1)		
 	    done
 	fi
 	if [ -z "$dondes" ];then
