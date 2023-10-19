@@ -162,7 +162,7 @@ else
 	listacc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
     done
     cat $PrPWD/listadescarga.c | $PrPWD/stdcar "unsigned char files[" > "$PaPWD/$listacc.c"
-    curl -L "127.0.0.1/dirlistmt.php" 2>/dev/null | $PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr 'files[' | $PrPWD/stdcarsin '
+    curl -L "http://127.0.0.1/dirlistmt.php" 2>/dev/null | $PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr 'files[' | $PrPWD/stdcarsin '
 ' >> "$PaPWD/$listacc.c"
     cat $PrPWD/listadescarga.c | $PrPWD/stdcdr "unsigned char files[" | $PrPWD/stdcdr ';' >> "$PaPWD/$listacc.c"
     errors=$(gcc -o $PaPWD/$listacc "$PaPWD/$listacc.c" 2>&1)
