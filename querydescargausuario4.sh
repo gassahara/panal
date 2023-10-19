@@ -35,38 +35,6 @@ pren=0
 proc=0
 if [ -f "$nomprograma.lista0" ];then
     while [ -n "$continua" ];do
-<<<<<<< Updated upstream
-	ii=$(expr $i + 50)
-	if [ 0$ii -gt 0$count ];then
-	    continua=0
-	fi	
-	if [ ! -f "$PaPWD/$pn.l.$ii" -a ! -f "$PaPWD/$pn.lock" ];then
-	    touch "$PaPWD/$pn.l.$ii"
-	    if [ 0$ii -lt 0$count ];then
- 		$0 $i &
-	    fi
-	    pren=0
-	    while [ "0$i" -lt "$ii" ];do
-		n2=1;
-		proc=1
-		while [ 0$n2 -lt 2 ];do
-		    if [ -z "$dondes" ];then
-			i=$ii
-			continua=0
-			echo "0$ii + 1"
-			i=$(expr 0$ii + 1)
-			n2=$count
-			n2=$(expr 0$n2 - 0$pren)
-			break
-		    else
-			n2=$(echo "$dondes" | $PrPWD/stdcarsin ' ' )
-			dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
-		    fi
-		    n2=$(expr 0$n2 - 0$pren)
-		done
-		listf=$(cat "$nomprograma.lista0" | $PrPWD/stdcdrn 0$pren | $PrPWD/stdcarn $n2 )
-		pren=$(expr 0$pren + 0$n2 + 1)
-=======
 	fname="$PaPWD/querydescarga.l.$ii"
 	if [ ! -f "$fname.lock" -a ! -f "$PaPWD/$pn.lock" ];then
 	    touch "$fname.lock"
@@ -75,7 +43,6 @@ if [ -f "$nomprograma.lista0" ];then
  		$0 $ii &
 	    fi
 	    for listf in $(cat "$fname"); do
->>>>>>> Stashed changes
 		fn=$listf
 		slash=$(echo "$fn" | tr -d '
 ' | $PrPWD/stdbuscaarg_donde_hasta "/" )
@@ -164,27 +131,15 @@ if [ -f "$nomprograma.lista0" ];then
 		touch $PaPWD/$pn.lock
 		a=1
 		while [ "0$a" -le 0$count ];do
-<<<<<<< Updated upstream
-		    if [ -f "$PaPWD/$pn.l.$a" ];then
-			a=$(expr 0$count + 1)
-=======
 		    if [ -f "$PaPWD/querydescarga.l.$a.lock" ];then
 			a=1
 			sleep 2
 			rm $pn.lock
 			exit
->>>>>>> Stashed changes
 		    fi
 		    a=$(expr $a + 1)
 		done
 		rm  -v "$nomprograma.lista0"
-<<<<<<< Updated upstream
-		if [ 0$a -gt 0$count ];then
-		    curl -H 'Cache-Control: no-cache, no-store'  -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | tr '
-' ' ' > $nomprograma.lista0
-		fi
-=======
->>>>>>> Stashed changes
 		echo "X"
 		rm $pn.lock
 		sleep 10
@@ -194,26 +149,11 @@ if [ -f "$nomprograma.lista0" ];then
 	    continua=0
 	    break
 	else
-<<<<<<< Updated upstream
-	    while [ "0$i" -lt "$ii" ];do
-		dondes=$(echo "$dondes" | $PrPWD/stdcdr ' ' )
-		if [ -z "$dondes" ];then
-		    continua=0
-		    break
-		fi
-		i=$(expr 0$i + 1)		
-	    done
-	fi
-	if [ -z "$dondes" ];then
-	    continua=0
-	    break
-=======
 	    ii=$(expr $ii + 1)
 	    fname="$PaPWD/querydescarga.l.$ii"
 	    if [ ! -f "$fname" ];then
 		exit
 	    fi
->>>>>>> Stashed changes
 	fi
     done
 else    
