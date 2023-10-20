@@ -18,7 +18,7 @@ cd $PrPWD
 PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
-remotepath="https://curare2019.ddns.net/"
+remotepath="https://curare2019.ddns.net"
 PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
 busca=".."
 posicion=0;
@@ -173,7 +173,7 @@ else
 	listacc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
     done
     cat $PrPWD/listadescarga.c | $PrPWD/stdcar "unsigned char files[" > "$PaPWD/$listacc.c"
-    curl -L "$remotepath/dirlistmt.php?i=$(date)" 2>/dev/null | $PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr 'files[' | $PrPWD/stdcarsin '
+    curl -L "$remotepath/dirlistmt.php?i=$(date +%s)" 2>/dev/null | $PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr 'files[' | $PrPWD/stdcarsin '
 ' >> "$PaPWD/$listacc.c"
     cat $PrPWD/listadescarga.c | $PrPWD/stdcdr "unsigned char files[" | $PrPWD/stdcdr ';' >> "$PaPWD/$listacc.c"
     errors=$(gcc -o $PaPWD/$listacc "$PaPWD/$listacc.c" 2>&1)
