@@ -75,8 +75,7 @@ if [ -z "$encuentra" ];then
 	    balan=$(expr 0$opens - $closs)
 	    echo "main $mains opens $opens closs $closs "
 	    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
-    		ejec="$fn.$nomprograma.bin"
-		errores=$(gcc -o ./$ejec $fn 2>&1 )
+		errores=$(gcc $fn 2>&1 )
 		if [ -z "$errores" ];then
 		    variables=$(cat $fn |$PrPWD/stddeclaracionesdevariable|$PrPWD/stddelcar '
 ')
@@ -154,7 +153,6 @@ if [ -z "$encuentra" ];then
 				while [ -f "$datosdelc.c" ];do
 				    datosdelc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				done
-				$PaPWD/$outputdelc-bin
 				echo "$datosdelc.c"
 				$PaPWD/$outputdelc-bin > $datosdelc.c
 

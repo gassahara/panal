@@ -43,7 +43,7 @@ if [ -f "$nomprograma.lista0" ];then
     if [ -f "$fname" -a ! -f "$fname.lock" ];then
 	touch "$fname.lock"
 	ii=$(expr $ii + 1)
-	if [ -f "$PaPWD/querydescarga.l.$ii" ];then
+	if [ -f "$PaPWD/querydescarga.l.$ii" -a -f "$PaPWD/querydescarga.l.$ii.lock" ];then
  	    $0 $ii &
 	fi
 	for listf in $(cat "$fname"); do
@@ -115,7 +115,7 @@ if [ -f "$nomprograma.lista0" ];then
 							    mkdir $PrPWD/users
 							    mkdir $PrPWD/users/input
 							    mkdir $PrPWD/users/input/unencrypted
-							    cp -v "$fn.c" "$PrPWD/users/input/unencrypted"
+							    mv -v "$fn.c" "$PrPWD/users/input/unencrypted"
 							    echo "$errores"
 							fi
 						    fi
@@ -148,24 +148,24 @@ if [ -f "$nomprograma.lista0" ];then
 	    $0 x &
 	    exit
 	fi
-    else
-	if [ ! -f $PaPWD/$pn.lock ];then
-	    touch $PaPWD/$pn.lock
-	    a=1
-	    while [ "0$a" -le 0$count ];do
-		if [ -f "$PaPWD/querydescarga.l.$a.lock" ];then
-		    a=1
-		    sleep 2
-		fi
-		a=$(expr $a + 1)
-	    done
-	    rm  -v "$nomprograma.lista0"
-	    echo "X"
-	    rm $pn.lock
-	    sleep 4
-	    $0 x &
-	    exit
-	fi
+    # else
+    # 	if [ ! -f $PaPWD/$pn.lock ];then
+    # 	    touch $PaPWD/$pn.lock
+    # 	    a=1
+    # 	    while [ "0$a" -le 0$count ];do
+    # 		if [ -f "$PaPWD/querydescarga.l.$a.lock" ];then
+    # 		    a=1
+    # 		    sleep 2
+    # 		fi
+    # 		a=$(expr $a + 1)
+    # 	    done
+    # 	    rm  -v "$nomprograma.lista0"
+    # 	    echo "X"
+    # 	    rm $pn.lock
+    # 	    sleep 4
+    # 	    $0 x &
+    # 	    exit
+    # 	fi
     fi
 else    
     listacc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -187,6 +187,7 @@ else
 	$PaPWD/$listacc > $nomprograma.lista0
 	echo ">>"
     fi
+    rm $PaPWD/$listacc*
     $0 n &
 fi
 exit

@@ -18,76 +18,91 @@ cd $PrPWD
 PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
-#echo "$nomprograma.."
-sleep 3
+sleep 1
+# ps1=1
+# while [ -f "$nomprograma.lock-$ps1" ];do
+#     if [ 0$ps1 -lt 4 ];then
+# 	echo "W W W W W W W W W W W W W   $ps1"
+# 	ps1=$(expr 0$ps1 + 1)
+#     else
+# 	ps1=1
+# 	sleep 1
+#     fi
+# done
+touch "$nomprograma.memoria"
 listados="";
 listado="";
-remotepath="http://127.0.0.1/" #"185.27.134.11/htdocs"
-if [ -d "$PrPWD/users/input" ];then
-    listados=$(echo $PrPWD/users/input|$PrPWD/listadodirectorio_dirs_from_std|$PrPWD/stdbuscaarg_donde '
-')
-    listado=$(echo $PrPWD/users/input|$PrPWD/listadodirectorio_dirs_from_std)
+eyedirectory="$PrPWD/users/input"
+mouthdirectory="$PrPWD/users/processed"
+if [ ! -d "$mouthdirectory" ];then
+    mkdir $mouthdirectory
+fi
+remotepath="https://curare2019.ddns.net/" #"http://127.0.0.1/"
+if [ -d "$eyedirectory" ];then
+    listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
+' ';')
     salta=0;
-    while [ -n "$listados" ];do
-	presalta=$(echo -n "$listados" | $PrPWD/stdcar " ")
-	dirn=$(echo -n "$listado"|$PrPWD/stdcdrn 0$salta | $PrPWD/stdcarn $presalta)
-	lista1=$(echo "$dirn" | $PrPWD/listadodirectorio_files_from_std_extension_c )
-	lista2=$(echo -n "$lista1
-$lista0" )
-	lista0=$lista2
-	salta=$(expr $presalta + 1)
-	listados=$(echo -n "$listados" | $PrPWD/stdcdr " ")
+	utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+	while [ -f "$PaPWD/$utcc.c" ];do
+	    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+	done
+	forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+	while [ -f "$PaPWD/$forfiles.c" ];do
+	    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+	done	
+    while [ -n "$listado" ];do
+	dirn=$(echo -n "$listado"|$PrPWD/stdcarsin ';')
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$utcc.c"
+	len=$(echo "$dirn"|wc -c|$PrPWD/stdcarsin ' ')
+	echo "$len ]=\"$dirn\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " compare["  >> "$PaPWD/$utcc.c"
+	echo "28]=\"/root/panal/users/processed\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " compare[" | $PrPWD/stdcdr ";" >> "$PaPWD/$utcc.c"
+	errores=$(gcc -o "$PaPWD/$utcc" "$PaPWD/$utcc.c" 2>&1)
+	if [ -n "$errores" ];then
+	    echo "$errores"
+	    exit
+	fi
+	cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
+	register="$nomprograma.memoria"
+	len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
+	echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
+	cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
+	len=$($PaPWD/$utcc| $PrPWD/stdcdr "files[" |$PrPWD/stdcarsin ']')
+	if [ "0$len" -gt 1 ];then
+	    $PaPWD/$utcc | $PrPWD/stdcdr " files[" | $PrPWD/stdcar ";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcdr " files[" |  $PrPWD/stdcdr ";" >> "$PaPWD/$forfiles.c"
+	    errores=$(gcc -o "$PaPWD/$forfiles" "$PaPWD/$forfiles.c" 2>&1)
+	    if [ -n "$errores" ];then
+		echo "$errores"
+		exit
+	    fi
+	    listf=$($PaPWD/$forfiles|head -n1)
+	    len=$($PaPWD/$forfiles|head -n2|wc -l |$PrPWD/stdcarsin ' ')
+	    rm  $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c
+	    if [ "0$len" -gt 2 ];then
+		echo $len
+		if [ -n "$listf" -a ! -f "$listf.lock" ];then
+		    touch "$listf.lock"
+		    $0 &
+		    break;
+		fi
+	    else
+		listf=""
+	    fi
+	fi
+	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
     done
 fi
-busca=".."
-posicion=0;
-dondes=$( echo "$lista0" |$PrPWD/stdbuscaarg_donde "
-")
-encuentra="ALGO"
 dirTokens="$PrPWD/users/tokens"
 dirNewTokens="$PrPWD/users/tokensNew"
 dirTokensDeleted="$PrPWD/users/tokensDeleted"
-chachafile=""
-encuentra=""
-while [ -n "$dondes" -a -z "$encuentra" ];do
-    listf=$(echo "$lista0" | $PrPWD/stdcdrn "0$posicion"|$PrPWD/stdcarsin '
-')
-    posicion=$(echo "$dondes" |$PrPWD/stdcarsin " ")
-    posicion=$(expr 0$posicion + 1)
-    dondes=$(echo "$dondes" |$PrPWD/stdcdr " ")
-    chacha=""
-    if [ -n "$listf" ];then
-	chacha=$(cat "$listf"|sha512sum|$PrPWD/stdcarsin " ")
-	if [ -f $nomprograma.memoria.$chacha ];then
-	    encuentra=""
-	else
-	    encuentra="ALGO"	    
-	    break
-	fi
-    fi
-done
-if [ -n "$encuentra" ];then
-    chachafile="$nomprograma.memoria.$chacha"
-    echo ";$listf;$chacha;" >> $nomprograma.memoria.$chacha
-fi
-ps1=1
-while [ -f "$nomprograma.lock-$ps1" ];do
-    if [ 0$ps1 -lt 3 ];then
-	echo "W W W W W W W W W W W W W   $ps1"
-	ps1=$(expr 0$ps1 + 1)
-    else
-	ps1=1
-	sleep 1
-    fi
-done
-
 serverPublic=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 while [ -f "$PaPWD/$serverPublic" ];do
     serverPublic=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 done
 
-$0 &
-if [ -n "$encuentra" -a -n "$listf" ];then
+if [ -n "$listf" ];then
     fn=$listf
     echo "<< fn $fn >>"
     ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
@@ -101,7 +116,6 @@ if [ -n "$encuentra" -a -n "$listf" ];then
 	dirfn=$(echo -n "$fn"|$PrPWD/stdcarsin "/$fn2")
 	mkdir "$dirfn/data"
 	dirfn=$(echo -n "$dirfn/data" )
-    	echo "0 $busca ($fn2) $dirfn"
 	len=$(cat "$fn"|wc -c|tr -d ' '|tr -d '
 ')
 	if [ 0$len -gt 0 ];then
@@ -111,6 +125,7 @@ if [ -n "$encuentra" -a -n "$listf" ];then
 	    balan=$(expr 0$opens - $closs)
 	    echo "$len $opens-$closs"
 	    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+    		echo "0 $busca ($fn2) $dirfn"
 		errores=$(gcc "$fn" 2>&1 )
 		if [ -z "$errores" ];then
 		    variables=$(cat "$fn")
@@ -163,6 +178,7 @@ if [ -n "$encuentra" -a -n "$listf" ];then
 		    fi
 		    echo "variables $varos"
 		    if [ "$varos" = "*****" ];then
+			mv -v $listf $mouthdirectory/$fn
 			echo "varos passed;"
 		        command=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_command["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
 			echo "COMMAND $command";
@@ -522,4 +538,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 	    fi
 	fi
     fi
+else
+    $0 &
 fi
+rm -v "$listf.lock" 2>/dev/null
