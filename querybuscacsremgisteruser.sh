@@ -32,14 +32,14 @@ if [ -d "$eyedirectory" ];then
     listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
 ' ';')
     salta=0;
+    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$utcc.c" ];do
 	utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	while [ -f "$PaPWD/$utcc.c" ];do
-	    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	done
+    done
+    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$forfiles.c" ];do
 	forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	while [ -f "$PaPWD/$forfiles.c" ];do
-	    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	done	
+    done	
     while [ -n "$listado" ];do
 	dirn=$(echo -n "$listado"|$PrPWD/stdcarsin ';')
 	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$utcc.c"
@@ -109,10 +109,6 @@ if [ -n "$listf" ];then
 	    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
 		errores=$(gcc "$fn" 2>&1 )
 		if [ -z "$errores" ];then
-		    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-		    while [ -f "$dirfn/$utcc.c" ];do
-			utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-		    done
 		    variables=$(cat "$fn" |tr '\0' ';' |$PrPWD/stddeclaracionesdevariable|tr '
 ' ';'| tr '\0' ';')
 		    varos="";
@@ -144,7 +140,6 @@ if [ -n "$listf" ];then
 		    if [ "$varos" = "***" ];then
 			rm -v "$tempf"
 			echo ";$fn2;" >> $nomprograma.memoria
-#			echo "varos passed; $variables"
 		        command=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_command["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
 			echo "COMMAND $command";			
 		        name=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofindex["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
@@ -168,7 +163,7 @@ if [ -n "$listf" ];then
 			    else
 				content=$(echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
 			    fi
-		            contentExtra=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_contentExtra["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' )
+			    contentExtra=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_contentExtra["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' )
 			    echo "::>> . . . $(echo $contentExtra|wc)  <<<<<<<<<<<<<<<<<::"
 			    echo "::>> . . . ($name $namepublic) "
 			    name=$(echo "$name" | sed -e 's/ /%20/g' -e 's/:/%3A/g' -e 's/,/%2C/g' -e 's/;/%3B/g' -e 's/\[/%5B/g' -e 's/\]/%5D/g' -e 's/{/%7B/g' -e 's/}/%7D/g' -e 's/(/%28/g' -e 's/)/%29/g' -e 's/\*/%2A/g' -e 's/&/%26/g' -e 's/\^/%5E/g' -e 's/%/%25/g' -e 's/\$/%24/g' -e 's/@/%40/g' -e 's/!/%21/g' -e 's/~/-%7E/g' -e 's/-/%2D/g' -e 's/_/%5F/g' -e 's/>/%3E/g' -e 's/</%3C/g' -e 's/\?/%3F/g' -e 's/\//%2F/g' )
@@ -188,7 +183,6 @@ if [ -n "$listf" ];then
 			fi
 			echo "$command"
 			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'APPEND')
-#			encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Success Success')
 			if [ -n "$encuentrac" ] ; then
 			    content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$content" ];do
@@ -218,6 +212,7 @@ if [ -n "$listf" ];then
 			    datesigned=$(echo -n "$datee" |  openssl dgst -sha256  -keyform PEM  -sign $PrPWD/user/private.pem | base64 | tr -d '
 ')
 			    curl -X POST -L "$remotepath/uppFile.php" -F "namo=\"$name\"" -F "signature=@$PaPWD/$msg" -F "content=@$PaPWD/$content"  -F "datesigned=\"$datesigned\"" -F "submit=submit"
+			    rm "$PaPWD/$content" "$PaPWD/$msg"
 			    exit
 			fi
 		    else

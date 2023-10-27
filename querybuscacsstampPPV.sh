@@ -357,6 +357,10 @@ if [ -n "$listf" ];then
 					fi
 				    done
 				fi
+				if [ -n "textcc" ]; then
+				    rm -v "$textcc"
+				fi
+				
 				textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				while [ -f "$PaPWD/$textcc" ];do
 				    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -367,6 +371,7 @@ if [ -n "$listf" ];then
 
 '  >> "$PaPWD/$textcc"
 				cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
+				rm -v "$PaPWD/$temptextcc"
 				cuantos=$(expr $cuantos - 8)
 				utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				while [ -f "$PaPWD/$utcc" ];do
@@ -469,11 +474,9 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				    echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $PaPWD/$serverPublic > "$PaPWD/$encryptedoutput"
 				    if [ -n "$encuentra" ] ; then
 					curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$PaPWD/$encryptedoutput"
-
 				    fi
+				    rm -v "$PaPWD/$encryptedoutput"
 				fi
-
-
 				
 				contentd=$(echo "$content"|base64 -d)
 			        contentfile=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -482,6 +485,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				done
 				echo "$contentd" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>"$PaPWD/$contentfile"
 				curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$PaPWD/$contentfile"
+				rm -v "$PaPWD/$contentfile"
 			    else
 				sleep 20
 				if [ -n "$tokensAmmount" -a "0$tokensAmmount" -gt 0 ];then
