@@ -19,16 +19,16 @@ PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
 sleep 1
-# ps1=1
-# while [ -f "$nomprograma.lock-$ps1" ];do
-#     if [ 0$ps1 -lt 4 ];then
-# 	echo "W W W W W W W W W W W W W   $ps1"
-# 	ps1=$(expr 0$ps1 + 1)
-#     else
-# 	ps1=1
-# 	sleep 1
-#     fi
-# done
+ ps1=1
+while [ -f "$nomprograma.lock-$ps1" ];do
+    if [ 0$ps1 -lt 4 ];then
+	echo "W W W W W W W W W W W W W   $ps1"
+	ps1=$(expr 0$ps1 + 1)
+    else
+	ps1=1
+	sleep 1
+    fi
+done
 listados="";
 listado="";
 touch "$nomprograma.memoria"
@@ -37,60 +37,65 @@ mouthdirectory="$PrPWD/users/processed"
 if [ ! -d "$mouthdirectory" ];then
     mkdir $mouthdirectory
 fi
-remotepath="https://curare2019.ddns.net/" #"http://127.0.0.1/"
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
 if [ -d "$eyedirectory" ];then
     listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
 ' ';')
     salta=0;
+    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$utcc.c" ];do
 	utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	while [ -f "$PaPWD/$utcc.c" ];do
-	    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	done
+    done
+    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$forfiles.c" ];do
 	forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	while [ -f "$PaPWD/$forfiles.c" ];do
-	    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
-	done	
+    done	
     while [ -n "$listado" ];do
 	dirn=$(echo -n "$listado"|$PrPWD/stdcarsin ';')
 	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$utcc.c"
 	len=$(echo "$dirn"|wc -c|$PrPWD/stdcarsin ' ')
 	echo "$len ]=\"$dirn\";" >> "$PaPWD/$utcc.c"
 	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " compare["  >> "$PaPWD/$utcc.c"
-	echo "28]=\"/root/panal/users/processed\";" >> "$PaPWD/$utcc.c"
+	len=$(echo "$mouthdirectory"|wc -c | $PrPWD/stdcarsin ' ' )
+	echo "$len]=\"$mouthdirectory\";" >> "$PaPWD/$utcc.c"
 	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " compare[" | $PrPWD/stdcdr ";" >> "$PaPWD/$utcc.c"
 	errores=$(gcc -o "$PaPWD/$utcc" "$PaPWD/$utcc.c" 2>&1)
 	if [ -n "$errores" ];then
 	    echo "$errores"
 	    exit
 	fi
-	cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
-	register="$nomprograma.memoria"
-	len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
-	echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
-	cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
+	echo $utcc
 	len=$($PaPWD/$utcc| $PrPWD/stdcdr "files[" |$PrPWD/stdcarsin ']')
 	if [ "0$len" -gt 1 ];then
+	    echo "LLLLLLLLLLL   $len"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
+	    register="$nomprograma.memoria"
+	    len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
+	    echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
 	    $PaPWD/$utcc | $PrPWD/stdcdr " files[" | $PrPWD/stdcar ";" >> "$PaPWD/$forfiles.c"
 	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcdr " files[" |  $PrPWD/stdcdr ";" >> "$PaPWD/$forfiles.c"
 	    errores=$(gcc -o "$PaPWD/$forfiles" "$PaPWD/$forfiles.c" 2>&1)
+	    echo $PaPWD/$forfiles
 	    if [ -n "$errores" ];then
 		echo "$errores"
 		exit
 	    fi
 	    listf=$($PaPWD/$forfiles|head -n1)
 	    len=$($PaPWD/$forfiles|head -n2|wc -l |$PrPWD/stdcarsin ' ')
-	    rm  $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c
 	    if [ "0$len" -gt 2 ];then
 		echo $len
-		if [ -n "$listf" -a ! -f "$listf.lock" ];then
-		    touch "$listf.lock"
+		listg=$($PaPWD/$forfiles|head -n2|head -n1)
+		if [ -n "$listg" -a ! -f "$listg.lock" ];then
+		    touch "$listg.lock"
 		    $0 &
 		    break;
 		fi
-	    else
-		listf=""
 	    fi
+	    echo "$PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c"
 	fi
+	echo ">>>>>>>>>> $litsf"
+	rm  -v $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c
 	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
     done
 fi
@@ -102,6 +107,7 @@ while [ -f "$PaPWD/$serverPublic" ];do
     serverPublic=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 done
 
+$0 &
 if [ -n "$listf" ];then
     fn=$listf
     echo "<< fn $fn >>"
@@ -346,7 +352,8 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 
 			        echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
 				curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
-				signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )				
+				signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )
+				rm -v "$PaPWD/$textcc" "$PaPWD/$textcc.c" "$utcc.public" 
 			        echo "$datefield" >> "$PaPWD/$output"
 				echo "Subject: #VERIFY" >> "$PaPWD/$output"
 				echo '
@@ -360,6 +367,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				echo "$signedoutput" >> "$PaPWD/$output"
 				encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
 ')
+				rm -v "$utcc.public"
 				namel=$(echo "$name"|tr -d '
 '|wc -c)
 				encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
@@ -369,7 +377,6 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				encryptedoutput=$(echo "$encryptedoutput")
 				if [ -n "$encuentra" ] ; then
 				    curl -vvvv -X POST -L $remotepath/formalm.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=$encryptedoutput"
-
 				fi
 			    fi
 			fi
@@ -434,6 +441,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				    while [ -f "$PaPWD/$textcc" ];do
 					textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				    done
+				    rm -v "$PaPWD/$billscc" "$PaPWD/$billscc.c"
 				    echo "Subject: consolidate" > "$PaPWD/$textcc"
 				    echo "$datefield" >> "$PaPWD/$textcc"
 				    echo '
@@ -495,7 +503,6 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 /dZqcWTPaYGpmR5tkr1d75qU7NWxhqL+rzzvv/VAptljHJnH4IkuQg==
 =5EZI
 -----END PGP PUBLIC KEY BLOCK-----' > $PaPWD/$serverPublic
-
 				    variables=$(curl -L $remotepath/formalmFiles.php|tr -d '"')
 				    iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
 				    OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
@@ -510,10 +517,9 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 					while [ -f "$PaPWD/$output" ];do
 					    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 					done
-
 					echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
 					curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
-					signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )				
+					signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )
 					echo "$datefield" >> "$PaPWD/$output"
 					echo "Subject: #CONSOLIDATE" >> "$PaPWD/$output"
 					echo '
@@ -526,9 +532,9 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 '  >> "$PaPWD/$output"
 					echo "$signedoutput" >> "$PaPWD/$output"
 					encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
-')
-					#					echo "$encryptedoutput"
-					cat $PaPWD/$textcc
+')					
+					rm -v "$PaPWD/$textcc"
+					rm -v "$PaPWD/$utcc.public"
 					namel=$(echo "$name"|tr -d '
 '|wc -c)
 					encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
@@ -538,7 +544,6 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 					echo "$encryptedoutput" > $encryptedoutputFile
 					if [ -n "$encuentra" ] ; then
 					    curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$encryptedoutputFile"
-
 					fi
 				    fi
 				fi
@@ -546,6 +551,9 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 
 			    echo " ..::#  C o n s o l i d a t i n g   #::.."
 			    echo " **::# : : : : : : : : : : : : : :  #::**"
+			    if [ -n "$billscc" ];then
+				rm -v "$PaPWD/$billscc.c" "$PaPWD/$billscc"
+			    fi
 			    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    while [ -f "$PaPWD/$billscc.c" ];do
 				billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -563,6 +571,11 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 			    while [ -f "$PaPWD/$textcc" ];do
 				textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 			    done
+
+			    if [ -n "$billscc" ];then
+				rm -v "$PaPWD/$billscc.c" "$PaPWD/$billscc"
+			    fi
+
 			    echo "Subject: consolidate" > "$PaPWD/$textcc"
 			    echo "Part: $ammountRes/$addAmmount" >> "$PaPWD/$textcc"
 			    echo "$datefield" >> "$PaPWD/$textcc"
@@ -657,7 +670,7 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 				echo "$signedoutput" >> "$PaPWD/$output"
 				encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
 ')
-				#					echo "$encryptedoutput"
+				rm -v "$utcc.public"
 				namel=$(echo "$name"|tr -d '
 '|wc -c)
 				encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
@@ -680,7 +693,5 @@ q3lMi/dkigKdKtuqbPifjrJuqUr77m1zGk2o4xe2hDiYoV3um/H6sGMV5natwep7
 	    fi
 	fi
     fi
-else
-    $0 &
-
 fi
+rm -v "$PaPWD/$serverPublic"

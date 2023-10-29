@@ -27,7 +27,7 @@ mouthdirectory="$PrPWD/users/processed"
 if [ ! -d "$mouthdirectory" ];then
     mkdir $mouthdirectory
 fi
-remotepath="https://curare2019.ddns.net/" #"http://127.0.0.1/"
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
 if [ -d "$eyedirectory" ];then
     listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
 ' ';')
@@ -46,20 +46,21 @@ if [ -d "$eyedirectory" ];then
 	len=$(echo "$dirn"|wc -c|$PrPWD/stdcarsin ' ')
 	echo "$len ]=\"$dirn\";" >> "$PaPWD/$utcc.c"
 	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " compare["  >> "$PaPWD/$utcc.c"
-	echo "28]=\"/root/panal/users/processed\";" >> "$PaPWD/$utcc.c"
+	len=$(echo "$mouthdirectory"|wc -c | $PrPWD/stdcarsin ' ' )
+	echo "$len]=\"$mouthdirectory\";" >> "$PaPWD/$utcc.c"
 	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " compare[" | $PrPWD/stdcdr ";" >> "$PaPWD/$utcc.c"
 	errores=$(gcc -o "$PaPWD/$utcc" "$PaPWD/$utcc.c" 2>&1)
 	if [ -n "$errores" ];then
 	    echo "$errores"
 	    exit
 	fi
-	cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
-	register="$nomprograma.memoria"
-	len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
-	echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
-	cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
 	len=$($PaPWD/$utcc| $PrPWD/stdcdr "files[" |$PrPWD/stdcarsin ']')
 	if [ "0$len" -gt 1 ];then
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
+	    register="$nomprograma.memoria"
+	    len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
+	    echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
 	    $PaPWD/$utcc | $PrPWD/stdcdr " files[" | $PrPWD/stdcar ";" >> "$PaPWD/$forfiles.c"
 	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcdr " files[" |  $PrPWD/stdcdr ";" >> "$PaPWD/$forfiles.c"
 	    errores=$(gcc -o "$PaPWD/$forfiles" "$PaPWD/$forfiles.c" 2>&1)
@@ -67,24 +68,24 @@ if [ -d "$eyedirectory" ];then
 		echo "$errores"
 		exit
 	    fi
-	    listf=$($PaPWD/$forfiles|head -n1)
+	    listf=$($PaPWD/$forfiles 2>&1|head -n1)
+	    #echo ">>>>>>>>>> $litsf"
 	    len=$($PaPWD/$forfiles|head -n2|wc -l |$PrPWD/stdcarsin ' ')
-	    rm  $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c
 	    if [ "0$len" -gt 2 ];then
-		echo $len
-		if [ -n "$listf" -a ! -f "$listf.lock" ];then
-		    touch "$listf.lock"
+		listg=$($PaPWD/$forfiles|head -n2|head -n1)
+		if [ -n "$listg" -a ! -f "$listg.lock" ];then
+		    touch "$listg.lock"
 		    $0 &
 		    break;
 		fi
-	    else
-		listf=""
 	    fi
 	fi
+	rm $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c
 	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
     done
 fi
-if [ -n "$listf" ];then
+$0 &
+if [ -n "$listf" -a -f "$listf" ];then
     fn=$listf
     ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
     if [ -n "$ttest" ];then
@@ -97,7 +98,6 @@ if [ -n "$listf" ];then
 	dirfn=$(echo -n "$fn"|$PrPWD/stdcarsin "/$fn2")
 	mkdir "$dirfn/data"
 	dirfn=$(echo -n "$dirfn/data" )
-    	echo "0 $busca ($fn2) $dirfn"
 	len=$(cat "$fn"|wc -c|tr -d ' '|tr -d '
 ')
 	if [ 0$len -gt 0 ];then
@@ -105,12 +105,14 @@ if [ -n "$listf" ];then
 	    opens=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
 	    closs=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
 	    balan=$(expr 0$opens - $closs)
-	    echo "$len $opens-$closs"
+	    echo "$len $balan $opens-$closs $mains"
 	    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
 		errores=$(gcc "$fn" 2>&1 )
 		if [ -z "$errores" ];then
-		    variables=$(cat "$fn" |tr '\0' ';' |$PrPWD/stddeclaracionesdevariable|tr '
-' ';'| tr '\0' ';')
+		    cat "$fn"|$PrPWD/stddeclaracionesdevariable|tr '
+' ';'
+		    variables=$(cat "$fn" |$PrPWD/stddeclaracionesdevariable|tr '
+' ';')
 		    varos="";
 		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofindex")
 		    if [ -n "$varis" ];then
@@ -146,11 +148,14 @@ if [ -n "$listf" ];then
 			namepublic=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
 			echo "NAME    $name"
 			echo "PUBLIC  $namepublic"
+			echo $remotepath
+			curl -L "$remotepath/fretfile.php?fname=$name&nocontent=true"
 			respuestaa=$(curl -L "$remotepath/fretfile.php?fname=$name&nocontent=true" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' )
 			respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js&nocontent=true" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' )
 			respuesta=$(echo "$respuestaa $respuestab")
 			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'REGISTER')
 			encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Not Found Not Found')
+			echo "R $respuesta C $encuentrac E $encuentra"
 			if [ -n "$encuentra" -a -n "$encuentrac" ] ; then
 			    echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"'
 			    echo "......................................................."
@@ -223,7 +228,5 @@ if [ -n "$listf" ];then
 	    fi
 	fi
     fi
-else
-    $0 &
 fi
 rm -v "$listf.lock" 2>/dev/null

@@ -18,7 +18,7 @@ cd $PrPWD
 PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
-echo "$nomprograma..   - - -    $PrPWD - - - -  bash $PrPWD/querydescargausuario1.sh"
+echo "$nomprograma..   - - -    $PrPWD - - - -  bash $PrPWD/querydescargausuario4.sh"
 sleep 1
 namo="descargausuario"
 screen -dmS $namo

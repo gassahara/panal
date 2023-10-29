@@ -18,7 +18,8 @@ cd $PrPWD
 PrPWD2=$PWD
 PrPWD=$PrPWD2
 cd $PaPWD
-remotepath="https://curare2019.ddns.net/"
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
+echo ":>:>:>:>>>> $remotepath"
 PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
 busca=".."
 posicion=0;
@@ -33,6 +34,7 @@ while [ -n "$slash" ];do
 done
 pren=0
 proc=0
+echo "O"
 if [ -f "$nomprograma.lista0" ];then
     ii=1
     while [ -f "$PaPWD/querydescarga.l.$ii" -a -f "$PaPWD/querydescarga.l.$ii.lock" ];do
@@ -110,6 +112,7 @@ if [ -f "$nomprograma.lista0" ];then
 						    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
     							errors=$(gcc $fn.c 2>&1)
 							if [ -n "$errors" ];then
+							    rm "$fn" "$fn.c"
 							    echo "There are errors on $fn.c"
 							else
 							    mkdir $PrPWD/users
@@ -148,32 +151,17 @@ if [ -f "$nomprograma.lista0" ];then
 	    $0 x &
 	    exit
 	fi
-    # else
-    # 	if [ ! -f $PaPWD/$pn.lock ];then
-    # 	    touch $PaPWD/$pn.lock
-    # 	    a=1
-    # 	    while [ "0$a" -le 0$count ];do
-    # 		if [ -f "$PaPWD/querydescarga.l.$a.lock" ];then
-    # 		    a=1
-    # 		    sleep 2
-    # 		fi
-    # 		a=$(expr $a + 1)
-    # 	    done
-    # 	    rm  -v "$nomprograma.lista0"
-    # 	    echo "X"
-    # 	    rm $pn.lock
-    # 	    sleep 4
-    # 	    $0 x &
-    # 	    exit
-    # 	fi
     fi
-else    
+else
+    echo "I"
     listacc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
     while [ -f "$PaPWD/$listacc.c" ];do
 	listacc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
     done
+    echo "$listacc" "$remotepath/dirlistmt.php"
     cat $PrPWD/listadescarga.c | $PrPWD/stdcar "unsigned char files[" > "$PaPWD/$listacc.c"
-    rfile=$(curl -L "$remotepath/dirlistmt.php" 2>/dev/null| $PrPWD/stdcdr 'file="'|$PrPWD/stdcarsin '"')
+    curl -vvvv -L "$remotepath/dirlistmt.php"
+    rfile=$(curl -L "$remotepath/dirlistmt.php" 2>/dev/null | $PrPWD/stdcdr 'file="'|$PrPWD/stdcarsin '"')
     echo "<<$remotepath/$rfile>>"
     curl -L "$remotepath/$rfile"  | $PrPWD/stddeclaracionesdevariable |  $PrPWD/stdcdr 'files[' | $PrPWD/stdcarsin '
 '  >> "$PaPWD/$listacc.c"
@@ -181,13 +169,14 @@ else
     errors=$(gcc -o $PaPWD/$listacc "$PaPWD/$listacc.c" 2>&1)
     if [ -n "$errors" ];then
 	echo "There are errors on $PaPWD/$listacc"
+	rm -v "$PaPWD/$listacc" "$PaPWD/$listacc.c"
 	rm $nomprograma.lista0
     else
 	echo "$listacc"
 	$PaPWD/$listacc > $nomprograma.lista0
 	echo ">>"
     fi
-    rm $PaPWD/$listacc*
+    rm "$PaPWD/$listacc" "$PaPWD/$listacc.c"
     $0 n &
 fi
 exit

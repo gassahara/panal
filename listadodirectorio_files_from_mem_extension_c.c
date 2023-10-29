@@ -7,14 +7,21 @@ int main(int argc, char *argv[]) {
   DIR *pdyr,*pdyr2;
 
   struct dirent *pent = NULL;
-  static unsigned char buffer[37]="/root/panal/users/input/unencrypted";
-  static unsigned char compare[28]="/root/panal/users/processed";
+  static unsigned char buffer[48]="/home/user/servers/nube/users/input/unencrypted";
+  static unsigned char compare[40]="/home/user/servers/nube/users/processed";
   int m=0;
   buffer[sizeof(buffer)-1]= 0;
+  compare[sizeof(compare)-1]= 0;
   long biggest_m=sizeof(buffer);
   int l=0;
   int n=0;
-  unsigned char *temp;
+  unsigned char temp[1024];
+  l=0;
+  while(l<sizeof(temp)) {
+    temp[l]=0;
+    l++;
+  }
+  l=0;
   pdyr=opendir (buffer);
   if (pdyr != NULL) {
     while ( (pent = readdir (pdyr)) !=NULL) {
