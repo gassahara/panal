@@ -160,7 +160,7 @@ else
     done
     echo "$listacc" "$remotepath/dirlistmt.php"
     cat $PrPWD/listadescarga.c | $PrPWD/stdcar "unsigned char files[" > "$PaPWD/$listacc.c"
-    curl -vvvv -L "$remotepath/dirlistmt.php"
+    curl -L "$remotepath/dirlistmt.php"
     rfile=$(curl -L "$remotepath/dirlistmt.php" 2>/dev/null | $PrPWD/stdcdr 'file="'|$PrPWD/stdcarsin '"')
     echo "<<$remotepath/$rfile>>"
     curl -L "$remotepath/$rfile"  | $PrPWD/stddeclaracionesdevariable |  $PrPWD/stdcdr 'files[' | $PrPWD/stdcarsin '

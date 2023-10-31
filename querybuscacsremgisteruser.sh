@@ -80,7 +80,7 @@ if [ -d "$eyedirectory" ];then
 		fi
 	    fi
 	fi
-	rm $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c
+	rm $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c 2>/dev/null
 	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
     done
 fi
