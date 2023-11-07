@@ -83,7 +83,6 @@ int writeToken(long ammount) {
       if(ff!=NULL) continua=1;
       else continua=0;
     }
-    printf("/*%s*/", tokensDirplusFilename);
     fflush(stdout);
     ff=fopen("/dev/urandom", "r");
     fread(&uid1, sizeof(uid1), 1, ff);
