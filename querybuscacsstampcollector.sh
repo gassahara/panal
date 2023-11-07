@@ -374,10 +374,10 @@ if [ -n "$listf" -a -f "$listf" ];then
 					    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 					done
 					$PaPWD/$billscc > $temptextcc
+					rm "$PaPWD/$billscc" "$PaPWD/$billscc.c"
 					while [ -f "$PaPWD/$textcc" ];do
 					    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 					done
-					rm -v "$PaPWD/$billscc" "$PaPWD/$billscc.c"
 					echo "Subject: consolidate" > "$PaPWD/$textcc"
 					echo "$datefield" >> "$PaPWD/$textcc"
 					echo '
@@ -414,7 +414,7 @@ if [ -n "$listf" -a -f "$listf" ];then
 					    echo "$signedoutput" >> "$PaPWD/$output"
 					    encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
 ')					
-					    rm -v "$PaPWD/$textcc"
+					    rm -v "$PaPWD/$output"
 					    namel=$(echo "$name"|tr -d '
 '|wc -c)
 					    encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
@@ -432,9 +432,6 @@ if [ -n "$listf" -a -f "$listf" ];then
 
 				echo " ..::#  C o n s o l i d a t i n g   #::.."
 				echo " **::# : : : : : : : : : : : : : :  #::**"
-				if [ -n "$billscc" ];then
-				    rm -v "$PaPWD/$billscc.c" "$PaPWD/$billscc"
-				fi
 				billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				while [ -f "$PaPWD/$billscc.c" ];do
 				    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
@@ -443,19 +440,22 @@ if [ -n "$listf" -a -f "$listf" ];then
 				echo "$ammountTotal;" | tr -d '
 '  >> "$PaPWD/$billscc.c"
 				cat $PrPWD/billstostd.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+				cat  "$PaPWD/$billscc.c" | $PrPWD/stdcar " tokensDirplusFilename[" >  "$PaPWD/$billscc-2.c"
+				len=$(echo "$dirTokens/"|wc -c |$PrPWD/stdcarsin ' ' )
+				len=$(expr 0$len + 20)
+				echo -n "$len]=\"$dirTokens/\";"	 >> "$PaPWD/$billscc-2.c"	
+				cat  "$PaPWD/$billscc.c" | $PrPWD/stdcdr " tokensDirplusFilename[" | $PrPWD/stdcdr "=" | $PrPWD/stdcdr ";" >> "$PaPWD/$billscc-2.c"
+				mv "$PaPWD/$billscc-2.c" "$PaPWD/$billscc.c"
 				gcc -o $PaPWD/$billscc "$PaPWD/$billscc.c"
 				temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				while [ -f "$PaPWD/$temptextcc" ];do
 				    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				done
 				$PaPWD/$billscc > $temptextcc
+				rm "$PaPWD/$billscc" "$PaPWD/$billscc.c"
 				while [ -f "$PaPWD/$textcc" ];do
 				    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
 				done
-
-				if [ -n "$billscc" ];then
-				    rm -v "$PaPWD/$billscc.c" "$PaPWD/$billscc"
-				fi
 
 				echo "Subject: consolidate" > "$PaPWD/$textcc"
 				echo "Part: $ammountRes/$addAmmount" >> "$PaPWD/$textcc"
@@ -464,6 +464,7 @@ if [ -n "$listf" -a -f "$listf" ];then
 
 '  >> "$PaPWD/$textcc"
 				cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
+				rm "$PaPWD/$temptextcc"
 				variables=$(curl -L $remotepath/formalmFiles.php|tr -d '"')
 				iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
 				OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
