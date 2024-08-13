@@ -1,0 +1,2085 @@
+#!/bin/bash
+fn=""
+PaPWD="$PWD"
+stdcdr="stdcdr"
+stdcdrd=""
+while [ ! -f "$stdcdrd$stdcdr" ];do
+    stdcdrd=$(echo "../$stdcdrd")
+done
+PrPWD=$stdcdrd
+pasa=0
+nomprograma=$0
+slash=$(echo "$nomprograma"| $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    nomprograma=$(echo "$nomprograma"| $PrPWD/stdcdr "/" )
+    slash=$(echo "$nomprograma" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+cd $PrPWD
+PrPWD2=$PWD
+PrPWD=$PrPWD2
+cd $PaPWD
+echo "$nomprograma..   - - -    $PrPWD - - - -  bash $PrPWD/querydescargausuario4.sh"
+sleep 1
+namo="descargausuario"
+screen -dmS $namo
+sleep 1
+rm $PrPWD/data/querydescarga.l*
+rm $PrPWD/data/querydescargausuario4.sh.lista0
+screen -S $namo -X stuff  "bash $PrPWD/querydescargausuario4.sh"
+screen -S $namo -X stuff  $'\r'
+#namo="buscausuario"
+#screen -dmS $namo
+#sleep 1
+#screen -S $namo -X stuff  "bash $PrPWD/querybuscacsusuario3.sh"
+#screen -S $namo -X stuff  $'\r'
+namo="registeruser"
+screen -dmS $namo
+sleep 1
+screen -S $namo -X stuff  "bash $PrPWD/querybuscacsremgisteruser.sh"
+screen -S $namo -X stuff  $'\r'
+namo="stampcollector"
+screen -dmS $namo
+sleep 1
+screen -S $namo -X stuff  "bash $PrPWD/querybuscacsstampcollector.sh"
+screen -S $namo -X stuff  $'\r'
+
+namo="stampcontracts"
+screen -dmS $namo
+sleep 1
+screen -S $namo -X stuff  "bash $PrPWD/querybuscacsstampcontractbox.sh"
+screen -S $namo -X stuff  $'\r'
+namo="ppv"
+screen -dmS $namo
+sleep 1
+screen -S $namo -X stuff  "bash $PrPWD/querybuscacsstampPPV.sh"
+screen -S $namo -X stuff  $'\r'
+
+#!/bin/bash
+fn=""
+PaPWD="$PWD"
+stdcdr="stdcdr"
+stdcdrd=""
+while [ ! -f "$stdcdrd$stdcdr" ];do
+    stdcdrd=$(echo "../$stdcdrd")
+done
+PrPWD=$stdcdrd
+pasa=0
+nomprograma=$0
+slash=$(echo "$nomprograma"| $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    nomprograma=$(echo "$nomprograma"| $PrPWD/stdcdr "/" )
+    slash=$(echo "$nomprograma" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+cd $PrPWD
+PrPWD2=$PWD
+PrPWD=$PrPWD2
+cd $PaPWD
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
+echo ":>:>:>:>>>> $remotepath"
+PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
+busca=".."
+posicion=0;
+encuentra="ALGO"
+ii=1
+continua=1
+pn=$0
+slash=$(echo "$pn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    pn=$(echo "$pn" | $PrPWD/stdcdr "/" )
+    slash=$(echo $pn | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+pren=0
+proc=0
+echo "O"
+if [ -f "$nomprograma.lista0" ];then
+    ii=1
+    while [ -f "$PaPWD/querydescarga.l.$ii" -a -f "$PaPWD/querydescarga.l.$ii.lock" ];do
+	ii=$(expr $ii + 1)
+	echo "$ii"
+    done    
+    fname="$PaPWD/querydescarga.l.$ii"
+    if [ -f "$fname" -a ! -f "$fname.lock" ];then
+	touch "$fname.lock"
+	ii=$(expr $ii + 1)
+	if [ -f "$PaPWD/querydescarga.l.$ii" -a -f "$PaPWD/querydescarga.l.$ii.lock" ];then
+ 	    $0 $ii &
+	fi
+	for listf in $(cat "$fname"); do
+	    fn=$listf
+	    slash=$(echo "$fn" | tr -d '
+' | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    while [ -n "$slash" ];do
+		fn=$(echo "$fn" | tr -d '
+' | $PrPWD/stdcdr "/" )
+		slash=$(echo $fn | tr -d '
+' | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    done
+	    if [ -n "$fn" -a -n "$listf" ];then
+		if [ ! -f "$fn.memoria" ];then
+		    echo "<<$listf>>"
+		    tamano=$(echo "$listf"|tr -d '
+' | wc -c | $PrPWD/stdcarsin ' ')
+		    echo "T $tamano"
+		    if [ 0$tamano -gt 4 ];then
+			tamano=$(expr 0$tamano - 3)
+		    fi
+		    encuentra=$(echo "$listf"|$PrPWD/stdcdrn $tamano| $PrPWD/stdbuscaarg ".js")
+		    if [ -z "$encuentra" ];then
+			echo ";$listf;" > "$fn.memoria"
+		    else
+			echo "<:<$remotepath/$listf >:>"
+			respcode=$(curl --head --silent --fail "$remotepath/$listf" | $PrPWD/stdbuscaarg "HTTP/1.1 200 OK")
+			if [ -n "$respcode" ];then
+			    curl -L  "$remotepath/$listf" 2>/dev/null > $fn #2>/dev/null
+			    echo -n ">"
+			    if [ -f "$fn" ];then
+				echo -n "F"
+				size=$(cat "$fn" | wc -c | $PrPWD/stdcarsin ' ')
+				opens=$(cat "$fn"|$PrPWD/stdbuscaarg_count "BEGIN PGP MESSAGE")
+				closs=$(cat "$fn"|$PrPWD/stdbuscaarg_count "END PGP MESSAGE")
+				if [ -z "$opens" -o "0$opens" -eq 0 ];then
+				    if [ 0$tamano -gt 1 ];then
+					firstchar=$(cat "$fn"|$PrPWD/stdcarn 2)
+					if [ "$firstchar" != '--' -a "$firstchar" != 'BE' -a "$firstchar" != ' -' -a "$firstchar" != '- '  ];then
+					    echo ";$listf;" > "$fn.memoria"
+					    echo ">> >> >> $size $opens $closs"
+					fi
+				    fi			
+				else
+				    if [ 0$opens -gt 0 ];then
+					balan=$(expr 0$opens - 0$closs )
+					if [ "$balan" = "0"  ];then
+					    echo "SAVED PGP"
+					    echo ";$listf;" > "$fn.memoria"
+					    cat "$fn" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>$fn.c
+					    balan=$(cat "$fn.c"|wc -c|$PrPWD/stddelcar " " )
+					    if [ 0$balan -gt 0 ];then
+						echo '/*' | tr -d '
+' > $fn.tmp
+						cat $fn.c >> $fn.tmp
+						mv -v $fn.tmp $fn.c
+						mains=$(cat "$fn.c"|$PrPWD/stdbuscaarg " main")
+						opens=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
+						closs=$(cat "$fn.c"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
+						if [ 0$opens -gt 0 ];then
+						    echo "IT IS C"
+						    balan=$(expr  0$opens - 0$closs)
+						    echo ">>> $opens : $closs <<< $balan ($mains)"
+						    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+    							errors=$(gcc $fn.c 2>&1)
+							if [ -n "$errors" ];then
+							    rm "$fn" "$fn.c"
+							    echo "There are errors on $fn.c"
+							else
+							    mkdir $PrPWD/users
+							    mkdir $PrPWD/users/input
+							    mkdir $PrPWD/users/input/unencrypted
+							    mv -v "$fn.c" "$PrPWD/users/input/unencrypted"
+							    echo "$errores"
+							fi
+						    fi
+						fi
+					    fi
+					fi
+				    fi
+				fi
+			    fi
+			fi			
+		    fi
+		fi
+	    fi
+	done
+	rm  -v "$fname.lock"
+	if [ ! -f $PaPWD/$pn.lock ];then
+	    touch $PaPWD/$pn.lock
+	    a=1
+	    while [ "0$a" -le 0$count ];do
+		if [ -f "$PaPWD/querydescarga.l.$a.lock" ];then
+		    a=1
+		    sleep 2
+		fi
+		a=$(expr $a + 1)
+	    done
+	    rm  -v "$nomprograma.lista0"
+	    echo "X"
+	    rm $pn.lock
+	    sleep 4
+	    $0 x &
+	    exit
+	fi
+    fi
+else
+    echo "I"
+    listacc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$listacc.c" ];do
+	listacc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done
+    echo "$listacc" "$remotepath/dirlistmt.php"
+    cat $PrPWD/listadescarga.c | $PrPWD/stdcar "unsigned char files[" > "$PaPWD/$listacc.c"
+    curl -L "$remotepath/dirlistmt.php"
+    rfile=$(curl -L "$remotepath/dirlistmt.php" 2>/dev/null | $PrPWD/stdcdr 'file="'|$PrPWD/stdcarsin '"')
+    echo "<<$remotepath/$rfile>>"
+    curl -L "$remotepath/$rfile"  | $PrPWD/stddeclaracionesdevariable |  $PrPWD/stdcdr 'files[' | $PrPWD/stdcarsin '
+'  >> "$PaPWD/$listacc.c"
+    cat $PrPWD/listadescarga.c | $PrPWD/stdcdr "unsigned char files[" | $PrPWD/stdcdr ';' >> "$PaPWD/$listacc.c"
+    errors=$(gcc -o $PaPWD/$listacc "$PaPWD/$listacc.c" 2>&1)
+    if [ -n "$errors" ];then
+	echo "There are errors on $PaPWD/$listacc"
+	rm -v "$PaPWD/$listacc" "$PaPWD/$listacc.c"
+	rm $nomprograma.lista0
+    else
+	echo "$listacc"
+	$PaPWD/$listacc > $nomprograma.lista0
+	echo ">>"
+    fi
+    rm "$PaPWD/$listacc" "$PaPWD/$listacc.c"
+    $0 n &
+fi
+exit
+#!/bin/bash
+fn=""
+PaPWD="$PWD"
+stdcdr="stdcdr"
+stdcdrd=""
+while [ ! -f "$stdcdrd$stdcdr" ];do
+    stdcdrd=$(echo "../$stdcdrd")
+done
+PrPWD=$stdcdrd
+pasa=0
+nomprograma=$0
+slash=$(echo "$nomprograma"| $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    nomprograma=$(echo "$nomprograma"| $PrPWD/stdcdr "/" )
+    slash=$(echo "$nomprograma" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+cd $PrPWD
+PrPWD2=$PWD
+PrPWD=$PrPWD2
+cd $PaPWD
+#echo "$nomprograma.."
+sleep 2
+listados="";
+listado="";
+lista0=$($PrPWD/listadodirectorio_files_extension .c )
+PbPWD=$(echo "$PaPWD"|$PrPWD/stdcdr "$PrPWD")
+busca=".."
+posicion=0;
+dondes=$( echo "$lista0" |$PrPWD/stdbuscaarg_donde '
+')
+encuentra="ALGO"
+while [ -n "$dondes" -a -n "$encuentra" ];do
+    listf=$(echo "$lista0" | $PrPWD/stdcdrn "0$posicion"|$PrPWD/stdcarsin '
+')
+    posicion=$(echo "$dondes" |$PrPWD/stdcarsin " ")
+    posicion=$(expr 0$posicion + 1)
+    dondes=$(echo "$dondes" |$PrPWD/stdcdr " ")
+    if [ -z "$listf" ];then
+	encuentra="ALGO"
+	continue;
+    fi
+    chacha=$(cat "$listf"|$PrPWD/chacha20)
+    encuentra=$(cat $nomprograma.memoria | $PrPWD/stdbuscaarg ";$listf;$chacha;")
+done
+if [ -z "$encuentra" ];then
+    echo ";$listf;$chacha;" >> $nomprograma.memoria
+fi
+ps1=1
+while [ -f "$nomprograma.lock-$ps1" ];do
+    if [ 0$ps1 -lt 2 ];then
+	echo "W W W W W W W W W W W W W   $ps1"
+	ps1=$(expr 0$ps1 + 1)
+    else
+	ps1=1
+	sleep 1
+    fi
+done
+    $0 &
+if [ -z "$encuentra" ];then
+    fn=$listf
+    echo "<< fn $fn >>"
+    ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
+    if [ -n "$ttest" ];then
+	slash=$(echo "$fn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	while [ -n "$slash" ];do
+	    fn=$(echo "$fn" | $PrPWD/stdcdr "/" )
+	    slash=$(echo $fn | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	done
+    	echo "0 $busca ($fn)"
+	len=$(cat "$fn"|wc -c|tr -d ' ')
+	if [ 0$len -gt 0 ];then
+	    mains=$(cat "$fn"|$PrPWD/stdbuscaarg " main")
+	    opens=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
+	    closs=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
+	    balan=$(expr 0$opens - $closs)
+	    echo "main $mains opens $opens closs $closs "
+	    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+		errores=$(gcc $fn 2>&1 )
+		if [ -z "$errores" ];then
+		    variables=$(cat $fn |$PrPWD/stddeclaracionesdevariable|$PrPWD/stddelcar '
+')
+		    userfromfile=$(echo ";$variables" |$PrPWD/stdcdr ";char *"|$PrPWD/stdcarsin "=")
+		    ttest=$(echo ";$variables" |$PrPWD/stdbuscaarg_donde_hasta ";int ")
+		    dondes=0
+		    while [ "0$ttest" -gt 0 ];do
+			dondes=$(($dondes+$ttest))
+			ivfromfile=$(echo ";$variables" |$PrPWD/stdcdrn $dondes|$PrPWD/stdcarsin ";")
+			len=$(echo $ivfromfile|$PrPWD/stdcdr "]"|$PrPWD/stdbuscaarg_donde_hasta "[16]")
+			len2=$(echo $ivfromfile|$PrPWD/stdbuscaarg_count "][")
+			if [ 0$len -gt 0 -a 0$len2 -eq 1 ];then
+			    ivfromfile=$(echo "$ivfromfile"|$PrPWD/stdcarsin "["|$PrPWD/stddelcar " ")
+			    break;
+			else
+			    ivfromfile=""
+			fi
+			ttest=$(echo ";$variables" |$PrPWD/stdcdrn $dondes|$PrPWD/stdbuscaarg_donde_hasta ";int ")
+		    done
+
+		    ttest=$(echo ";$variables"| $PrPWD/stddelcar "int $ivfromfile"|$PrPWD/stdbuscaarg_donde_hasta ";int ")
+		    dondes=0
+		    while [ "0$ttest" -gt 0 ];do
+			dondes=$(($dondes+$ttest))
+			encryptedfromfile=$(echo ";$variables"| $PrPWD/stddelcar "int $ivfromfile"|$PrPWD/stdcdrn $dondes|$PrPWD/stdcarsin ";")
+			len2=$(echo $encryptedfromfile|$PrPWD/stdbuscaarg_count "][")
+			if [ 0$len2 -eq 1 ];then
+			    encryptedfromfile=$(echo "$encryptedfromfile"|$PrPWD/stdcarsin ";"|$PrPWD/stdcarsin "["|$PrPWD/stddelcar " ")
+			    break;
+			else
+			    encryptedfromfile=""
+			fi
+			ttest=$(echo ";$variables"| $PrPWD/stddelcar "int $ivfromfile"|$PrPWD/stdcdrn $dondes|$PrPWD/stdbuscaarg_donde_hasta ";int ")
+		    done
+
+		    filedfromfile=$(echo ";$variables" |$PrPWD/stdcdr ";FILE *"|$PrPWD/stdcarsin "="|$PrPWD/stdcarsin ";")
+		    ca5=$(echo "$userfromfile $ivfromfile $encryptedfromfile $filedfromfile"|$PrPWD/stdbuscaarg " 0")
+		    echo "<$userfromfile> <$ivfromfile> <$encryptedfromfile> <FD $filedfromfile> <$ca5>"
+		    if [ -n "$userfromfile" -a -n "$ivfromfile" -a -n "$encryptedfromfile" -a -n "$filedfromfile" -a -z "$ca5" ];then
+			filed=$(cat $fn | $PrPWD/stdcdr "$filedfromfile=" | $PrPWD/stdcdr "fopen(" |$PrPWD/stddelcar '"' | $PrPWD/stdcarsin ",");
+			usuarioo=$(echo ";$variables" |$PrPWD/stdcdr "$userfromfile=" |$PrPWD/stdcdr '"' | $PrPWD/stdcarsin '"');
+			echo "- - - - - - - - - - - - - - - -  "
+			echo "uU $usuarioo Uu $userfromfile uU"
+			echo "- - - - - - - - - - - - - - - -  "
+			errores="USUARIO INCORRECTO"
+			if [ -f "$PrPWD/users/$usuarioo/$usuarioo-aes.c" ];then
+			    outputdelc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$outputdelc.c" ];do
+				outputdelc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    done
+			    echo "oOO $outputdelc OOo"
+			    arrayindex=$(cat $fn | $PrPWD/stdcdr "int $ivfromfile["  | $PrPWD/stdcarsin "]");
+			    dondes=0
+			    iv=$(echo "$variables" | $PrPWD/stdcdr "int $ivfromfile["  | $PrPWD/stdcarsin ";");
+			    msj=$(echo "$variables" | $PrPWD/stdcdr "int $encryptedfromfile["|$PrPWD/stdcarsin ";");
+			    filed=$(cat $fn | $PrPWD/stdcdr "$filedfromfile=" | $PrPWD/stdcdr "fopen(" |$PrPWD/stddelcar '"' | $PrPWD/stdcarsin ",");
+			    c=0
+			    echo "IV $ivfromfile $iv"
+			    cat $PrPWD/users/$usuarioo/$usuarioo-aes.c | $PrPWD/stdcar "unsigned char iv[" > $outputdelc.c
+			    echo "$iv;" >> $outputdelc.c
+			    cat $PrPWD/users/$usuarioo/$usuarioo-aes.c | $PrPWD/stdcdr "unsigned char iv[" | $PrPWD/stdcdr ";" >> $outputdelc.c
+
+			    echo "msj $encryptedfromfile $msj"
+			    cat $outputdelc.c | $PrPWD/stdcar "unsigned char buf[" > $outputdelc-2.c
+			    echo "$msj;" >> $outputdelc-2.c
+			    cat $outputdelc.c | $PrPWD/stdcdr "unsigned char buf[" | $PrPWD/stdcdr ";" >> $outputdelc-2.c
+			    mv $outputdelc-2.c $outputdelc.c
+
+			    echo "$outputdelc.c"
+			    tail $outputdelc.c
+			    errores=$(gcc -o $outputdelc-bin $outputdelc.c 2>&1)
+			    echo "< < < |ERRORES:$errores| > > >"
+			    if [ -z "$errores" ];then
+				datosdelc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$datosdelc.c" ];do
+				    datosdelc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				echo "$datosdelc.c"
+				$PaPWD/$outputdelc-bin > $datosdelc.c
+
+				outputdelcu=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$outputdelcu.c" ];do
+				    outputdelcu=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				echo -n "/*"  > $outputdelcu.c
+				cat $datosdelc.c|$PrPWD/stdcdr "int buf["|$PrPWD/stdcarsin ";"|$PrPWD/stdcdr "=" |$PrPWD/stdfromdec >> $outputdelcu.c
+				errores=$(gcc -o $outputdelcu-bin $outputdelcu.c 2>&1)
+				echo "<< (( $outputdelcu )) >>"
+				echo "<( $errores ])>"
+				if [ -z "$errores" ];then
+				    echo " * . * . * . * . * . * . * . * . * . * . * . * "
+				    cat "$outputdelcu.c"
+				    echo " * . * . * . * . * . * . * . * . * . * . * . * "
+u				    mkdir $PrPWD/users
+				    mkdir $PrPWD/users/input
+				    mkdir $PrPWD/users/input/$usuarioo
+				    cp -v $outputdelcu.c $PrPWD/users/input/$usuarioo/
+				fi
+			    fi
+			else
+			    mkdir $PrPWD/users
+			    mkdir $PrPWD/users/output
+			    mkdir $PrPWD/users/output/unencrypted
+			    echo "errores=\"Error de usuario de nombre de usuario o contraseña\";" > $PrPWD/users/output/unencrypted/$filed
+			    echo "processed=255;" >> $PrPWD/users/output/unencrypted/$filed
+			    echo "RROR!!"
+			    exit
+			fi
+			if [ -n "$errores" ];then
+			    mkdir $PrPWD/users
+			    mkdir $PrPWD/users/output
+			    mkdir $PrPWD/users/output/unencrypted
+			    echo "Escribiendo a $filed"
+			    echo "errores=\"Error de usuario de nombre de usuario o contraseña\";" > $PrPWD/users/output/unencrypted/$filed
+			    echo "processed=255;" >> $PrPWD/users/output/unencrypted/$filed
+			else
+			    mkdir $PrPWD/users
+			    mkdir $PrPWD/users/output
+			    mkdir $PrPWD/users/output/unencrypted
+			    echo "11111111111111111111111111111111111111111111111111111111111111
+$filed
+2222222222222222222222222222222222222222222222"
+			    echo "Escribiendo a $filed"
+			    echo "errores=\"Entrada registrada correctamente, en cuanto se encunetre procesada aparecera la respuesta en la lista de mensajes (con el titulo indicado en la entrada)\";" >> $PrPWD/users/output/unencrypted/$filed
+			    echo "processed=255;" >> $PrPWD/users/output/unencrypted/$filed
+			fi
+		    else
+			echo "======================="
+			echo "$errores"
+		    fi
+		else
+		    echo "$errores" #rm $fn
+		fi
+	    fi
+	fi
+    fi
+fi
+		
+		
+#!/bin/bash
+fn=""
+PaPWD="$PWD"
+stdcdr="stdcdr"
+stdcdrd=""
+while [ ! -f "$stdcdrd$stdcdr" ];do
+    stdcdrd=$(echo "../$stdcdrd")
+done
+PrPWD=$stdcdrd
+pasa=0
+nomprograma=$0
+slash=$(echo "$nomprograma"| $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    nomprograma=$(echo "$nomprograma"| $PrPWD/stdcdr "/" )
+    slash=$(echo "$nomprograma" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+cd $PrPWD
+PrPWD2=$PWD
+PrPWD=$PrPWD2
+cd $PaPWD
+sleep 1
+touch "$nomprograma.memoria"
+listados="";
+listado="";
+eyedirectory="$PrPWD/users/input"
+mouthdirectory="$PrPWD/users/processed"
+if [ ! -d "$mouthdirectory" ];then
+    mkdir $mouthdirectory
+fi
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
+if [ -d "$eyedirectory" ];then
+    listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
+' ';')
+    salta=0;
+    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$utcc.c" ];do
+	utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done
+    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$forfiles.c" ];do
+	forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done	
+    while [ -n "$listado" ];do
+	dirn=$(echo -n "$listado"|$PrPWD/stdcarsin ';')
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$utcc.c"
+	len=$(echo "$dirn"|wc -c|$PrPWD/stdcarsin ' ')
+	echo "$len ]=\"$dirn\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " compare["  >> "$PaPWD/$utcc.c"
+	len=$(echo "$mouthdirectory"|wc -c | $PrPWD/stdcarsin ' ' )
+	echo "$len]=\"$mouthdirectory\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " compare[" | $PrPWD/stdcdr ";" >> "$PaPWD/$utcc.c"
+	errores=$(gcc -o "$PaPWD/$utcc" "$PaPWD/$utcc.c" 2>&1)
+	if [ -n "$errores" ];then
+	    echo "$errores"
+	    exit
+	fi
+	len=$($PaPWD/$utcc| $PrPWD/stdcdr "files[" |$PrPWD/stdcarsin ']')
+	if [ "0$len" -gt 1 ];then
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
+	    register="$nomprograma.memoria"
+	    len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
+	    echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
+	    $PaPWD/$utcc | $PrPWD/stdcdr " files[" | $PrPWD/stdcar ";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcdr " files[" |  $PrPWD/stdcdr ";" >> "$PaPWD/$forfiles.c"
+	    errores=$(gcc -o "$PaPWD/$forfiles" "$PaPWD/$forfiles.c" 2>&1)
+	    if [ -n "$errores" ];then
+		echo "$errores"
+		exit
+	    fi
+	    listf=$($PaPWD/$forfiles 2>&1|head -n1)
+	    #echo ">>>>>>>>>> $litsf"
+	    len=$($PaPWD/$forfiles|head -n2|wc -l |$PrPWD/stdcarsin ' ')
+	    if [ "0$len" -gt 2 ];then
+		listg=$($PaPWD/$forfiles|head -n2|head -n1)
+		if [ -n "$listg" -a ! -f "$listg.lock" ];then
+		    touch "$listg.lock"
+		    $0 &
+		    break;
+		fi
+	    fi
+	fi
+	rm $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c 2>/dev/null
+	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
+    done
+fi
+$0 &
+if [ -n "$listf" -a -f "$listf" ];then
+    fn=$listf
+    ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
+    if [ -n "$ttest" ];then
+	slash=$(echo "$fn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	fn2="$fn"
+	while [ -n "$slash" ];do
+	    fn2=$(echo -n "$fn2" | $PrPWD/stdcdr "/" )
+	    slash=$(echo -n "$fn2" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	done
+	dirfn=$(echo -n "$fn"|$PrPWD/stdcarsin "/$fn2")
+	mkdir "$dirfn/data"
+	dirfn=$(echo -n "$dirfn/data" )
+	len=$(cat "$fn"|wc -c|tr -d ' '|tr -d '
+')
+	if [ 0$len -gt 0 ];then
+	    mains=$(cat "$fn"|$PrPWD/stdbuscaarg " main")
+	    opens=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
+	    closs=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
+	    balan=$(expr 0$opens - $closs)
+	    echo "$len $balan $opens-$closs $mains"
+	    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+		errores=$(gcc "$fn" 2>&1 )
+		if [ -z "$errores" ];then
+		    cat "$fn"|$PrPWD/stddeclaracionesdevariable|tr '
+' ';'
+		    variables=$(cat "$fn" |$PrPWD/stddeclaracionesdevariable|tr '
+' ';')
+		    varos="";
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofindex")
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			echo ";$fn2;" >> $nomprograma.memoria
+			exit 0
+		    fi
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_command")
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			echo ";$fn2;" >> $nomprograma.memoria
+			exit 0
+		    fi		    
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_content")
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			echo ";$fn2;" >> $nomprograma.memoria
+			exit 0
+		    fi
+		    echo "variables passed"
+		    if [ "$varos" = "***" ];then
+			rm -v "$tempf"
+			echo ";$fn2;" >> $nomprograma.memoria
+		        command=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_command["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
+			echo "COMMAND $command";			
+		        name=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofindex["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
+			namepublic=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			echo "NAME    $name"
+			echo "PUBLIC  $namepublic"
+			echo $remotepath
+			curl -L "$remotepath/fretfile.php?fname=$name&nocontent=true"
+			respuestaa=$(curl -L "$remotepath/fretfile.php?fname=$name&nocontent=true" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' )
+			respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js&nocontent=true" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' )
+			respuesta=$(echo "$respuestaa $respuestab")
+			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'REGISTER')
+			encuentra=$(echo "$respuesta" |$PrPWD/stdbuscaarg 'Not Found Not Found')
+			echo "R $respuesta C $encuentrac E $encuentra"
+			if [ -n "$encuentra" -a -n "$encuentrac" ] ; then
+			    echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"'
+			    echo "......................................................."
+		            content2=$(echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | base64 -d )
+			    encuentra=$(echo "$content2"|$PrPWD/stdbuscaarg '*/')
+			    if [ -n "$encuentra" ];then
+				content=$(echo "/*$content2" | $PrPWD/stddeclaracionesdevariable_tojs | tr -d '
+' | base64 | tr -d '
+' )
+			    else
+				content=$(echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
+			    fi
+			    contentExtra=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_contentExtra["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' )
+			    echo "::>> . . . $(echo $contentExtra|wc)  <<<<<<<<<<<<<<<<<::"
+			    echo "::>> . . . ($name $namepublic) "
+			    name=$(echo "$name" | sed -e 's/ /%20/g' -e 's/:/%3A/g' -e 's/,/%2C/g' -e 's/;/%3B/g' -e 's/\[/%5B/g' -e 's/\]/%5D/g' -e 's/{/%7B/g' -e 's/}/%7D/g' -e 's/(/%28/g' -e 's/)/%29/g' -e 's/\*/%2A/g' -e 's/&/%26/g' -e 's/\^/%5E/g' -e 's/%/%25/g' -e 's/\$/%24/g' -e 's/@/%40/g' -e 's/!/%21/g' -e 's/~/-%7E/g' -e 's/-/%2D/g' -e 's/_/%5F/g' -e 's/>/%3E/g' -e 's/</%3C/g' -e 's/\?/%3F/g' -e 's/\//%2F/g' )
+			    echo " ... $name <<::"
+			    msg=$(echo -n "$content" | openssl dgst -sha256  -keyform PEM -sign $PrPWD/user/private.pem | base64 | tr -d '
+')
+			    msgExtra=$(echo -n "$contentExtra" | openssl dgst -sha256  -keyform PEM -sign $PrPWD/user/private.pem | base64 | tr -d '
+')
+			    datee=$(date -u '+%Y-%m-%d %H:%M')
+			    echo "$datee"
+			    datesigned=$(echo -n "$datee" |  openssl dgst -sha256  -keyform PEM  -sign $PrPWD/user/private.pem | base64 | tr -d '
+')
+			    curl -X POST -L "$remotepath/upp.php" -F "namo=\"$name\""       -F "signature=\"$msg\""      -F "content=\"$content\""      -F "datesigned=\"$datesigned\"" -F "submit=submit"
+			    echo "><><><><"
+			    curl -X POST -L "$remotepath/upp.php" -F "namo=\"$namepublic.js\"" -F "signature=\"$msgExtra\"" -F "content=\"$contentExtra\"" -F "datesigned=\"$datesigned\"" -F "submit=submit"
+			    exit
+			fi
+			echo "$command"
+			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'APPEND')
+			if [ -n "$encuentrac" ] ; then
+			    content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$PaPWD/$content" ];do
+				content=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    done
+		            echo -n ";$variables"     |$PrPWD/stdcdr "char prefix_content["     |$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' > "$PaPWD/$content"
+			    echo "CONTENT $content";
+			    count=1
+			    encuentra=""
+			    echo ">>> A P P E N D <<<"
+			    sha=""
+			    curl -L "$remotepath/flastfile.php?sha=$name&count=1"
+			    count=$(curl -L "$remotepath/flastfile.php?sha=$name&count=1" 2>/dev/null | $PrPWD/stdcdr 'count=' | $PrPWD/stdcarsin '&'|$PrPWD/stdcarsin ";")
+			    sha=$(echo "$name $count"| tr -d " " | tr -d '
+' | sha512sum | $PrPWD/stdcarsin " ")
+			    echo "COUNT $count"
+			    name="$sha.js"
+			    echo ">>>> $name ($count)"
+			    msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$PaPWD/$msg" ];do
+				msg=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    done
+			    cat "$PaPWD/$content" | openssl dgst -sha256  -keyform PEM -sign $PrPWD/user/private.pem | base64 | tr -d '
+' > "$PaPWD/$msg"
+			    datee=$(date -u '+%Y-%m-%d %H:%M')
+			    echo "$datee"
+			    datesigned=$(echo -n "$datee" |  openssl dgst -sha256  -keyform PEM  -sign $PrPWD/user/private.pem | base64 | tr -d '
+')
+			    curl -X POST -L "$remotepath/uppFile.php" -F "namo=\"$name\"" -F "signature=@$PaPWD/$msg" -F "content=@$PaPWD/$content"  -F "datesigned=\"$datesigned\"" -F "submit=submit"
+			    rm "$PaPWD/$content" "$PaPWD/$msg"
+			    exit
+			fi
+		    else
+			echo ";$fn2;" >> $nomprograma.memoria
+			echo "I R"
+		    fi
+		fi		
+	    fi
+	fi
+    fi
+fi
+rm -v "$listf.lock" 2>/dev/null
+#!/bin/bash
+fn=""
+PaPWD="$PWD"
+stdcdr="stdcdr"
+stdcdrd=""
+while [ ! -f "$stdcdrd$stdcdr" ];do
+    stdcdrd=$(echo "../$stdcdrd")
+done
+PrPWD=$stdcdrd
+pasa=0
+nomprograma=$0
+slash=$(echo "$nomprograma"| $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    nomprograma=$(echo "$nomprograma"| $PrPWD/stdcdr "/" )
+    slash=$(echo "$nomprograma" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+cd $PrPWD
+PrPWD2=$PWD
+PrPWD=$PrPWD2
+cd $PaPWD
+sleep 1
+ ps1=1
+while [ -f "$nomprograma.lock-$ps1" ];do
+    if [ 0$ps1 -lt 4 ];then
+	echo "W W W W W W W W W W W W W   $ps1"
+	ps1=$(expr 0$ps1 + 1)
+    else
+	ps1=1
+	sleep 1
+    fi
+done
+listados="";
+listado="";
+touch "$nomprograma.memoria"
+eyedirectory="$PrPWD/users/input"
+mouthdirectory="$PrPWD/users/processed"
+if [ ! -d "$mouthdirectory" ];then
+    mkdir $mouthdirectory
+fi
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
+if [ -d "$eyedirectory" ];then
+    listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
+' ';')
+    salta=0;
+    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$utcc.c" ];do
+	utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done
+    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$forfiles.c" ];do
+	forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done	
+    while [ -n "$listado" ];do
+	dirn=$(echo -n "$listado"|$PrPWD/stdcarsin ';')
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$utcc.c"
+	len=$(echo "$dirn"|wc -c|$PrPWD/stdcarsin ' ')
+	echo "$len ]=\"$dirn\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " compare["  >> "$PaPWD/$utcc.c"
+	len=$(echo "$mouthdirectory"|wc -c | $PrPWD/stdcarsin ' ' )
+	echo "$len]=\"$mouthdirectory\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " compare[" | $PrPWD/stdcdr ";" >> "$PaPWD/$utcc.c"
+	errores=$(gcc -o "$PaPWD/$utcc" "$PaPWD/$utcc.c" 2>&1)
+	if [ -n "$errores" ];then
+	    echo "$errores"
+	    exit
+	fi
+	len=$($PaPWD/$utcc| $PrPWD/stdcdr "files[" |$PrPWD/stdcarsin ']')
+	if [ "0$len" -gt 1 ];then
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
+	    register="$nomprograma.memoria"
+	    len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
+	    echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
+	    $PaPWD/$utcc | $PrPWD/stdcdr " files[" | $PrPWD/stdcar ";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcdr " files[" |  $PrPWD/stdcdr ";" >> "$PaPWD/$forfiles.c"
+	    errores=$(gcc -o "$PaPWD/$forfiles" "$PaPWD/$forfiles.c" 2>&1)
+	    if [ -n "$errores" ];then
+		echo "$errores"
+		exit
+	    fi
+	    listf=$($PaPWD/$forfiles|head -n1)
+	    if [ "$listf" = "END/" ];then
+		listf=""
+	    fi
+	    len=$($PaPWD/$forfiles|head -n2|wc -l |$PrPWD/stdcarsin ' ')
+	    if [ "0$len" -gt 2 ];then
+		listg=$($PaPWD/$forfiles|head -n2|head -n1)
+		if [ -n "$listg" -a ! -f "$listg.lock" ];then
+		    touch "$listg.lock"
+		    $0&
+		    break;
+		fi
+	    fi
+	fi
+	rm  $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c 2>/dev/null
+	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
+    done
+fi
+dirTokens="$PrPWD/users/tokens"
+dirNewTokens="$PrPWD/users/tokensNew"
+dirTokensDeleted="$PrPWD/users/tokensDeleted"
+serverPublic=$PrPWD/users/serverPublic.txt
+mkdir "$dirTokens" 2>/dev/null
+mkdir "$dirNewTokens" 2>/dev/null
+mkdir "$dirTokensDeleted" 2>/dev/null
+
+$0&
+if [ -n "$listf" -a -f "$listf" ];then
+    len=$(wc -c "$listf" |$PrPWD/stdcarsin ' ')
+    if [ 0$len -gt 1 ];then
+	echo "$listf"
+	fn=$listf
+	ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
+	if [ -n "$ttest" ];then
+	    slash=$(echo "$fn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    fn2="$fn"
+	    while [ -n "$slash" ];do
+		fn2=$(echo -n "$fn2" | $PrPWD/stdcdr "/" )
+		slash=$(echo -n "$fn2" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    done
+	    dirfn=$(echo -n "$fn"|$PrPWD/stdcarsin "/$fn2")
+	    mkdir "$dirfn/data" 2>/dev/null
+	    dirfn=$(echo -n "$dirfn/data" )
+	    len=$(cat "$fn"|wc -c|tr -d ' '|tr -d '
+')
+	    if [ 0$len -gt 0 ];then
+		mains=$(cat "$fn"|$PrPWD/stdbuscaarg " main")
+		opens=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
+		closs=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
+		balan=$(expr 0$opens - $closs)
+		#	    echo "$len $opens-$closs"
+		if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+		    errores=$(gcc "$fn" 2>&1 )
+		    if [ -z "$errores" ];then
+			echo "$fn2;" >> $nomprograma.memoria
+			variables=$(cat "$fn"|tr -d '\0' | $PrPWD/stddeclaracionesdevariable| tr -d '\0' |tr '
+' ';' )
+			varos="";
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofBox")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_stamps_command")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi		    
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_dates")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid1")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid2")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid3")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid4")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_stamps_fname")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_ammount")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			else
+			    exit 0
+			fi
+			if [ "$varos" = "*********" ];then
+			    echo "varos passed;"
+			    echo $fn			
+			    mv -v $listf $mouthdirectory
+		            command=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_stamps_command["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
+		            tokens_dates=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_dates["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid1=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid1["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid2=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid2["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid3=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid3["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid4=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid4["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_ammounts=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_ammount["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_fnames=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_stamps_fname["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr -d '"'|tr '}' ',')
+			    echo "COMMAND $command";			
+		            name=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofBox["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
+			    name=$(echo "$name" | tr -d '
+' | sha512sum | $PrPWD/stdcarsin ' ')
+			    name=$(echo "$name .js"|tr -d ' ')
+			    namepublic=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			    echo "NAME    $name"
+			    echo "PUBLIC  $namepublic"
+			    respuestaa=$(curl -L "$remotepath/fretfile.php?fname=$name" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' )
+			    respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' )
+			    respuesta=$(echo "$respuestaa $respuestab")
+			    encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'VERIFY')
+			    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   ($encuentrac) ($namepublic)"
+			    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$PaPWD/$textcc" ];do
+				textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    done
+			    if [ -n "$encuentrac" ] ; then
+				busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
+				echo "Subject: verify" > "$PaPWD/$textcc"
+				datefield="Date: $(date +%s)"
+				echo "$datefield" >> "$PaPWD/$textcc"
+				echo '
+
+'  >> "$PaPWD/$textcc"
+				while [ -n "$busca" ];do
+				    tokenDate=$(echo "$tokens_dates" | $PrPWD/stdcarsin ",")
+				    tokens_dates=$(echo "$tokens_dates" | $PrPWD/stdcdr ",")
+				    tokenAmmount=$(echo "$tokens_ammounts" | $PrPWD/stdcarsin ",")
+				    tokens_ammounts=$(echo "$tokens_ammounts" | $PrPWD/stdcdr ",")
+				    tokenUid1=$(echo "$tokens_uid1" | $PrPWD/stdcarsin ",")
+				    tokens_uid1=$(echo "$tokens_uid1" | $PrPWD/stdcdr ",")
+				    tokenUid2=$(echo "$tokens_uid2" | $PrPWD/stdcarsin ",")
+				    tokens_uid2=$(echo "$tokens_uid2" | $PrPWD/stdcdr ",")
+				    tokenUid3=$(echo "$tokens_uid3" | $PrPWD/stdcarsin ",")
+				    tokens_uid3=$(echo "$tokens_uid3" | $PrPWD/stdcdr ",")
+				    tokenUid4=$(echo "$tokens_uid4" | $PrPWD/stdcarsin ",")
+				    tokens_uid4=$(echo "$tokens_uid4" | $PrPWD/stdcdr ",")
+				    tokenFname=$(echo "$tokens_fnames" | $PrPWD/stdcarsin ",")
+				    tokens_fnames=$(echo "$tokens_fnames" | $PrPWD/stdcdr ",")
+				    fname=$(echo "$tokenFname .c"|tr -d ' ')
+				    buscaDate=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long date=$tokenDate;")
+				    buscaFname=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "char fname[21]=\"$tokenFname\";")
+				    buscaAmmount=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long ammount=$tokenAmmount;")
+				    buscaUid1=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$tokenUid1;")
+				    buscaUid2=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid2=$tokenUid2;")
+				    buscaUid3=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid3=$tokenUid3;")
+				    buscaUid4=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid4=$tokenUid4;")
+				    busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
+				    echo "$buscaUid1 $buscaUid2 $buscaUid3 $buscaUid4 $buscaDate $buscaFname  $buscaAmmount"
+				    if [ -n "$buscaUid1" -a -n "$buscaUid2" -a -n "$buscaUid3" -a -n "$buscaUid4" -a -n "$buscaDate" -a -n "$buscaFname"  -a -n "$buscaAmmount" ];then
+					echo "VERIFIED:$tokenFname" >> $PaPWD/$textcc
+				    else
+					echo "NOT VERIFIED:$tokenFname" >> $PaPWD/$textcc
+				    fi
+
+				done
+				variables=$(curl -L $remotepath/formalm.php|tr -d '"')
+				iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
+				OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
+				OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
+				respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
+				encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
+				echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  ($encuentra) ($namepublic)"
+				if [ -n "$encuentra" ] ; then
+				    utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$utcc.public" ];do
+					utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    echo "SUBIR"
+				    boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    boundary="------- $boundaryR";
+				    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$output" ];do
+					output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+
+			            echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
+				    curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
+				    signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )
+			            echo "$datefield" >> "$PaPWD/$output"
+				    echo "Subject: #VERIFY" >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$boundary"  >> "$PaPWD/$output"
+				    echo "Content-Type: text/plain; charset=us-ascii; field=signature;"  >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$signedoutput" >> "$PaPWD/$output"
+				    encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
+')
+				    namel=$(echo "$name"|tr -d '
+'|wc -c)
+				    encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
+'|wc -c)
+				    texto=$(echo " $($PrPWD/aleatorio|$PrPWD/stdcdrn 2) int main() {  $($PrPWD/aleatorio) char nameofindex[$namel]=\"$name\"; $($PrPWD/aleatorio)  char command[6]=\"APPEND\"; $($PrPWD/aleatorio)  char content[$encryptedoutputl]=\"$encryptedoutput\"; $($PrPWD/aleatorio)  }")
+				    encryptedoutput=$(echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $serverPublic)
+				    encryptedoutput=$(echo "$encryptedoutput")
+				    if [ -n "$encuentra" ] ; then
+					curl -X POST -L $remotepath/formalm.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=$encryptedoutput"
+				    fi
+				fi
+				rm "$utcc.public"
+			    fi
+
+
+			    encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'CONSOLIDATE')
+			    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   ($encuentrac) ($namepublic)"
+			    if [ -n "$encuentrac" ] ; then
+				busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
+				ammountTotal=0
+				while [ -n "$busca" ];do
+				    tokenDate=$(echo "$tokens_dates" | $PrPWD/stdcarsin ",")
+				    tokens_dates=$(echo "$tokens_dates" | $PrPWD/stdcdr ",")
+				    tokenAmmount=$(echo "$tokens_ammounts" | $PrPWD/stdcarsin ",")
+				    tokens_ammounts=$(echo "$tokens_ammounts" | $PrPWD/stdcdr ",")
+				    tokenUid1=$(echo "$tokens_uid1" | $PrPWD/stdcarsin ",")
+				    tokens_uid1=$(echo "$tokens_uid1" | $PrPWD/stdcdr ",")
+				    tokenUid2=$(echo "$tokens_uid2" | $PrPWD/stdcarsin ",")
+				    tokens_uid2=$(echo "$tokens_uid2" | $PrPWD/stdcdr ",")
+				    tokenUid3=$(echo "$tokens_uid3" | $PrPWD/stdcarsin ",")
+				    tokens_uid3=$(echo "$tokens_uid3" | $PrPWD/stdcdr ",")
+				    tokenUid4=$(echo "$tokens_uid4" | $PrPWD/stdcarsin ",")
+				    tokens_uid4=$(echo "$tokens_uid4" | $PrPWD/stdcdr ",")
+				    tokenFname=$(echo "$tokens_fnames" | $PrPWD/stdcarsin ",")
+				    tokens_fnames=$(echo "$tokens_fnames" | $PrPWD/stdcdr ",")
+				    fname=$(echo "$tokenFname .c"|tr -d ' ')
+				    buscaDate=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long date=$tokenDate;")
+				    buscaFname=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "char fname[21]=\"$tokenFname\";")
+				    buscaAmmount=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long ammount=$tokenAmmount;")
+				    buscaUid1=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$tokenUid1;")
+				    buscaUid2=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid2=$tokenUid2;")
+				    buscaUid3=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid3=$tokenUid3;")
+				    buscaUid4=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid4=$tokenUid4;")
+				    busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
+				    if [ -n "$buscaUid1" -a -n "$buscaUid2" -a -n "$buscaUid3" -a -n "$buscaUid4" -a -n "$buscaDate" -a -n "$buscaFname"  -a -n "$buscaAmmount" ];then
+					ammountTotal=$(expr 0$ammountTotal + 0$tokenAmmount)
+					mv "$dirTokens/$fname" $dirTokensDeleted/
+				    fi
+				done
+				datefield="Date: $(date +%s)"
+				
+				varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_bills")
+				if [ -n "$varis" ];then
+				    echo " ..::#  C h a n g i n g   B i l l s   #::.."
+				    ammountBills=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_bills="|$PrPWD/stdcarsin ";")
+				    if [ "0$ammountBills" -lt "0$ammountTotal" ];then
+					ammountTotal=$(expr 0$ammountTotal - 0$ammountBills)
+					billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					while [ -f "$PaPWD/$billscc.c" ];do
+					    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					done
+					cat $PrPWD/billstostd.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+					echo "$ammountBills;" | tr -d '
+'  >> "$PaPWD/$billscc.c"
+					cat $PrPWD/billstostd.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+					gcc -o $PaPWD/$billscc "$PaPWD/$billscc.c"
+					temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					while [ -f "$PaPWD/$temptextcc" ];do
+					    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					done
+					$PaPWD/$billscc > $temptextcc
+					while [ -f "$PaPWD/$textcc" ];do
+					    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					done
+					rm -v "$PaPWD/$billscc" "$PaPWD/$billscc.c"
+					echo "Subject: consolidate" > "$PaPWD/$textcc"
+					echo "$datefield" >> "$PaPWD/$textcc"
+					echo '
+
+'  >> "$PaPWD/$textcc"
+					cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
+					variables=$(curl -L $remotepath/formalmFiles.php|tr -d '"')
+					iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
+					OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
+					OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
+					respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
+					encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
+					if [ -n "$encuentra" ] ; then
+					    echo "SUBIR"
+					    boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					    boundary="------- $boundaryR";
+					    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					    while [ -f "$PaPWD/$output" ];do
+						output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					    done
+					    echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
+					    curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
+					    signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )
+					    echo "$datefield" >> "$PaPWD/$output"
+					    echo "Subject: #CONSOLIDATE" >> "$PaPWD/$output"
+					    echo '
+
+'  >> "$PaPWD/$output"
+					    echo "$boundary"  >> "$PaPWD/$output"
+					    echo "Content-Type: text/plain; charset=us-ascii; field=signature;"  >> "$PaPWD/$output"
+					    echo '
+
+'  >> "$PaPWD/$output"
+					    echo "$signedoutput" >> "$PaPWD/$output"
+					    encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
+')					
+					    rm -v "$PaPWD/$textcc"
+					    namel=$(echo "$name"|tr -d '
+'|wc -c)
+					    encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
+'|wc -c)
+					    texto=$(echo " $($PrPWD/aleatorio|$PrPWD/stdcdrn 2) int main() {  $($PrPWD/aleatorio) char nameofindex[$namel]=\"$name\"; $($PrPWD/aleatorio)  char command[6]=\"APPEND\"; $($PrPWD/aleatorio)  char content[$encryptedoutputl]=\"$encryptedoutput\"; $($PrPWD/aleatorio)  }")
+					    encryptedoutput=$(echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $serverPublic)
+					    echo "$encryptedoutput" > $encryptedoutputFile
+					    if [ -n "$encuentra" ] ; then
+						curl -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$encryptedoutputFile"
+					    fi
+					fi
+				    fi
+				    rm "$utcc.public"
+				fi
+
+				echo " ..::#  C o n s o l i d a t i n g   #::.."
+				echo " **::# : : : : : : : : : : : : : :  #::**"
+				if [ -n "$billscc" ];then
+				    rm -v "$PaPWD/$billscc.c" "$PaPWD/$billscc"
+				fi
+				billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$billscc.c" ];do
+				    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				cat $PrPWD/billstostd.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+				echo "$ammountTotal;" | tr -d '
+'  >> "$PaPWD/$billscc.c"
+				cat $PrPWD/billstostd.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+				gcc -o $PaPWD/$billscc "$PaPWD/$billscc.c"
+				temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$temptextcc" ];do
+				    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				$PaPWD/$billscc > $temptextcc
+				while [ -f "$PaPWD/$textcc" ];do
+				    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+
+				if [ -n "$billscc" ];then
+				    rm -v "$PaPWD/$billscc.c" "$PaPWD/$billscc"
+				fi
+
+				echo "Subject: consolidate" > "$PaPWD/$textcc"
+				echo "Part: $ammountRes/$addAmmount" >> "$PaPWD/$textcc"
+				echo "$datefield" >> "$PaPWD/$textcc"
+				echo '
+
+'  >> "$PaPWD/$textcc"
+				cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
+				variables=$(curl -L $remotepath/formalmFiles.php|tr -d '"')
+				iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
+				OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
+				OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
+				respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
+				encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
+				if [ -n "$encuentra" ] ; then
+				    echo "SUBIR"
+				    boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    boundary="------- $boundaryR";
+				    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$output" ];do
+					output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+
+				    echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
+				    curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
+				    signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )				
+				    echo "$datefield" >> "$PaPWD/$output"
+				    echo "Subject: #CONSOLIDATE" >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$boundary"  >> "$PaPWD/$output"
+				    echo "Content-Type: text/plain; charset=us-ascii; field=signature;"  >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$signedoutput" >> "$PaPWD/$output"
+				    encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
+')
+				    rm "$PaPWD/$output"
+				    namel=$(echo "$name"|tr -d '
+'|wc -c)
+				    encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
+'|wc -c)
+				    texto=$(echo " $($PrPWD/aleatorio|$PrPWD/stdcdrn 2) int main() {  $($PrPWD/aleatorio) char nameofindex[$namel]=\"$name\"; $($PrPWD/aleatorio)  char command[6]=\"APPEND\"; $($PrPWD/aleatorio)  char content[$encryptedoutputl]=\"$encryptedoutput\"; $($PrPWD/aleatorio)  }")
+				    encryptedoutput=$(echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $serverPublic)
+				    encriptedOutputFiles=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$encriptedOutputFiles" ];do
+					encriptedOutputFiles=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    echo "$encryptedoutput" > $encriptedOutputFiles
+				    if [ -n "$encuentra" ] ; then
+					curl -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$encriptedOutputFiles"
+
+				    fi
+				    rm "$utcc.public"
+				fi
+			    fi
+			fi
+		    fi
+		fi
+	    fi
+	fi
+    fi
+fi
+exit
+#!/bin/bash
+fn=""
+PaPWD="$PWD"
+stdcdr="stdcdr"
+stdcdrd=""
+while [ ! -f "$stdcdrd$stdcdr" ];do
+    stdcdrd=$(echo "../$stdcdrd")
+done
+PrPWD=$stdcdrd
+pasa=0
+nomprograma=$0
+slash=$(echo "$nomprograma"| $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    nomprograma=$(echo "$nomprograma"| $PrPWD/stdcdr "/" )
+    slash=$(echo "$nomprograma" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+cd $PrPWD
+PrPWD2=$PWD
+PrPWD=$PrPWD2
+cd $PaPWD
+sleep 1
+ps1=1
+while [ -f "$nomprograma.lock-$ps1" ];do
+    if [ 0$ps1 -lt 4 ];then
+	echo "W W W W W W W W W W W W W   $ps1"
+	ps1=$(expr 0$ps1 + 1)
+    else
+	ps1=1
+	sleep 1
+    fi
+done
+touch "$nomprograma.memoria"
+listados="";
+listado="";
+eyedirectory="$PrPWD/users/input"
+mouthdirectory="$PrPWD/users/processed"
+if [ ! -d "$mouthdirectory" ];then
+    mkdir $mouthdirectory
+fi
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
+if [ -d "$eyedirectory" ];then
+    listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
+' ';')
+    salta=0;
+    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$utcc.c" ];do
+	utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done
+    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$forfiles.c" ];do
+	forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done	
+    while [ -n "$listado" ];do
+	dirn=$(echo -n "$listado"|$PrPWD/stdcarsin ';')
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$utcc.c"
+	len=$(echo "$dirn"|wc -c|$PrPWD/stdcarsin ' ')
+	echo "$len ]=\"$dirn\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " compare["  >> "$PaPWD/$utcc.c"
+	len=$(echo "$mouthdirectory"|wc -c | $PrPWD/stdcarsin ' ' )
+	echo "$len]=\"$mouthdirectory\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " compare[" | $PrPWD/stdcdr ";" >> "$PaPWD/$utcc.c"
+	errores=$(gcc -o "$PaPWD/$utcc" "$PaPWD/$utcc.c" 2>&1)
+	if [ -n "$errores" ];then
+	    echo "$errores"
+	    exit
+	fi
+	len=$($PaPWD/$utcc| $PrPWD/stdcdr "files[" |$PrPWD/stdcarsin ']')
+	if [ "0$len" -gt 1 ];then
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
+	    register="$nomprograma.memoria"
+	    len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
+	    echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
+	    $PaPWD/$utcc | $PrPWD/stdcdr " files[" | $PrPWD/stdcar ";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcdr " files[" |  $PrPWD/stdcdr ";" >> "$PaPWD/$forfiles.c"
+	    errores=$(gcc -o "$PaPWD/$forfiles" "$PaPWD/$forfiles.c" 2>&1)
+	    if [ -n "$errores" ];then
+		echo "$errores"
+		exit
+	    fi
+	    listf=$($PaPWD/$forfiles|head -n1)
+	    if [ "$listf" = "END/" ];then
+		listf=""
+	    fi
+	    len=$($PaPWD/$forfiles|head -n2|wc -l |$PrPWD/stdcarsin ' ')
+	    if [ "0$len" -gt 2 ];then
+		listg=$($PaPWD/$forfiles|head -n2|head -n1)
+		if [ -n "$listg" -a ! -f "$listg.lock" ];then
+		    touch "$listg.lock"
+		    $0&
+		    break;
+		fi
+	    fi
+	fi
+	rm  $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c 2>/dev/null
+	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
+    done
+fi
+dirTokens="$PrPWD/users/tokens"
+dirNewTokens="$PrPWD/users/tokensNew"
+dirTokensDeleted="$PrPWD/users/tokensDeleted"
+serverPublic=$PrPWD/users/serverPublic.txt
+mkdir "$dirTokens" 2>/dev/null
+mkdir "$dirNewTokens" 2>/dev/null
+mkdir "$dirTokensDeleted" 2>/dev/null
+
+$0&
+if [ -n "$listf" -a -f "$listf" ];then
+    len=$(wc -c "$listf" |$PrPWD/stdcarsin ' ')
+    if [ 0$len -gt 1 ];then
+	fn=$listf
+	echo "<< fn $fn >>"
+	ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
+	if [ -n "$ttest" ];then
+	    slash=$(echo "$fn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    fn2="$fn"
+	    while [ -n "$slash" ];do
+		fn2=$(echo -n "$fn2" | $PrPWD/stdcdr "/" )
+		slash=$(echo -n "$fn2" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	    done
+	    dirfn=$(echo -n "$fn"|$PrPWD/stdcarsin "/$fn2")
+	    mkdir "$dirfn/data" 2>/dev/null
+	    dirfn=$(echo -n "$dirfn/data" )
+#    	    echo "0 $busca ($fn2) $dirfn"
+	    len=$(cat "$fn"|wc -c|tr -d ' '|tr -d '
+')
+	    if [ 0$len -gt 0 ];then
+		mains=$(cat "$fn"|$PrPWD/stdbuscaarg " main")
+		opens=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
+		closs=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
+		balan=$(expr 0$opens - $closs)
+		echo "$len $opens-$closs"
+		if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+		    errores=$(gcc "$fn" 2>&1 )
+		    if [ -z "$errores" ];then
+			echo "$fn2;" >> $nomprograma.memoria
+			variables=$(cat "$fn"|tr -d '\0' | $PrPWD/stddeclaracionesdevariable| tr -d '\0' |tr '
+' ';' )
+			varos="";
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofDestinatary")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_stamps_command")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi		    
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_dates")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid1")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid2")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid3")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_uid4")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_stamps_fname")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_stamps_ammount")
+			if [ -n "$varis" ];then
+			    varos="$varos$varis"
+			    echo "$varos"
+			else
+			    exit 0
+			fi
+			echo "variables $varos"
+			if [ "$varos" = "*********" ];then
+			    rm -v "$tempf"
+			    echo "varos passed;"
+		            command=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_stamps_command["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
+		            tokens_dates=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_dates["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid1=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid1["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid2=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid2["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid3=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid3["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_uid4=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_uid4["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_ammounts=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_stamps_ammount["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr '}' ',')
+		            tokens_fnames=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_stamps_fname["|$PrPWD/stdcdr "="|$PrPWD/stdcdr "{"|$PrPWD/stdcarsin ";"|tr -d '"'|tr '}' ',')
+			    echo "COMMAND $command";
+		            name=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofDestinatary["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
+			    nameRemote=$(echo "$name" | tr -d '
+' | sha512sum | $PrPWD/stdcarsin ' ')
+			    nameRemote=$(echo "$nameRemote .js"|tr -d ' ')
+			    namepublic=$(echo "$nameRemote public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			    echo "NAME    $nameRemote ($name)"
+			    echo "PUBLIC  $namepublic"
+			    respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr 'error' | $PrPWD/stdcdr '"' | $PrPWD/stdcarsin '"'  | $PrPWD/stdbuscaarg "Success")			
+			    if [ -z "$respuestab" ];then
+				echo "$name not found"
+				exit
+			    fi
+			    respuesta=$(echo "$respuestaa $respuestab")
+			    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentrac) ($namepublic)"
+			    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    while [ -f "$PaPWD/$textcc" ];do
+				textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			    done
+			    encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'SEND')
+			    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentrac) ($namepublic)"
+			    if [ -n "$encuentrac" ] ; then
+				dirDestinatary="$PrPWD/users/input/$name"
+				dirDestinataryTokens="$PrPWD/users/input/$name/tokens"
+				mkdir $dirDestinatary
+				mkdir $dirDestinataryTokens
+				busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
+				ammountTotal=0
+				while [ -n "$busca" ];do
+				    tokenDate=$(echo "$tokens_dates" | $PrPWD/stdcarsin ",")
+				    tokens_dates=$(echo "$tokens_dates" | $PrPWD/stdcdr ",")
+				    tokenAmmount=$(echo "$tokens_ammounts" | $PrPWD/stdcarsin ",")
+				    tokens_ammounts=$(echo "$tokens_ammounts" | $PrPWD/stdcdr ",")
+				    tokenUid1=$(echo "$tokens_uid1" | $PrPWD/stdcarsin ",")
+				    tokens_uid1=$(echo "$tokens_uid1" | $PrPWD/stdcdr ",")
+				    tokenUid2=$(echo "$tokens_uid2" | $PrPWD/stdcarsin ",")
+				    tokens_uid2=$(echo "$tokens_uid2" | $PrPWD/stdcdr ",")
+				    tokenUid3=$(echo "$tokens_uid3" | $PrPWD/stdcarsin ",")
+				    tokens_uid3=$(echo "$tokens_uid3" | $PrPWD/stdcdr ",")
+				    tokenUid4=$(echo "$tokens_uid4" | $PrPWD/stdcarsin ",")
+				    tokens_uid4=$(echo "$tokens_uid4" | $PrPWD/stdcdr ",")
+				    tokenFname=$(echo "$tokens_fnames" | $PrPWD/stdcarsin ",")
+				    tokens_fnames=$(echo "$tokens_fnames" | $PrPWD/stdcdr ",")
+				    fname=$(echo "$tokenFname .c"|tr -d ' ')
+				    buscaDate=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long date=$tokenDate;")
+				    buscaFname=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "char fname[21]=\"$tokenFname\";")
+				    buscaAmmount=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long ammount=$tokenAmmount;")
+				    buscaUid1=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid1=$tokenUid1;")
+				    buscaUid2=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid2=$tokenUid2;")
+				    buscaUid3=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid3=$tokenUid3;")
+				    buscaUid4=$(cat "$dirTokens/$fname" | $PrPWD/stdbuscaarg "long uid4=$tokenUid4;")
+				    busca=$(echo "$tokens_dates" | $PrPWD/stdbuscaarg ",")
+				    echo "$buscaUid1 $buscaUid2 $buscaUid3 $buscaUid4 $buscaDate $buscaFname  $buscaAmmount"
+				    if [ -n "$buscaUid1" -a -n "$buscaUid2" -a -n "$buscaUid3" -a -n "$buscaUid4" -a -n "$buscaDate" -a -n "$buscaFname"  -a -n "$buscaAmmount" ];then
+					ammountTotal=$(expr 0$ammountTotal + 0$tokenAmmount)
+					mv "$dirTokens/$fname" $dirTokensDeleted
+				    fi
+				done
+				billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$billscc.c" ];do
+				    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				cat $PrPWD/billstostd.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+				echo "$ammountTotal;" | tr -d '
+'  >> "$PaPWD/$billscc.c"
+				cat $PrPWD/billstostd.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+
+				ldestokens=$(echo "$dirDestinataryTokens/" | tr -d '
+' | wc -c)
+				ldestokens=$(expr $ldestokens + 21)
+				cat $PaPWD/$billscc.c | $PrPWD/stdcar "char tokensDirplusFilename[" > "$PaPWD/$billscc-ii.c"
+				echo "$ldestokens]="'"'"$dirDestinataryTokens/"'"'";" | tr -d '
+'  >> "$PaPWD/$billscc-ii.c" 
+				cat $PaPWD/$billscc.c | $PrPWD/stdcdr "char tokensDirplusFilename[" | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc-ii.c"
+				mv -v "$PaPWD/$billscc-ii.c" "$PaPWD/$billscc.c"
+				echo "_ _ _ _ _ _ _"
+				echo $PaPWD/$billscc.c
+				cat $PaPWD/$billscc.c
+				sleep 20
+				errors=$(gcc -o "$PaPWD/$billscc" "$PaPWD/$billscc.c" 2>&1)
+				temptextcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$textcc" ];do
+				    temptextcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				$PaPWD/$billscc > $temptextcc
+				rm -v "$PaPWD/$billscc" "$PaPWD/$billscc.c"
+				if [ -z "$errores" ];then
+				    cp $dirDestinataryTokens/* $dirTokens
+				    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$textcc" ];do
+					textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    datefield="Date: $(date +%s)"
+				    echo "Subject: #sendcoin" > "$PaPWD/$textcc"
+				    echo "$datefield" >> "$PaPWD/$textcc"
+				    echo '
+
+'  >> "$PaPWD/$textcc"
+				    cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
+				    utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$utcc" ];do
+					utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    variables=$(curl -L $remotepath/formalmFiles.php|tr -d '"')
+				    iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
+				    OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
+				    OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
+				    respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
+				    encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
+				    if [ -n "$encuentra" ] ; then
+					echo "SUBIR"
+					boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					boundary="------- $boundaryR";
+					output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					while [ -f "$PaPWD/$output" ];do
+					    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					done
+
+					echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
+					curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
+					signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )				    
+					echo "$datefield" >> "$PaPWD/$output"
+					echo "Subject: #sendcoin" >> "$PaPWD/$output"
+					echo '
+
+'  >> "$PaPWD/$output"
+					echo "$boundary"  >> "$PaPWD/$output"
+					echo "Content-Type: text/plain; charset=us-ascii; field=signature;"  >> "$PaPWD/$output"
+					echo '
+
+'  >> "$PaPWD/$output"
+					echo "$signedoutput" >> "$PaPWD/$output"
+					encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
+')
+					rm -v "$textcc" "$textcc.c" "$temptextcc" "$temptextcc.c" "$utcc.public"
+					namel=$(echo "$nameRemote"|tr -d '
+'|wc -c)
+					encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
+'|wc -c)
+					texto=$(echo " $($PrPWD/aleatorio|$PrPWD/stdcdrn 2) int main() {  $($PrPWD/aleatorio) char nameofindex[$namel]=\"$nameRemote\"; $($PrPWD/aleatorio)  char command[6]=\"APPEND\"; $($PrPWD/aleatorio)  char content[$encryptedoutputl]=\"$encryptedoutput\"; $($PrPWD/aleatorio)  }")
+					encryptedoutput=$(echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $serverPublic)
+					encriptedOutputFiles=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					while [ -f "$PaPWD/$encriptedOutputFiles" ];do
+					    encriptedOutputFiles=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+					done
+					echo "$encryptedoutput" > $encriptedOutputFiles
+					if [ -n "$encuentra" ] ; then
+					    curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$encriptedOutputFiles"
+					fi
+				    fi
+				fi
+			    fi
+			fi
+		    fi
+		fi
+	    fi
+	fi
+    fi
+fi
+#!/bin/bash
+fn=""
+PaPWD="$PWD"
+stdcdr="stdcdr"
+stdcdrd=""
+while [ ! -f "$stdcdrd$stdcdr" ];do
+    stdcdrd=$(echo "../$stdcdrd")
+done
+PrPWD=$stdcdrd
+pasa=0
+nomprograma=$0
+slash=$(echo "$nomprograma"| $PrPWD/stdbuscaarg_donde_hasta "/" )
+while [ -n "$slash" ];do
+    nomprograma=$(echo "$nomprograma"| $PrPWD/stdcdr "/" )
+    slash=$(echo "$nomprograma" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+done
+cd $PrPWD
+PrPWD2=$PWD
+PrPWD=$PrPWD2
+cd $PaPWD
+sleep 1
+touch "$nomprograma.memoria"
+listados="";
+listado="";
+eyedirectory="$PrPWD/users/input"
+mouthdirectory="$PrPWD/users/processed"
+if [ ! -d "$mouthdirectory" ];then
+    mkdir $mouthdirectory
+fi
+remotepath=$(cat $PrPWD/host.c|$PrPWD/stddeclaracionesdevariable | $PrPWD/stdcdr host|$PrPWD/stdcdr = |$PrPWD/stdcdr '"'|$PrPWD/stdcarsin '"')
+if [ -d "$eyedirectory" ];then
+    listado=$(echo "$eyedirectory"|$PrPWD/listadodirectorio_dirs_from_std|tr '
+' ';')
+    salta=0;
+    utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$utcc.c" ];do
+	utcc=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done
+    forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    while [ -f "$PaPWD/$forfiles.c" ];do
+	forfiles=$(dd if=/dev/random bs=1 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+    done	
+    while [ -n "$listado" ];do
+	dirn=$(echo -n "$listado"|$PrPWD/stdcarsin ';')
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$utcc.c"
+	len=$(echo "$dirn"|wc -c|$PrPWD/stdcarsin ' ')
+	echo "$len ]=\"$dirn\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " compare["  >> "$PaPWD/$utcc.c"
+	len=$(echo "$mouthdirectory"|wc -c | $PrPWD/stdcarsin ' ' )
+	echo "$len]=\"$mouthdirectory\";" >> "$PaPWD/$utcc.c"
+	cat $PrPWD/listadodirectorio_files_from_mem_extension_c.c | $PrPWD/stdcdr " compare[" | $PrPWD/stdcdr ";" >> "$PaPWD/$utcc.c"
+	errores=$(gcc -o "$PaPWD/$utcc" "$PaPWD/$utcc.c" 2>&1)
+	if [ -n "$errores" ];then
+	    echo "$errores"
+	    exit
+	fi
+	echo $utcc
+	len=$($PaPWD/$utcc| $PrPWD/stdcdr "files[" |$PrPWD/stdcarsin ']')
+	if [ "0$len" -gt 1 ];then
+	    echo "LLLLLLLLLLL   $len"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcar " buffer[" > "$PaPWD/$forfiles.c"
+	    register="$nomprograma.memoria"
+	    len=$(echo "$register"|wc -c|$PrPWD/stdcarsin ' ')
+	    echo "$len ]=\"$register\";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcar " files["  >> "$PaPWD/$forfiles.c"
+	    $PaPWD/$utcc | $PrPWD/stdcdr " files[" | $PrPWD/stdcar ";" >> "$PaPWD/$forfiles.c"
+	    cat $PrPWD/getregisteranlock.c | $PrPWD/stdcdr " buffer[" | $PrPWD/stdcdr ";" |  $PrPWD/stdcdr " files[" |  $PrPWD/stdcdr ";" >> "$PaPWD/$forfiles.c"
+	    errores=$(gcc -o "$PaPWD/$forfiles" "$PaPWD/$forfiles.c" 2>&1)
+	    echo $PaPWD/$forfiles
+	    if [ -n "$errores" ];then
+		echo "$errores"
+		exit
+	    fi
+	    listf=$($PaPWD/$forfiles|head -n1)
+	    len=$($PaPWD/$forfiles|head -n2|wc -l |$PrPWD/stdcarsin ' ')
+	    if [ "0$len" -gt 2 ];then
+		echo $len
+		listg=$($PaPWD/$forfiles|head -n2|head -n1)
+		if [ -n "$listg" -a ! -f "$listg.lock" ];then
+		    touch "$listg.lock"
+		    $0 &
+		    break;
+		fi
+	    fi
+	    echo "$PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c"
+	fi
+	echo ">>>>>>>>>> $litsf"
+	rm  -v $PaPWD/$forfiles $PaPWD/$forfiles.c $PaPWD/$utcc $PaPWD/$utcc.c
+	listado=$(echo -n "$listado" | $PrPWD/stdcdr ";")
+    done
+fi
+dirTokens="$PrPWD/users/tokens"
+mkdir "$dirTokens"
+dirNewTokens="$PrPWD/users/tokensNew"
+mkdir "$dirNewTokens"
+dirTokensDeleted="$PrPWD/users/tokensDeleted"
+mkdir "$dirTokensDeleted"
+serverPublic=$PrPWD/users/serverPublic.txt
+
+$0 &
+if [ -n "$listf" ];then
+    fn=$listf
+    echo "<< fn $fn >>"
+    ttest=$(echo -n "$fn" |$PrPWD/stddelcar " ")
+    if [ -n "$ttest" ];then
+	slash=$(echo "$fn" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	fn2="$fn"
+	while [ -n "$slash" ];do
+	    fn2=$(echo -n "$fn2" | $PrPWD/stdcdr "/" )
+	    slash=$(echo -n "$fn2" | $PrPWD/stdbuscaarg_donde_hasta "/" )
+	done
+	dirfn=$(echo -n "$fn"|$PrPWD/stdcarsin "/$fn2")
+	mkdir "$dirfn/data"
+	dirfn=$(echo -n "$dirfn/data" )
+	len=$(cat "$fn"|wc -c|tr -d ' '|tr -d '
+')
+	if [ 0$len -gt 0 ];then
+	    mains=$(cat "$fn"|$PrPWD/stdbuscaarg " main")
+	    opens=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "{")
+	    closs=$(cat "$fn"|$PrPWD/stdcdr " main"|$PrPWD/stdbuscaarg_count "}")
+	    balan=$(expr 0$opens - $closs)
+	    echo "$len $opens-$closs"
+	    if [ 0$opens -gt 0 -a "$balan" = "0" -a -n "$mains" ];then
+    		echo "0 $busca ($fn2) $dirfn"
+		errores=$(gcc "$fn" 2>&1 )
+		if [ -z "$errores" ];then
+		    variables=$(cat "$fn")
+		    variables=$(echo "$variables"|$PrPWD/stddeclaracionesdevariable|tr '
+' ';')
+		    varos="";
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofDestinatary")
+		    echo "nameofDestinatary"
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			exit 0
+		    fi
+		    echo "variables $varos"
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_nameofSignatary")
+		    echo "nameofSignatary"
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			exit 0
+		    fi
+		    echo "variables $varos"
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_command")
+		    echo "command"
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			exit 0
+		    fi
+		    echo "variables $varos"
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "char prefix_content")
+		    echo "content"
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			exit 0
+		    fi
+		    echo "variables $varos"
+		    varis=$(echo -n ";$variables" |$PrPWD/stdbuscaarg "long prefix_ammount")
+		    echo "ammount"
+		    if [ -n "$varis" ];then
+			varos="$varos$varis"
+			echo "$varos"
+		    else
+			exit 0
+		    fi
+		    echo "variables $varos"
+		    if [ "$varos" = "*****" ];then
+			mv -v $listf $mouthdirectory/$fn
+			echo "varos passed;"
+		        command=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_command["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"')
+			echo "COMMAND $command";
+		        ammount=$(echo -n ";$variables"|$PrPWD/stdcdr "long prefix_ammount="|$PrPWD/stdcarsin ";")
+			echo "AMMOUNT $ammount";
+		        nameDestinatary=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofDestinatary["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
+			nameDestinataryRemote=$(echo "$nameDestinatary" | tr -d '
+' | sha512sum | $PrPWD/stdcarsin ' ')
+			nameDestinataryRemote=$(echo "$nameDestinataryRemote .js"|tr -d ' ')
+			namepublicDestinataryRemote=$(echo "$name public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			echo "NAMEDestinatary    $nameDestinataryRemote"
+			echo "PUBLICDestinatary  $namepublicDestinataryRemote"
+			publicKeyofDestinatary=$(curl -L "$remotepath/fretfile.php?fname=$namepublicDestinataryRemote.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' | base64 -d )
+			publicKeyofDestinataryResult=$(echo "$publicKeyofDestinatary" | wc -c)
+		        nameSignatary=$(echo -n ";$variables"|$PrPWD/stdcdr "char prefix_nameofSignatary["|$PrPWD/stdcdr "="|$PrPWD/stdcarsin ";"|tr -d '"' | sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g' | xargs -0 echo -e)
+			nameSignataryRemote=$(echo "$nameSignataryRemote" | tr -d '
+' | sha512sum | $PrPWD/stdcarsin ' ')
+			nameSignataryRemote=$(echo "$nameSignataryRemote .js"|tr -d ' ')
+			namepublicSignataryRemote=$(echo "$nameSignataryRemote public"| tr -d ' ' | sha512sum | $PrPWD/stdcarsin ' ')
+			echo "NAMESignatary    $nameSignataryRemote"
+			echo "PUBLICSignatary  $namepublicSignataryRemote"
+			publicKeyofSignatary=$(curl -L "$remotepath/fretfile.php?fname=$namepublicSignataryRemote.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcdr '"'  | $PrPWD/stdcarsin '"' | base64 -d )
+			publicKeyofSignataryResult=$(echo "$publicKeyofSignatary" | wc -c)
+			encuentrac=$(echo "$command" |$PrPWD/stdbuscaarg 'REGISTER')
+			echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   $respuesta   ($encuentrac) ($publicKeyofSignataryResult $publicKeyofDestinataryResult )"
+			textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			while [ -f "$PaPWD/$textcc" ];do
+			    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+			done
+			if [ -n "$encuentrac" ] ; then
+			    dirDestinatary="$PrPWD/users/input/$nameDestinatary"
+			    dirDestinataryTokens="$PrPWD/users/input/$nameDestinatary/tokens"
+			    mkdir $dirDestinatary
+			    mkdir $dirDestinataryTokens
+			    listaTokens=$(echo "$dirDestinataryTokens" | $PrPWD/listadodirectorio_files_from_std_extension_c|tr '
+' ' ')
+			    tokensAmmount=0
+			    ammountRes=0
+			    listaTokens=$(echo $listaTokens|tr '
+' ' ')
+			    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg ' ')
+			    while [ -n "$donde" ];do
+				tokenNew=$(echo $listaTokens|tr -d '
+'|$PrPWD/stdcarsin " ")
+				listaTokens=$(echo $listaTokens|tr -d '
+'|$PrPWD/stdcdr " ")
+				if [ -n "$tokenNew" ];then
+				    if [ -f "$tokenNew" ];then
+					ammountToken=$(cat "$tokenNew" | $PrPWD/stdcdr "long ammount=" | $PrPWD/stdcarsin ";")
+					echo "T: $ammountToken $tokensAmmount $dirDestinataryTokens"
+					if [ -n "$ammountToken" ];then
+					    tokensAmmount2=$(expr 0$tokensAmmount + $ammountToken)
+					    tokensAmmount=$tokensAmmount2
+					    mv -v "$tokenNew" $dirTokensDeleted
+					fi
+				    fi
+				fi
+				donde=$(echo $listaTokens|tr -d '
+'|$PrPWD/stdbuscaarg " ")
+#				echo "$donde :$listaTokens:"
+			    done
+			    echo "A $tokensAmmount ::"
+			    sleep 20
+			    if [ "0$tokensAmmount" -ge "0$ammount" ];then
+				resto=$(expr 0$tokensAmmount - 0$ammount)
+				billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$billscc.c" ];do
+				    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				cat $PrPWD/bills.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+				echo "$ammount;" | tr -d '
+'  >> "$PaPWD/$billscc.c"
+				cat $PrPWD/bills.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+				gcc -o "$PaPWD/$billscc" "$PaPWD/$billscc.c"
+				cuantos=$($PaPWD/$billscc | ../stdbuscaarg_count ',')
+				listaAmmount=$($PaPWD/$billscc)
+				addAmmount=$(echo $listaAmmount|tr ',' '+'|bc)
+				dondeAmmount="ALGO"
+				c=1
+				ammountRes=0;
+				datefield="Date: $(date +%s)"
+				temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$temptextcc" ];do
+				    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				while [ -n "$dondeAmmount" ];do
+				    tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
+				    while [ "0$tokenAmmount" -gt 0 ];do
+					listaTokens=$(echo "$dirNewTokens/$tokenAmmount/" | $PrPWD/listadodirectorio_files_from_std_extension_c)
+					tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
+					echo "A $tokenAmmount $ammountRes/$addAmmount $c $dirNewTokens/$tokenAmmount/"
+					donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+					while [ -n "$donde" ];do
+					    tokenNew=$(echo $listaTokens|$PrPWD/stdcarsin " ")
+					    if [ -n "$tokenNew" ];then
+						echo "c=$c A:$tokenAmmount T:$tokenNew X:$PaPWD/$temptextcc"
+						if [ -f "$tokenNew" ];then
+						    mv $tokenNew $dirTokens
+						    newName=$tokenNew
+						    donde=$(echo $newName|$PrPWD/stdbuscaarg "/")
+						    while [ -n "$donde" ];do
+							newName=$(echo $newName|$PrPWD/stdcdr "/")
+							donde=$(echo $newName|$PrPWD/stdbuscaarg "/")
+						    done
+						    cat $dirTokens/$newName >> $PaPWD/$temptextcc
+						    ammountRes=$(expr $tokenAmmount + $ammountRes)
+						    tokenAmmount=0
+						    donde=""
+						else
+						    listaTokens=$(echo $listaTokens|$PrPWD/stdcdr " ")
+						    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+						    echo "$donde"
+						fi
+					    fi
+					done
+				    done
+				    listaAmmount=$(echo $listaAmmount|$PrPWD/stdcdr ",")
+				    dondeAmmount=$(echo $listaAmmount|$PrPWD/stdbuscaarg ",")
+				    c=$(expr 0$c + 1)
+				    if [ -z "$dondeAmmount" ];then
+					c=13
+				    fi
+				    rm -v "$billscc" "$billscc.c" 
+				done
+
+				if [ 0$resto -gt 0 ];then
+				    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$billscc.c" ];do
+					billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    cat $PrPWD/bills.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+				    echo "$resto;" | tr -d '
+'  >> "$PaPWD/$billscc.c"
+				    cat $PrPWD/bills.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+				    gcc -o "$PaPWD/$billscc" "$PaPWD/$billscc.c"
+				    cuantos=$($PaPWD/$billscc | ../stdbuscaarg_count ',')
+				    listaAmmount=$($PaPWD/$billscc)
+				    addAmmount=$(echo $listaAmmount|tr ',' '+'|bc)
+				    dondeAmmount="ALGO"
+				    c=1
+				    ammountRes=0;
+				    datefield="Date: $(date +%s)"
+				    while [ -n "$dondeAmmount" ];do
+					tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
+					while [ "0$tokenAmmount" -gt 0 ];do
+					    listaTokens=$(echo "$dirNewTokens/$tokenAmmount/" | $PrPWD/listadodirectorio_files_from_std_extension_c)
+					    tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
+					    echo "A $tokenAmmount $ammountRes/$addAmmount $c $dirNewTokens/$tokenAmmount/"
+					    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+					    while [ -n "$donde" ];do
+						tokenNew=$(echo $listaTokens|$PrPWD/stdcarsin " ")
+						if [ -n "$tokenNew" ];then
+						    echo "c=$c A:$tokenAmmount T:$tokenNew"
+						    if [ -f "$tokenNew" ];then
+							mv $tokenNew $dirTokens
+							newName=$tokenNew
+							donde=$(echo $newName|$PrPWD/stdbuscaarg "/")
+							while [ -n "$donde" ];do
+							    newName=$(echo $newName|$PrPWD/stdcdr "/")
+							    donde=$(echo $newName|$PrPWD/stdbuscaarg "/")
+							done
+							cp $dirTokens/$newName $dirDestinataryTokens
+							donde=""
+						    else
+							listaTokens=$(echo $listaTokens|$PrPWD/stdcdr " ")
+							donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+							echo "$donde"
+						    fi
+						fi
+					    done
+					done
+					listaAmmount=$(echo $listaAmmount|$PrPWD/stdcdr ",")
+					dondeAmmount=$(echo $listaAmmount|$PrPWD/stdbuscaarg ",")
+					c=$(expr 0$c + 1)
+					if [ -z "$dondeAmmount" ];then
+					    c=13
+					fi
+				    done
+				    rm -v "$billscc" "$billscc.c" 
+				fi
+				if [ -n "$textcc" ]; then
+				    rm -v "$PaPWD/$textcc"
+				fi
+				
+				textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$textcc" ];do
+				    textcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				echo "Subject: sendcoins" > "$PaPWD/$textcc"
+				echo "$datefield" >> "$PaPWD/$textcc"
+				echo '
+
+'  >> "$PaPWD/$textcc"
+				cat  "$PaPWD/$temptextcc" >> "$PaPWD/$textcc"
+				rm -v "$PaPWD/$temptextcc"
+				cuantos=$(expr $cuantos - 8)
+				utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$utcc.public" ];do
+				    utcc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+
+				variables=$(curl -L $remotepath/formalm.php|tr -d '"')
+				iv_OTP=$(echo "$variables" | $PrPWD/stdcdr "iv_OTP=" | $PrPWD/stdcarsin ";")
+				OTP_resource=$(echo "$variables" | $PrPWD/stdcdr "OTP_resource=" | $PrPWD/stdcarsin ";")
+				OTP=$(echo "$variables" | $PrPWD/stdcdr " OTP=" | $PrPWD/stdcarsin ";")
+				respuestab=$(curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null )
+				encuentra=$(echo "$respuestab" |$PrPWD/stdbuscaarg 'Success')
+				if [ -n "$encuentra" ] ; then
+				    echo "SUBIR"
+				    boundaryR=$(dd if=/dev/urandom bs=1 skip=20 count=20 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    boundary="------- $boundaryR";
+				    output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$output" ];do
+					output=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+
+				    echo "Content-Type: multipart/mixed; boundary=$boundary" > "$PaPWD/$output"
+				    curl -L "$remotepath/fretfile.php?fname=$namepublic.js" 2>/dev/null | $PrPWD/stdcdr "content=" | $PrPWD/stdcarsin ";" | tr -d '"' | base64 -d | $PrPWD/stdcdr '`' | $PrPWD/stdcarsin '`' > $utcc.public
+				    signedoutput=$(cat $PaPWD/$textcc| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f  $utcc.public - | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --clearsign )
+				    rm -v "$PaPWD/$textcc"
+				    echo "$datefield" >> "$PaPWD/$output"
+				    echo "Subject: #sendcoins" >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$boundary"  >> "$PaPWD/$output"
+				    echo "Content-Type: text/plain; charset=us-ascii; field=signature;"  >> "$PaPWD/$output"
+				    echo '
+
+'  >> "$PaPWD/$output"
+				    echo "$signedoutput" >> "$PaPWD/$output"
+				    encryptedoutput=$(cat "$PaPWD/$output" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $utcc.public|base64|tr -d '
+')				    
+				    namel=$(echo "$name"|tr -d '
+'|wc -c)
+				    encryptedoutputl=$(echo "$encryptedoutput"| tr -d '
+'|wc -c)
+				    texto=$(echo " $($PrPWD/aleatorio|$PrPWD/stdcdrn 2) int main() {  $($PrPWD/aleatorio) char nameofindex[$namel]=\"$name\"; $($PrPWD/aleatorio)  char command[6]=\"APPEND\"; $($PrPWD/aleatorio)  char content[$encryptedoutputl]=\"$encryptedoutput\"; $($PrPWD/aleatorio)  }")
+				    encryptedoutput=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$encryptedoutput" ];do
+					encryptedoutput=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    echo "$texto"| gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --trustdb-name $PrPWD/user/trustdb.gpg --armor  --encrypt -f $PaPWD/$serverPublic > "$PaPWD/$encryptedoutput"
+				    if [ -n "$encuentra" ] ; then
+					curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$PaPWD/$encryptedoutput"
+				    fi
+				    rm -v "$PaPWD/$encryptedoutput"
+				fi
+				
+				contentd=$(echo "$content"|base64 -d)
+			        contentfile=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				while [ -f "$PaPWD/$contentfile" ];do
+				    contentfile=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				done
+				echo "$contentd" | gpg  --homedir $PrPWD/user/ --no-default-keyring --keyring $PrPWD/user/key.key --secret-keyring $PrPWD/user/key.gpg --trustdb-name $PrPWD/user/trustdb.gpg  -d  2>/dev/null 1>"$PaPWD/$contentfile"
+				curl -vvvv -X POST -L $remotepath/formalmFiles.php -F "OTP=$OTP" -F "iv_OTP=$iv_OTP" -F "OTP_resource=$OTP_resource" -F "texto2=@$PaPWD/$contentfile"
+				rm -v "$PaPWD/$contentfile"
+			    else
+				sleep 20
+				if [ -n "$tokensAmmount" -a "0$tokensAmmount" -gt 0 ];then
+				    billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$billscc.c" ];do
+					billscc=$(dd if=/dev/urandom bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    cat $PrPWD/bills.c | $PrPWD/stdcar " long num_pellets = " > "$PaPWD/$billscc.c"
+				    echo "$tokensAmmount;" | tr -d '
+'  >> "$PaPWD/$billscc.c"
+				    cat $PrPWD/bills.c | $PrPWD/stdcdr " long num_pellets = " | $PrPWD/stdcdr ';' >> "$PaPWD/$billscc.c"
+				    gcc -o "$PaPWD/$billscc" "$PaPWD/$billscc.c"
+				    cuantos=$($PaPWD/$billscc | ../stdbuscaarg_count ',')
+				    listaAmmount=$($PaPWD/$billscc)
+				    addAmmount=$(echo $listaAmmount|tr ',' '+'|bc)
+				    dondeAmmount="ALGO"
+				    c=1
+				    ammountRes=0;
+				    datefield="Date: $(date +%s)"
+				    temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    while [ -f "$PaPWD/$temptextcc" ];do
+					temptextcc=$(dd if=/dev/random bs=1 skip=20 count=10 2>/dev/null |$PrPWD/stdtohex|$PrPWD/stddelcar " ")
+				    done
+				    while [ -n "$dondeAmmount" ];do
+					tokenAmmount=$(echo $listaAmmount | $PrPWD/stdcarsin ',')
+					listaTokens=$(echo "$dirNewTokens/$tokenAmmount/" | $PrPWD/listadodirectorio_files_from_std_extension_c)
+					echo "A $tokenAmmount $addAmmount $c $dirNewTokens/$tokenAmmount/"
+					donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+					while [ -n "$donde" ];do
+					    tokenNew=$(echo $listaTokens|$PrPWD/stdcarsin " ")
+					    if [ -n "$tokenNew" ];then
+						echo "A:$tokenAmmount T:$tokenNew X:$dirDestinataryTokens $chachafile"
+						if [ -f "$tokenNew" ];then
+						    mv -v $tokenNew "$dirDestinataryTokens"
+						    addAmmount=$(echo 0$addAmmount + $tokenAmmount)
+						    donde=""
+						    break
+						else
+						    listaTokens=$(echo $listaTokens|$PrPWD/stdcdr " ")
+						    donde=$(echo $listaTokens|$PrPWD/stdbuscaarg " ")
+						    echo "$donde"
+						fi
+					    fi
+					done
+				    done
+				    listaAmmount=$(echo $listaAmmount|$PrPWD/stdcdr ",")
+				    dondeAmmount=$(echo $listaAmmount|$PrPWD/stdbuscaarg ",")
+				fi
+				rm -v "$chachafile"
+			    fi
+			fi
+		    fi
+		fi
+	    fi
+	fi
+    fi
+fi
+rm -v "$PaPWD/$utcc.public"
+rm -v "$listf.lock" 2>/dev/null
