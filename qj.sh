@@ -77,3 +77,4 @@ if [ "$status" = "completed" ]; then
 else
     echo "Job not completed. Current status: $status"
 fi
+ 
