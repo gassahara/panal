@@ -1,0 +1,37 @@
+<!doctype html>
+<!--
+-->
+<html>
+<head>
+  <title>ASTRO</title>
+  <script>
+    var uu1="data:text/calendar;base64,QkVHSU46VkNBTEVOREFSIApCRUdJTjpWRVZFTlQgCkNBVEVHT1JJRVM6TUVFVElORyAKRFRTVEFSVDtUWklEPUFtZXJpY2EvQ2FyYWNhczoyMDIwMDgyM1QxNDM0MDAKRFRFTkQ7VFpJRD1BbWVyaWNhL0NhcmFjYXM6MjAyMDA4MjNUMTYzNDAwIApTVU1NQVJZOllvdXIgUHJvcG9zYWwgUmV2aWV3CkRFU0NSSVBUSU9OOlN0ZXZlIGFuZCBKb2huIHRvIHJldmlldyBuZXdlc3QgcHJvcG9zYWwgbWF0ZXJpYWwKQ0xBU1M6UFJJVkFURQpFTkQ6VkVWRU5UCkVORDpWQ0FMRU5EQVIKCg==";
+    function getframa(frama) {
+	var x = document.getElementById(frama);
+	var y = (x.contentWindow || x.contentDocument);
+	if (y.document)y = y.document;
+	x.src=uu1;
+    }
+  </script>
+</head>
+<body>
+  <FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="astro.html">
+    <p>AÑO: <input name="yeard" /></p>
+    <p>MES: <input name="mond" /></p>
+    <p>DIA: <input name="dayd" /></p>
+    <p>HORA: <input name="horad" /></p>
+    <p>MINUTOS: <input name="mind" /></p>
+    <p>LONGITUD: <input name="longitud" /></p>
+    <select name="sistemd">
+      <option value="UTC">UTC</option>
+      <option value="LOCAL">LOCAL</option>
+    </select>
+    <p>LATITUD: <input name="latitud" /></p>
+    <p>TIMEZONE: <input name="timezone" /></p>
+    <input type="submit" value="ASTRO"/>
+  </FORM>
+  <iframe id="frama"></iframe>
+  <input onclick="getframa('frama');" type="button"></input>
+</body>
+</html>
+

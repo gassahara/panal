@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+</HEAD>
+<BODY>
+<div><b>CRC32 calcuator</b>: Drag a file here<br><hr>
+    <div id=status></div>
+    <div id=log></div>
+</div>
+
+
+<script type='text/worker' id='worker-script'>
+var table = new Uint32Array(256);
+for(var i=256; i--;) {
+    var tmp = i;
+    for(var k=8; k--;) {
+        tmp = tmp & 1 ? 3988292384 ^ tmp >>> 1 : tmp >>> 1;
+    }
+    table[i] = tmp;
+}
+    function parseFile(file, callback) {
+    var fileSize   = file.size;
+    var chunkSize  = 512 * 1024; // bytes
+    var offset     = 0;
+    var self       = this; // we need a reference to the current object
+    var block      = null;
+    var crc= -1;
+    var r = null;
+    var foo = function(evt) {
+        if (evt.target.error == null) {
+            //console.log(evt, evt.target.result.length);
+            offset += evt.loaded;
+            r = new Uint8Array(evt.target.result);
+            for(var i=0, l=r.length; i<l; i++)
+            {
+                crc = crc>>>8^table[crc&255^r[i]];
+            }
+            callback([true, offset]); // callback for handling read chunk
+        } else {
+            console.log("Read error: " + evt.target.error);
+            return;
+        }
+        if (offset >= fileSize) {
+            //console.log("CRC32: " +  );
+            callback([false, ((crc^-1)>>>0).toString(16).toUpperCase()]);
+            return;
+        }
+
+        block(offset, chunkSize, file);
+    }
+    block = function(_offset, length, _file) {
+        var r = new FileReader();
+        var blob = _file.slice(_offset, length + _offset);
+        r.onload = foo;
+        r.readAsArrayBuffer(blob);
+
+        var oAjaxReq = new XMLHttpRequest();
+        oAjaxReq.submittedData = oData;
+        oAjaxReq.onload = ajaxSuccess;
+    }
+    block(offset, chunkSize, file);
+}
+onmessage=function(e)
+{
+    parseFile(e.data, function(evt){
+        postMessage([evt[0], evt[1]]); 
+    });
+}
+</script>
+
+<SCRIPT>
+var q = document.getElementById('status');
+var y = document.getElementById('log');
+function makeWorker(script) {
+    var URL = window.URL || window.webkitURL;
+    var Blob = window.Blob;
+    var Worker = window.Worker;
+    if (!URL || !Blob || !Worker || !script) {
+        return null;
+    }
+    
+    var blob = new Blob([script]);
+    var worker = new Worker(URL.createObjectURL(blob));
+    return worker;
+}
+var worker = makeWorker(document.getElementById('worker-script').textContent);
+function doIt(e)
+{
+    var dt = e.dataTransfer.files[0];
+    worker.postMessage( e.dataTransfer.files[0] );
+    y.innerHTML = "CRC32: Calculating...";
+    worker.onmessage = function(z) {
+	if(z.data[0])
+	    {
+		q.innerHTML = ""+((z.data[1] / dt.size * 100).toFixed(2) + '%' );
+	    } else {
+	    y.innerHTML = "CRC32: " + ("00000000"+z.data[1]).slice(-8);
+	}
+    };
+}
+
+window.ondragover = function(){ return false; }
+    window.ondrop = function(e) { 
+	if(e.dataTransfer.files.length>0) { doIt(e); }
+	return false;
+    }
+</SCRIPT>

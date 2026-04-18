@@ -1,0 +1,44 @@
+<HTML>
+<HEAD>
+<script src="./lib/js/openpgp.min.js"></script>
+
+<script>
+function doEncrypt(inMessage, inRemotePublicKey)
+{
+    var key = inRemotePublicKey;
+    var publicKey = openpgp.key.readArmored(key);
+
+    openpgp.encryptMessage(publicKey.keys, inMessage).then(function(pgpMessage) {
+        message = pgpMessage;
+    }).catch(function(error) { 
+        alert(error);
+    }); 
+}
+</script>
+
+<body>
+<script>
+var message = "";
+doEncrypt(message, server_publicKey);
+var check = function(){
+    if(message != ""){
+        message = btoa(message);
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() 
+        {
+            if (xmlhttp.readyState == && xmlhttp.status == 200) 
+            {
+                alert(xmlhttp.responseText);
+            }
+        }
+        xmlhttp4.open("POST","http://someserver.com/ajax.decryptPGP.php", true);
+        xmlhttp4.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp4.send("message=" + message);
+    }
+    else {
+        setTimeout(check, 100);
+    }
+}
+check();
+</script>
+comp/openpgpjs-master/dist/openpgp.min.js

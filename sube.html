@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+</HEAD>
+<BODY>
+<div><b>CRC32 calcuator</b>: Drag a file here<br><hr>
+    <div id=status></div>
+    <div id=log></div>
+</div>
+
+
+<script type='text/worker' id='worker-script'>
+var table = new Uint32Array(256);
+for(var i=256; i--;) {
+    var tmp = i;
+    for(var k=8; k--;) {
+        tmp = tmp & 1 ? 3988292384 ^ tmp >>> 1 : tmp >>> 1;
+    }
+    table[i] = tmp;
+}
+    function parseFile(file, callback) {
+    var fileSize   = file.size;
+    var chunkSize  = 512 * 1024; // bytes
+    var offset     = 0;
+    var self       = this; // we need a reference to the current object
+    var block      = null;
+	var crc= -1;
+	var r = []; //null;
+	var ri=0;
+    var foo = function(evt) {
+        if (evt.target.error == null) {
+	    //            console.log(evt, evt.target.result.length);
+	    offset += chunkSize; //evt.loaded;
+	    setTimeout( function ff() {
+		r[ri] = new Uint8Array(evt.target.result);
+/*
+		for(var i=0, l=r[ri].length; i<l; i++) {
+                    crc = crc>>>8^table[crc&255^r[ri][i]];
+		}
+*/
+		if (offset >= fileSize) {
+		    ri=0;
+		    while(ri<r.length) {
+			//		    console.log("CRC32: " +  ((crc^-1)>>>0).toString(16).toUpperCase() );
+			console.log(r[ri].slice(0, 10).toString());
+			//callback([false, ((crc^-1)>>>0).toString(16).toUpperCase()]);
+			ri++;
+		    }
+		    return;
+		}
+		callback([true, offset]); // callback for handling read chunk
+		console.log( ":" + r[ri].length + "." + ri);
+		block(offset, chunkSize, file);
+		ri++;
+	    } , 10 );
+        } else {
+            console.log("Read error: " + evt.target.error);
+            return;
+        }
+    }
+    block = function(_offset, length, _file) {
+        var r2 = new FileReader();
+        var blob = _file.slice(_offset, length + _offset);
+        r2.onload = foo;
+        r2.readAsArrayBuffer(blob);
+	oi=0;
+    }
+    block(offset, chunkSize, file);
+}
+onmessage=function(e)
+{
+    parseFile(e.data, function(evt){
+        postMessage([evt[0], evt[1]]); 
+    });
+}
+</script>
+
+<SCRIPT>
+var q = document.getElementById('status');
+var y = document.getElementById('log');
+function makeWorker(script) {
+    var URL = window.URL || window.webkitURL;
+    var Blob = window.Blob;
+    var Worker = window.Worker;
+    if (!URL || !Blob || !Worker || !script) {
+        return null;
+    }
+    
+    var blob = new Blob([script]);
+    var worker = new Worker(URL.createObjectURL(blob));
+    return worker;
+}
+var worker = makeWorker(document.getElementById('worker-script').textContent);
+function doIt(e)
+{
+    var dt = e.dataTransfer.files[0];
+    worker.postMessage( e.dataTransfer.files[0] );
+    y.innerHTML = "CRC32: Calculating...";
+    worker.onmessage = function(z) {
+	if(z.data[0])
+	    {
+		q.innerHTML = ""+((z.data[1] / dt.size * 100).toFixed(2) + '%' );
+	    } else {
+	    y.innerHTML = "CRC32: " + ("00000000"+z.data[1]).slice(-8);
+	}
+    };
+}
+
+window.ondragover = function(){ return false; }
+    window.ondrop = function(e) { 
+	if(e.dataTransfer.files.length>0) { doIt(e); }
+	return false;
+    }
+</SCRIPT>

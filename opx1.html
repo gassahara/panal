@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>A S T R O</title>
+    <script src="openpgpjs/dist/openpgp.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      var pubkey=`-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBF8wBjABEAC13xRoxre28P2BCkjG8ImajL3iFfiWvkwOa9YyXklSmCc51ISr
+V8CmTz57ZhsxyRUWWvUXCh5kYnJf+pKzWInXoM6BvFwUwX43IkV1fadmU/sQRG+P
+HK7W52KxisRHkUTKIgKKauwecjDXH85rDlGNzfqyrmMrpv+JFG1LrWTUKhWIdNP9
+yQu1qpkZdjW22ibWKCHd9VGjaXI35KoC3A88jXPRpqRar2oUVa7BrIKbwa88O6MF
+kkA7R03YlhB+ZzZWu2aXzIAgiJi3qnRXdnEuGgiYQlzDvCxDwWu8HtsZK6t17JTl
+6QS3b9Y+xY00RDw16SHb1yUUJk03NkXDIj+Bc1VcH8U8VoWPCC46YzkssqTmSRVO
+JXhjFEPjM0T8YPpj9d+MZegd9gTacejM3WjxQLx1sOf7ShlWWKliT/aezdqbpjQP
+5+JykQFkYYY1gi3UjAw0MEjHPxy3Mr1TKZTH9XBA4EtZ+p9S7js//t1Zj6VuQHKx
+ZH0jOFvWWRj/FMSsB3Tz3yqcgd69GJ1UEMuL9LpLNCO0eB/msiWcsOLvNYSkPkD6
+Uei8HwChPatSSnicuGdEM+Ul1aTp/sMeGEYF5b4gm3Ovhf6Tn7m1guepZLKWZTCZ
+ET2kqKlIymTALW98s+KI/W0LfoeR6z0NpxEMaKIpGxQETWuP9Jz279X6/wARAQAB
+tAVub3JtYYkCTgQTAQoAOBYhBJMvwsuvla5hvDXzJl7mR5k0Ew8wBQJfMAYwAhsP
+BQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEF7mR5k0Ew8wKbIQAKMfchUogeh4
+BWZPSAJM/1ov8oCmJnusOkK3hAQKWR2+0jmlC0bkQq5RI6ICI1MBu+KmRkhK4zk2
+EP/QVm6zrW9Rb/HDw2BYO1i2oG89e3RlKCnSu8aHzrtBUc3khgrl0LfdPLWzRQem
+bT3AO0xJPQeaQr9+9UzKGxx/AWIrMIxY/MSQYUOUcvHjbKzqC6GkHHRXoRCyTmpV
+UUwxJM24jXrGo/U6OaNNPSscgW9ULYYZC3ITy4HOUzsv7XncxD8QMlEwEG2K5M1u
+rkz6R0FzWkbgm2UBSoHJEgZMGq6wTLT8F1oM9H7NN7hfpd6AH4VM38Gi5htPahLD
+0Sspp9Z5MKAxU99FVknlz3JFApVTFRWZq8x2ACJNVmj47kw2+KhA1ehjNJ9+fL1i
+H+cQ8Fp8pPxznD1mhV+14z/7uV7sZ/Sqz2xNtIG18tMOeLJJpEvYL1Jvs33ukXi2
+TAUsDtgqMgfVDNSH8l0ZNFH7dLjgcHowZgNMb9uY71Vil8nEQYhg4FeTulISirF+
+2Sxjsg4IWuPC/ls+fDqd34uOasre9T3lxF3AsGd6bKn+/BYpPhX5RPM403CFkz9m
+5cP4E/Z5Dq6bi8niv1c0a9G2egbhOgmPcIqHUOEv1yDJ9LpAEKCI/2VDhsO3rvrm
+fvZiFno/dSf/tNnqPdNO6pLuX6vTWtSm
+=yssG
+-----END PGP PUBLIC KEY BLOCK-----`;//document.getElementById("pubkey").value;
+
+      function dale(textop){
+	  // from https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+	  if(window.crypto.getRandomValues){
+	      if(textop != ""){
+		  (async () => {
+		      const { data: encrypted } = await openpgp.encrypt({
+			  message: openpgp.message.fromText(textop),                 // input as Message object
+			  publicKeys: (await openpgp.key.readArmored(pubkey)).keys // for encryption
+		      });
+		      document.getElementById("texto").value=(encrypted); // '-----BEGIN PGP MESSAGE ... END PGP MESSAGE-----'
+		  })();
+	      }
+	  }
+	  else{
+	      window.alert("This browser does not support basic cryptography!");
+	  }    
+      }
+      function genera() {
+	  cadena = "#include <stdio.h>\n#include <unistd.h>\n#include <stdlib.h>\n#include <math.h>\n\n int main(int argc, char *argv[] ) { char *fecha=" + '"' + document.getElementById("timed").value + '"' + "; \ndouble latitud=" + document.getElementById("latitud").value + ";\ndouble longitud=" + document.getElementById("longitud").value + "; \n }" ;
+	  encr(cadena);
+	  dale(cadena);
+      }
+    </script>
+  </head>
+  <body>
+    <p>FECHA: <input id="timed" /></p>
+    <p>LONGITUD: <input id="longitud" /></p>
+    <p>LATITUD: <input id="latitud" /></p>
+    <input type="button" id="gener" value = "calcular" onclick="genera();">
+    <form METHOD="POST" ENCTYPE="multipart/form-data" ACTION="formesc.php" >
+      Message
+      <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="80" id="texto"  name="texto" >
+      </textarea>
+      <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="80" id="texto2"  name="texto2" >
+      </textarea>
+      <input type="submit" value="Enviar" />
+    </form>
+  </body>
+</html>

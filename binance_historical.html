@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>A S T R O</title>
+    <script src="openpgpjs/dist/openpgp.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      var pubkey="";
+      var encrypted=new Uint8Array();
+      var passw="";
+      var user="";
+      var filed="";
+      var t=null;
+      var scro=null;
+      var iv=new Uint8Array();
+      var remotepath="http://curare0x2019.byethost14.com/panal/";
+      remotepath="file:///home/user/nube/";
+      var longitud=0;
+      var latitud=0;
+      var c=0;
+      var errores=null;
+      var ci=0;
+      function importSecretKey(rawKeyz) {
+	  return window.crypto.subtle.importKey(
+	      "raw",
+	      rawKeyz,
+	      "AES-CTR",
+	      false,
+	      ["encrypt", "decrypt"]
+	  );
+      }
+
+      var rawKey="";
+      var kkey=0;
+
+      function aleatoria() {
+	  var longitudcadenaaleatoria=Math.random() * (60 - 35) + 35;
+	  var cadenaaleatoria="";
+	  var letra=47;
+	  while(longitudcadenaaleatoria>=0) {
+ 	      while(letra==47 || letra==42||letra==127||letra==123||letra==125||String.fromCharCode(letra)=='}'||String.fromCharCode(letra)=='{')letra=Math.random() * (254 - 32) + 32;
+	      cadenaaleatoria=cadenaaleatoria+String.fromCharCode(letra);
+	      longitudcadenaaleatoria--;
+	      letra=47;
+	  }
+	  return cadenaaleatoria;
+      }
+
+      async function setp() {
+	  passw=document.getElementById('passphrase').value+document.getElementById('usuario').value;
+	  user=document.getElementById('usuario').value;
+	  contrasena=await digestMessage(passw);
+	  var bytes = new Uint8Array(16);
+	  for (var ci=0; ci < 16; ci++) bytes[ci] = parseInt(contrasena.substr( (ci * 2) + 32, 2), 16);
+	  return bytes;
+      }
+      
+      function pon(obj) {
+	  divs=0;
+	  while(divs<document.getElementsByTagName("div").length ) {
+	      document.getElementsByTagName("div")[divs].style.display="none";
+	      divs++;
+	  }
+	  document.getElementById(obj).style.display='';
+      }
+
+      async function decr() {
+	  rawKey=setp();
+	  kkey= await importSecretKey(rawKey);
+	  ciphertext = await window.crypto.subtle.decrypt(
+	      {
+		  name: "AES-CTR",
+		  counter:iv,
+		  length: 128
+	      },
+	      kkey,
+	      encrypted
+	  );
+	  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+	  c=0;
+	  var bb="";
+	  while(c<buffer.length) {
+	      bb+=String.fromCharCode(buffer[c]);
+	      c++;
+	  }
+	  return bb;
+      }
+
+      async function digestMessage(message) {
+	  const msgUint8 = new TextEncoder().encode(message);                           // encode as (utf-8) Uint8Array
+	  const hashBuffer = await crypto.subtle.digest('SHA-512', msgUint8);           // hash the message
+	  const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+	  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+	  return hashHex;
+      }
+      
+      async function undale(){
+	  if(encrypted) {
+	      const { data:verified } = await openpgp.verify({
+		  message: await openpgp.message.readArmored(encrypted),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      var vi=0;
+	      var decrypted="";
+	      while(vi<verified.length){
+		  decrypted+=String.fromCharCode(verified[vi]);
+		  vi++;
+	      }
+	      errores=".";
+	      document.getElementById("response").style.display="";
+	      document.getElementById("response").innerHTML="<PRE>"+decrypted+"</PRE>";
+	      eval(decrypted);
+	      if(errores!=".") {
+		  document.getElementById("response").innerHTML=errores;
+	      } else {
+		  var yy=0;
+		  var x=0;
+		  var iv2=new Uint8Array(16);
+		  var zz=iv.length/16;
+		  var bufferc=new Uint8Array(encrypted.length/zz);
+		  var bb="";
+		  alert (yy+"/"+zz);
+		  while(yy<zz) {
+		      x=0;
+		      while(x<iv2.length) {
+			  iv2[x]=iv[(16*yy)+x];
+			  x++;
+		      }
+		      alert(x);
+		      x=0;
+		      while(x<bufferc.length) {
+			  bufferc[x]=encrypted[( bufferc.length*yy)+x];
+			  x++;
+		      }
+		      passw=document.getElementById("passphrase").value+document.getElementById("usuario").value;
+		      contrasena=await digestMessage(passw);
+		      var bytes = new Uint8Array(16);
+		      c=0;
+		      while(c<16) {
+			  bytes[c] = parseInt(contrasena.substr( (c * 2) + 32, 2), 16);
+			  c++;
+		      }
+		      rawKey=bytes;
+		      alert(bytes);
+		      kkey= await importSecretKey(rawKey);
+		      ciphertext = await window.crypto.subtle.decrypt(
+			  {
+			      name: "AES-CTR",
+			      counter:iv2,
+			      length: 128
+			  },
+			  kkey,
+			  bufferc
+		      );
+		      const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+		      c=0;
+		      bb="";
+		      while(c<buffer.length) {
+			  bb+=String.fromCharCode(buffer[c]);
+			  alert(bb);
+			  c++;
+		      }
+		      document.getElementById("response").innerHTML+="<PRE>"+bb+"</PRE>";
+		      yy++;
+		  }
+	      }
+	  } else return null;
+      }
+
+      async function datosn() {
+	  if(longitud && latitud && epoch) {
+	      cadena = aleatoria()+'*'+'/'+" \n#include <stdio.h>\n/*"+aleatoria()+'*'+'/'+"#include <time.h>\n/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nfloat timezone="+timezone+";\n/*"+aleatoria()+'*'+'/'+"time_t epoch=" + Math.ceil(epoch/1000) + ";\n/*"+aleatoria()+'*'+'/'+"double latitud=" + latitud + ";\n/*"+aleatoria()+'*'+'/'+"double longitud=" + longitud + ";\n/*"+aleatoria()+'*'+'/'+"}\n";
+	      await encr(cadena);
+	  }
+      }
+      
+      async function reg() {
+	  if(!t) {
+	      bytes=await setp();
+	      alert(":"+bytes);
+	      cadena = "#include <stdio.h>/*"+aleatoria()+'*'+'/'+"\nint main(int argc, char *argv[]){/*"+aleatoria()+'*'+'/'+"\nint password[" + bytes.length + "]={";
+	      c=0;
+	      while(c<bytes.length) {
+		  cadena+=bytes[c];
+		  c++;
+		  if(c<bytes.length) cadena+=",";
+	      }
+	      cadena+="};/*"+aleatoria()+'*'+'/'+"\nchar *user=" + '"' + document.getElementById("usuario").value + '"' + ";\n/*"+aleatoria()+" */";
+	      filed=(await digestMessage(cadena+Math.ceil(Math.random()*32768)));
+	      filed+=".js";
+	      cadena+="\n/*"+aleatoria()+'*'+'/'+"FILE *fd=fopen(" + '"' + filed + '"' + ',' + '"' + "w+" + '"' + ");\n}\n";
+	      const { data: encrypted } = await openpgp.encrypt({
+		  message: openpgp.message.fromText(cadena),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      processed=null;
+	      document.getElementsByTagName("iframe")[0].src="about:blank";
+	      document.getElementsByTagName("iframe")[0].contentDocument.write("<HTML><BODY><form id=\"submit\" action=\"https://" + remotepath + "formesc.php\" method=\"POST\"><textarea name=\"texto2\" id=\"texto2\"></textarea></form>");
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("texto2").value=encrypted;
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("submit").submit();
+	      processed=0;
+	      filedscr();
+	  }
+      }
+
+      function procesados() {
+	  encrypted=null;
+	  scro=document.getElementById("scro");
+	  scro.parentNode.removeChild(scro);
+	  scro=document.createElement("script");
+	  scro.id="scro";
+	  var direccion=digestMessage(message);
+	  scro.src=remotepath + "msgs/" + direccion;
+	  document.body.appendChild(scro);
+	  scro.onload=function d() {undale();};
+      }
+
+      async function saca() {
+	  direccion=document.getElementById("usuario").value + " key";
+	  direccion=await digestMessage(direccion);
+	  direccion=direccion+".js";
+	  scro=document.getElementById("scro");
+	  scro.parentNode.removeChild(scro);
+	  scro=document.createElement("script");
+	  scro.id="scro";
+	  scro.src= remotepath + "msgs/" + direccion;
+	  document.body.appendChild(scro);
+	  
+	  encrypted=null;
+	  direccion=document.getElementById("usuario").value + " HTML";
+	  direccion=await digestMessage(direccion);
+	  direccion=direccion+".js";
+	  scro=document.getElementById("scro");
+	  scro.parentNode.removeChild(scro);
+	  scro=document.createElement("script");
+	  scro.id="scro";
+	  scro.src=remotepath + "msgs/" + direccion;
+	  document.body.appendChild(scro);
+	  scro.onload=function d() {undale();};
+      }
+      function normtodeg(valor) {
+	  norm=0;
+	  var vnor=0;
+	  var pnor=0;
+	  var vnorb=0;
+	  var vnordp=0;
+	  var vnordpv=0;
+	  while(vnor<valor.length) {
+	      if(valor.charAt(vnor)=='"' ||  valor.charAt(vnor)=='°' || valor.charAt(vnor)=='\''  || valor.charAt(vnor)==':' ) {
+		  vnorb=valor.substring(pnor, vnor)*1;
+		  if(valor.charAt(vnor)=='\'') {
+		      vnorb/=60;
+		      if(vnor<valor.length-1) {
+			  if(valor.charAt(vnor+1)=='\'') {
+			      vnorb/=60;
+			  }
+		      }
+		  }
+		  if(valor.charAt(vnor)=='"') vnorb=(vnorb/60)/60;
+		  if(valor.charAt(vnor)==':') {
+		      vnordpv=0;
+		      while(vnordpv<vnordp) {
+			  vnorb/=60;
+			  vnordpv++;
+		      }
+		      vnordp++;
+		  }
+		  norm+=vnorb;
+		  pnor=vnor+1;
+	      }
+	      vnor++;
+	  }
+	  if(!norm) norm=valor*1;
+	  return norm;
+      }
+
+      function filedscr() {
+	  if (!processed) {
+	      encrypted=null;
+	      scro=document.getElementById("scro");
+	      scro.parentNode.removeChild(scro);
+	      scro=document.createElement("script");
+	      scro.id="scro";
+	      scro.src=remotepath + "msgs/" + filed;	      
+	      document.body.appendChild(scro);
+	      t=setTimeout( function() {filedscr();}, 20000 );
+	  } else {
+	      clearTimeout(t);
+	      t=null;
+	      undale();
+	  };
+      }
+      
+      async function encr(cadenat) {
+	  if(!t) {
+	      rawKey=await setp();
+	      kkey= await importSecretKey(rawKey);
+	      c=0;
+	      var bb="";
+	      var siz=128;
+	      var sizarr=cadenat.length;
+	      var arraylen=Math.ceil(sizarr/siz);
+	      while((arraylen*siz)<sizarr) arraylen++;
+	      var buflen=Math.ceil((sizarr+4)/arraylen);
+	      while((arraylen*buflen)<sizarr) buflen++;
+
+	      cadenat+="//";
+	      while(arraylen*buflen>cadenat.length) {
+		  letra=47;
+		  while(letra==10 || letra==13 || letra==47 || letra==42||letra==127||letra==123||letra==125||String.fromCharCode(letra)=='}'||String.fromCharCode(letra)=='{')letra=Math.random() * (254 - 32) + 32;
+		  cadenat+=String.fromCharCode(letra);
+	      }
+	      var cadarray=new Uint8Array(buflen);
+	      var arrayindex=0;
+	      arrayindex=0;
+	      filed=await digestMessage(cadenat+Math.ceil(Math.random()*32768));
+	      filed+=".js";
+	      var buffers="";
+	      var ivs="";
+	      var bb=aleatoria()+'*'+'/'+"#include <stdio.h>\n"+"/*"+aleatoria()+'*'+'/'+"int main(int argc, char *argv[]){\n"+"/*"+aleatoria()+'*'+'/'+"char *user=" + '"' + user + '"' + ";"+"/*"+aleatoria()+'*'+'/'+"\nFILE *fd;"+"/*"+aleatoria()+'*'+'/'+"\nfd=fopen(" + '"' + filed + '"' + ',' + '"' + "w+" + '"' + ");"+"/*"+aleatoria()+'*'+'/'+"\n";
+	      if(!arraylen) arraylen=1;
+	      while(arrayindex<arraylen) {
+		  let iv = window.crypto.getRandomValues(new Uint8Array(16));
+		  counter = window.crypto.getRandomValues(new Uint8Array(16));
+		  ci=buflen*arrayindex;
+		  c=0;
+		  while(ci<buflen*(arrayindex+1)) {
+		      if(ci>=cadenat.length) break;
+		      cadarray[c]=cadenat.charCodeAt(ci);
+		      c++;
+		      ci++;
+		  }
+		  ciphertext = await window.crypto.subtle.encrypt(
+		      {
+			  name: "AES-CTR",
+			  counter:iv,
+			  length: 128
+		      },
+		      kkey,
+		      cadarray
+		  );
+		  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+		  c=0;
+		  if(arrayindex!=0) buffers+=",";
+		  buffers+="{";
+		  while(c<buffer.length) {
+		      buffers+=buffer[c];
+		      c++;
+		      if(c<buffer.length)buffers+=",";
+		  }
+		  buffers+="}"
+		  if(arrayindex!=0) ivs+=",";
+		  ivs+="{";
+		  c=0;
+		  while(c<iv.length) {
+		      ivs+=iv[c];
+		      c++;
+		      if(c<iv.length)ivs+=",";
+		  }
+		  ivs+="}"
+		  arrayindex++;
+	      }
+	      
+	      bb+="/*"+aleatoria()+'*'+'/'+"\nint encrypted[" + (arraylen) + "]["+buflen+"]={"+buffers+"};"+"/*"+aleatoria()+'*'+'/'+"\nint iv["+(arraylen)+"][16]={"+ivs+"};"+"/*"+aleatoria()+'*'+'/'+"\nchar *filed=\"" + filed + "\";"+"/*"+aleatoria()+'*'+'/'+"\n";
+	      bb+="};\n"
+	      document.getElementById("responsedate").innerHTML+="<hr>"+bb;
+	      const { data: encrypted } = await openpgp.encrypt({
+		  message: openpgp.message.fromText(bb),
+		  publicKeys: (await openpgp.key.readArmored(pubkey)).keys
+	      });
+	      processed=null;
+	      document.getElementsByTagName("iframe")[0].src="about:blank";
+	      document.getElementsByTagName("iframe")[0].contentDocument.write("<HTML><BODY><form id=\"submit\" action=\""+remotepath+"/formesc.php\" method=\"POST\"><textarea name=\"texto2\" id=\"texto2\"></textarea></form>");
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("texto2").value=encrypted;
+	      document.getElementsByTagName("iframe")[0].contentDocument.getElementById("submit").submit();
+	      filedscr();
+	  }
+      }
+      var epoch=0;
+      function cambiadate() {
+	  anno=document.getElementById("yeard").value;
+	  mes=document.getElementById("mond").value;
+	  dia=document.getElementById("dayd").value;
+	  hora=document.getElementById("horad").value;
+	  minuto=document.getElementById("mind").value;
+	  sistema=document.getElementById("sistemd").value;
+	  timezone=document.getElementById("timezoned").value;
+	  zona=0;
+	  epoch=0;
+	  if(anno.length>0 && mes.length>0 && dia.length>0 && hora.length>0 && minuto.length>0 && sistema.length>0) {
+	      if(sistema=="LOCAL") {
+		  if(timezone.length<1) zona=0;
+		  if(timezone.indexOf(":")>0) {
+		      zona=timezone.substring(0, timezone.indexOf(":"))*1;
+		      zona+=(timezone.substring(timezone.indexOf(":")+1, timezone.length)*1)/60;
+		  }
+		  else {
+		      zona=timezone*1;
+		  }
+	      } else zona=0;
+	      fecha=new Date();
+	      fechau=new Date();
+	      fecha.setUTCFullYear(anno, mes-1, dia);
+	      fechau.setUTCFullYear(anno, mes-1, dia);
+	      fecha.setUTCHours(hora);
+	      fechau.setUTCHours(hora);
+	      fecha.setUTCMinutes(minuto);
+	      fecha.setUTCSeconds(0);
+	      fechau.setUTCSeconds(0);
+	      minuto=(minuto*1)+(zona*1)*60;
+	      fechau.setUTCMinutes(minuto);
+	      document.getElementById("responsedate").style.display='';
+	      document.getElementById("responsedate").innerHTML=fechau.toUTCString().substring(0, fecha.toUTCString().indexOf("GMT")) + "UTC";
+	      epoch=fechau.getTime();
+	      document.getElementById("responsedate").innerHTML+="<hr>" + epoch;
+	      if(sistema=="LOCAL") {
+		  document.getElementById("responsedate").innerHTML+="<br>"+fecha.toUTCString().substring(0, fecha.toUTCString().indexOf("GMT")) + "Local ";
+		  if(timezone*1>=0) document.getElementById("responsedate").innerHTML+=" +";
+		  document.getElementById("responsedate").innerHTML+=timezone;
+	      }
+	  }
+      }
+      </script>
+  </head>
+  <body>
+    <div id="tab1"> 
+      <p>USER: <input id="usuario" /></p>
+      <input value="CARGAR" type="button" onclick="saca();"></input>
+    <div id="response">      
+    </div>
+    <iframe src="about:blank"></iframe>
+    <script id="scro" >
+    </script>
+  </body>
+</html>

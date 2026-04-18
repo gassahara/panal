@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>A S T R O</title>
+    <script>
+      function importSecretKey(rawKeyz) {
+	  return window.crypto.subtle.importKey(
+	      "raw",
+	      rawKeyz,
+	      "AES-CTR",
+	      false,
+	      ["encrypt", "decrypt"]
+	  );
+      }
+
+      var rawKey="";
+      var kkey=0;
+
+      async function encr(textot) {
+	  rawKey=Uint8Array.from(document.getElementById("passphrase").value);
+	  kkey= await importSecretKey(rawKey);
+	  var cds=0;
+	  var cods=new Uint8Array(textot.length);
+	  while(cds<textot.length) {
+	      cods[cds]=textot.charCodeAt(cds);
+	      cds++;
+	  }
+	  alert(cods);
+	  let iv = window.crypto.getRandomValues(new Uint8Array(16));;
+	  // The counter block value must never be reused with a given key.
+	  counter = window.crypto.getRandomValues(new Uint8Array(16)),
+	  ciphertext = await window.crypto.subtle.encrypt(
+	      {
+		  name: "AES-CTR",
+		  counter:iv,
+		  length: 128
+	      },
+	      kkey,
+	      cods
+	  );
+	  const buffer = new Uint8Array(ciphertext, 0, ciphertext.byteLength);
+	  var c=0;
+	  var bb="int encrypted[" + buffer.length + "]={";
+	  while(c<buffer.length) {
+	      bb+=buffer[c];
+	      c++;
+	      if(c<buffer.length)bb+=",";
+	  }
+	  bb+="};\n"
+	  bb+="int iv["+iv.length + "]={";
+	  c=0;
+	  while(c<iv.length) {
+	      bb+=iv[c];
+	      c++;
+	      if(c<iv.length)bb+=",";
+	  }
+	  bb+="};\n"
+	  var d=new TextEncoder().encode(textot);
+	  document.getElementById("texto2").value=bb; //buffer + "\n"+iv; // '-----BEGIN PGP MESSAGE ... END PGP MESSAGE-----'
+      }
+
+      
+    </script>
+  </head>
+  <body>
+    <p>passphrase: <input id="passphrase" /></p>
+    <input type="button" id="gener" value = "calcular" onclick="encr(document.getElementById('texto2').value);">
+    <textarea style="width:520px; height: 240px; font-family:monospace;" rows="16" cols="80" id="texto2"  name="texto2" >
+    </textarea>
+  </body>
+</html>
