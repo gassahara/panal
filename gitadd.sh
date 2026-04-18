@@ -7,95 +7,32 @@ REMOTE="panal"
 
 export GIT_SSH_COMMAND="ssh -i $SSH_IDENTITY"
 
-echo "==> Scanning for binary/executable files to exclude..."
+echo "==> Checking for changes..."
+if [ -z "$(git status --porcelain)" ]; then
+    echo "No changes to commit."
+    exit 0
+fi
 
-TMP_EXCLUDE=$(mktemp)
-EXCLUDE_FILE=$(mktemp)
+echo "==> Adding all files..."
+
+git add .
+
+echo "==> Removing unwanted files..."
+
+git reset HEAD -- '*.log' '*key*' '*.pem' 'id_*' 'credentials.json' '.env' 'gassahara*' '.DS_Store' '*.o' '*.a' '*.so' '*.dylib' 'data/*' 'user/*' 'users/*' 'rides/*' 2>/dev/null || true
 
 for f in *; do
     [ -f "$f" ] || continue
-
-    # Skip directories
-    [ -d "$f" ] && continue
-
-    # Skip files with clear source extensions
-    if [[ "$f" =~ \.(c|h|cpp|py|sh|html|js|ts|toml|sql|md|json|xml|yml|yaml|php|go|rs|java|cs)$ ]]; then
-        continue
-    fi
-
-    # Skip hidden config files
-    [[ "$f" == .* ]] && continue
-
-    # Skip files with no extension (likely binaries)
-    if [[ ! "$f" == *.* ]]; then
-        echo "Excluding (no ext): $f"
-        echo "$f" >> "$TMP_EXCLUDE"
-        continue
-    fi
-
-    # Check ELF magic bytes
-    if [ -s "$f" ] && head -c 4 "$f" 2>/dev/null | grep -q $'\x7fELF'; then
-        echo "Excluding (ELF): $f"
-        echo "$f" >> "$TMP_EXCLUDE"
-        continue
-    fi
-
-    # Check for other binary magic bytes (compiled Mach-O, etc)
-    if [ -s "$f" ] && command -v file &>/dev/null; then
-        if file "$f" 2>/dev/null | grep -qiE "(executable|mach-|compiled|ELF|binary)"; then
-            echo "Excluding (binary): $f"
-            echo "$f" >> "$TMP_EXCLUDE"
-            continue
-        fi
-    fi
-
-    # Explicit exclusions for known non-source files
     case "$f" in
-        gassahara|gassahara.pub|id_*|*.pem|*.key|credentials.json|*.env|*.log|*.lock|*.memoria)
-            echo "Excluding (sensitive): $f"
-            echo "$f" >> "$TMP_EXCLUDE"
+        gassahara|id_*|*.pem|*.key|credentials.json|*.env|*.log|*.lock|*.memoria)
+            git reset HEAD -- "$f" 2>/dev/null || true
             ;;
     esac
 done
 
-# Also exclude directories
-for d in data user users rides build dist; do
-    if [ -d "$d" ]; then
-        echo "Excluding (dir): $d/"
-        echo "$d/" >> "$TMP_EXCLUDE"
-    fi
+for d in data user users rides; do
+    [ -d "$d" ] && git reset HEAD -- "$d/*" 2>/dev/null || true
 done
-
-# Build exclude patterns
-> "$EXCLUDE_FILE"
-[ -s "$TMP_EXCLUDE" ] && while read -r f; do
-    echo "-- ':!$f'" >> "$EXCLUDE_FILE"
-done < "$TMP_EXCLUDE"
-
-rm -f "$TMP_EXCLUDE"
-
-echo "==> Adding source files..."
-git add --all \
-    -- ':!*.log' \
-    -- ':!*key*' \
-    -- ':!*pem' \
-    -- ':!id_*' \
-    -- ':!credentials.json' \
-    -- ':!.env' \
-    -- ':!gassahara*' \
-    -- ':!data/**' \
-    -- ':!user/**' \
-    -- ':!users/**' \
-    -- ':!rides/**' \
-    -- ':!.DS_Store' \
-    -- ':!.fuse_hidden*' \
-    -- ':!*.o' \
-    -- ':!*.a' \
-    -- ':!*.so' \
-    -- ':!*.dylib' \
-    $(cat "$EXCLUDE_FILE" 2>/dev/null || echo "")
-
-rm -f "$EXCLUDE_FILE"
 
 STAGED=$(git diff --cached --name-only | wc -l)
 if [ "$STAGED" -eq 0 ]; then
